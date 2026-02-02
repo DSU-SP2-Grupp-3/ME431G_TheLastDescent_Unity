@@ -1,27 +1,24 @@
 using System;
 using UnityEngine;
 
-public class RoundClock : MonoBehaviour
+public class RoundClock : Service<RoundClock>
 {
-    // todo: use service locator instead of static field
-    public static RoundClock instance;
-    
     /// Invokes when a new round is progressed to, passing the new round as the first parameter
     public event Action<int> RoundProgressed;
     
-    [SerializeField]
+    [SerializeField, Tooltip("How many realtime seconds it takes for a round to pass in realtime mode")]
     private float realSecondsPerRound;
 
     private int currentRound;
     private float nextRoundTime;
     
-    /// Determines which mode by which the round should progress.
+    /// Determines the mode by which the round should progress.
     /// Automatically in real time, or manually in turn based.
     private ProgressMode mode;
 
     void Awake()
     {
-        instance = this;
+        Register();
     }
     
     void Start()

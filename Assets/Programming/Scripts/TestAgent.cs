@@ -2,10 +2,12 @@ using UnityEngine;
 
 public class TestAgent : MonoBehaviour
 {
+    private Locator<RoundClock> roundClock;
     
     void Start()
     {
-        RoundClock.instance.RoundProgressed += OnNewRound;
+        roundClock = new Locator<RoundClock>();   
+        roundClock.Get().RoundProgressed += OnNewRound;
     }
 
     void OnNewRound(int round)
@@ -16,17 +18,19 @@ public class TestAgent : MonoBehaviour
     
     void Update()
     {
+        RoundClock rc = roundClock.Get();
+        
         if (Input.GetKeyDown(KeyCode.T))
         {
-            RoundClock.instance.EnterTurnBased();
+            rc.EnterTurnBased();
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
-            RoundClock.instance.EnterRealTime();
+            rc.EnterRealTime();
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            RoundClock.instance.ProgressToNextRound();
+            rc.ProgressToNextRound();
         }
     }
 }
