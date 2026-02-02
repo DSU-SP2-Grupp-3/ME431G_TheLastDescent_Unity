@@ -3,12 +3,11 @@ using UnityEngine;
 
 public class InteractionTest : MonoBehaviour
 {
-    public List<int> Ints;
-    public List<InterAct> interactions;
+    public List<Interaction> interactions;
 
     void Start()
     {
-        foreach(InterAct interaction in interactions)
+        foreach(Interaction interaction in interactions)
         {
             
         }
