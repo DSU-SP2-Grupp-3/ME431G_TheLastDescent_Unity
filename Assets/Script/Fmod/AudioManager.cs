@@ -50,6 +50,7 @@ public class AudioManager : MonoBehaviour
         {
             muInstance.start();
         }
+
     }
 
     public void StopEvent()
