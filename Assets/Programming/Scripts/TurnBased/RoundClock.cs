@@ -15,6 +15,7 @@ public class RoundClock : Service<RoundClock>
     /// Determines the mode by which the round should progress.
     /// Automatically in real time, or manually in turn based.
     private ProgressMode mode;
+    public ProgressMode currentMode => mode;
 
     void Awake()
     {
