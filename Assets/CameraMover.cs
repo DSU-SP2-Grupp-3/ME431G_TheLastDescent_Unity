@@ -4,24 +4,17 @@ using UnityEngine.UIElements;
 
 public class CameraMover : MonoBehaviour
 {
-    [Header("Targets, written in order of priority")]
-    
+   
     [Tooltip("The target Transform to move the camera from")]
     public Transform targetGameObject;
-    [Tooltip("The point in space that the camera is focused on.")]
-    public Vector3 targetLocation;
+    [Tooltip("Zoom / Distance to target")]
+    public float zoom;
 
     private void Update()
     {
         /*needs to account for zoom/distance to object
          which means vector math i bet :(*/
-        if (targetGameObject != null)
-        {
-            transform.position = targetGameObject.transform.position;
-        }
-        else
-        {
-            transform.position = targetLocation;
-        }
+        transform.position = new Vector3(targetGameObject.position.x - zoom, targetGameObject.position.y +zoom,
+            targetGameObject.position.z - zoom);
     }
 }
