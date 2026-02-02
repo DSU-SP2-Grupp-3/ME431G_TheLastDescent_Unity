@@ -1,6 +1,7 @@
 using UnityEngine;
 
-public interface Iinteraction
+public interface IInteraction
 {
     FloatRefrence runTime { get; }
+    void RunAction(float temp);
 }
