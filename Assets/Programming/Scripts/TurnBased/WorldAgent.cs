@@ -46,4 +46,7 @@ public class WorldAgent : MonoBehaviour
             yield return command.Execute();
         }
     }
+
+    // visualise command queue /se
+    // can afford new command /se
 }
