@@ -9,7 +9,7 @@ public class InteractionTest : MonoBehaviour
     {
         foreach(Interaction interaction in interactions)
         {
-            
+            interaction.RunAction(7);
         }
     }
 

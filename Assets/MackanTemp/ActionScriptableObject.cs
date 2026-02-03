@@ -14,7 +14,7 @@ public class ActionScriptableObject : Interaction, IInteraction
     {
         if (Cost > temp) return;
 
-        temp =- Cost;
+        temp -= Cost;
 
         //m- Datan som behövs refereras borde alltid vara temp, samt att temp blir en datatyp istället för float.
         //m- data bör inte returneras ur denna function, utan actions bör modifiera/använda existerande data i temp.
@@ -23,7 +23,7 @@ public class ActionScriptableObject : Interaction, IInteraction
         {
             inter.RunAction(temp);
         }
-
+        Debug.Log(temp);
         return;
     }
 }
