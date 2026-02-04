@@ -7,6 +7,7 @@ public class Player_Movement : MonoBehaviour
     [SerializeField] private NavMeshAgent nmAgent;
     private NavMeshPath currentPath;
     [SerializeField] private LineRenderer lineRenderer;
+    [SerializeField] private float pathcutoff;
     void Start()
     {
         if (nmAgent == null)
@@ -33,10 +34,22 @@ public class Player_Movement : MonoBehaviour
                 nmAgent.SetPath(currentPath);
             }
         }
+
+        if (Mathf.Sqrt(Mathf.Pow(transform.position.x - nmAgent.destination.x, 2) 
+                       + Mathf.Pow(transform.position.z - nmAgent.destination.z, 2)) 
+            < pathcutoff)  /*if distance between transform and destination small*/
+        {
+            lineRenderer.positionCount = 0;
+        }
     }
 
     private void DrawPath(NavMeshPath path)
     {
-        lineRenderer.SetPositions(path.corners);
+        lineRenderer.positionCount = path.corners.Length;
+        lineRenderer.SetPosition(0, transform.position);
+        for (int i = 1; i < path.corners.Length; i++)
+        {
+            lineRenderer.SetPosition(i, path.corners[i]);
+        }
     }
 }
