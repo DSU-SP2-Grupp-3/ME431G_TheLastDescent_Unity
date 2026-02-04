@@ -14,7 +14,7 @@ public class CameraMover : MonoBehaviour
     {
         /*needs to account for zoom/distance to object
          which means vector math i bet :(*/
-        transform.position = new Vector3(targetGameObject.position.x - zoom, targetGameObject.position.y +zoom,
+        transform.position = new Vector3(targetGameObject.position.x - zoom, targetGameObject.position.y + zoom,
             targetGameObject.position.z - zoom);
     }
 }
