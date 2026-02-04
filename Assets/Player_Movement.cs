@@ -7,6 +7,7 @@ public class Player_Movement : MonoBehaviour
     [SerializeField] private NavMeshAgent nmAgent;
     private NavMeshPath currentPath;
     [SerializeField] private LineRenderer lineRenderer;
+    [Tooltip("How close the agent needs to get to remove the path behind it.")]
     [SerializeField] private float pathcutoff;
     void Start()
     {
