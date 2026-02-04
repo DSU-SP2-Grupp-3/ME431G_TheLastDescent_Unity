@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 // -se:
@@ -9,10 +10,20 @@ using UnityEngine;
 /// <typeparam name="T">The type of the component that is inheriting Service. For example: Clock : Service&lt;Clock></typeparam>
 public abstract class Service<T> : MonoBehaviour
 {
+    public event Action<Service<T>> OnRegister;
+    public event Action<Service<T>> OnDeregister; 
+    
     public static Service<T> instance;
     protected void Register()
     {
+        if (instance) OnDeregister?.Invoke(instance);
         instance = this;
+        OnRegister?.Invoke(instance);
+    }
+    protected void Deregister()
+    {
+        if (instance) OnDeregister?.Invoke(instance);
+        instance = null;
     }
 
 }

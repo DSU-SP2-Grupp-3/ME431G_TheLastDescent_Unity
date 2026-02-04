@@ -12,6 +12,8 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
 
     private TurnManager turnManager;
 
+    public RoundClock.ProgressMode mode => roundClock.Get().currentMode;
+
     private void Awake()
     {
         roundClock = new();
@@ -32,4 +34,6 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
         roundClock.Get().EnterRealTime();
         turnManager.Deactivate();
     }
+    
+    public void Nothing() {}
 }

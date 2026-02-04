@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class WorldAgent : MonoBehaviour
 {
@@ -9,13 +10,22 @@ public class WorldAgent : MonoBehaviour
     {
         Ally, Enemy, Neutral 
     }
-    
-    public Team team { get; private set; }
 
+    public Team team;
+
+    public Animator animator;
+    public NavMeshAgent navMeshAgent;
+    public Transform cameraFocusTransform;
+    
+    /// <summary>
+    /// True if this agent should enter into the turn order when turn based mode is activated
+    /// </summary>
     private bool active;
     private Locator<ModeSwitcher> modeSwitcher;
         
     private Queue<Command> commandQueue;
+    private Command currentlyExecutingCommand;
+    private Coroutine currentExecutingCommandCoroutine;
     
     private void Awake()
     {
@@ -24,7 +34,12 @@ public class WorldAgent : MonoBehaviour
         modeSwitcher.Get().OnEnterTurnBased += RegisterInTurnManager;
     }
 
-    private void OnDisable()
+    private void Start()
+    {
+        StartCoroutine(ExecuteCommandQueue());
+    }
+
+    private void OnDestroy()
     {
         modeSwitcher.Get().OnEnterTurnBased -= RegisterInTurnManager;
     }
@@ -39,11 +54,33 @@ public class WorldAgent : MonoBehaviour
         commandQueue.Enqueue(command);
     }
 
+    public void OverwriteCommand(Command command)
+    {
+        currentlyExecutingCommand?.Break();
+        currentlyExecutingCommand = null;
+        if (currentExecutingCommandCoroutine != null) StopCoroutine(currentExecutingCommandCoroutine);
+        currentExecutingCommandCoroutine = null;
+        commandQueue.Clear();
+        commandQueue.Enqueue(command);
+        StartCoroutine(ExecuteCommandQueue());
+    }
+
     public IEnumerator ExecuteCommandQueue()
     {
-        while (commandQueue.TryDequeue(out Command command))
+        while (true)
         {
-            yield return command.Execute();
+            if (commandQueue.TryDequeue(out Command command))
+            {
+                currentlyExecutingCommand = command;
+                currentExecutingCommandCoroutine = StartCoroutine(command.Execute());
+                yield return currentExecutingCommandCoroutine;
+                currentExecutingCommandCoroutine = null;
+                currentlyExecutingCommand = null;
+            }
+            else
+            {
+                yield return null;
+            }
         }
     }
 

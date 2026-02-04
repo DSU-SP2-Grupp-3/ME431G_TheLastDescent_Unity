@@ -5,28 +5,59 @@ using UnityEngine.AI;
 public class MoveCommand : Command
 {
     // todo: -se: borde inte vara hårdkodad, borde bero på hur långt man går
-    public override float cost => 1f;
+    public override float cost
+    {
+        get
+        {
+            float length = 0;
+            for (int i = 1; i < agentPath.corners.Length; i++)
+            {
+                length += (agentPath.corners[i] - agentPath.corners[i - 1]).magnitude;
+            }
+            return length * costPerUnit;
+        }
+    }
 
-    private NavMeshAgent agent;
+    private NavMeshAgent navMeshAgent;
     private Vector3 toPosition;
-    public NavMeshPath agentPath => agent.path;
+    private Animator animator;
+    private float costPerUnit;
+    
+    public readonly NavMeshPath agentPath;
+    public readonly bool possible;
 
-    public MoveCommand(Vector3 toPosition, NavMeshAgent agent)
+    private const float playEndAnimationDistance = 0.5f;
+    
+    public MoveCommand(Vector3 toPosition, WorldAgent agent, float costPerUnit = 1f)
     {
         this.toPosition = toPosition;
-        this.agent = agent;
-        // todo: probably get reference to animator too
+        navMeshAgent = agent.navMeshAgent;
+        animator = agent.animator;
+        agentPath = new();
+        possible = navMeshAgent.CalculatePath(toPosition, agentPath);
     }
 
-    /// <inheritdoc />
     public override IEnumerator Execute()
     {
-        
-        agent.CalculatePath()
+        // do not do anything if the path is not valid -se
+        if (!possible) yield return null;
+
+        navMeshAgent.SetPath(agentPath);
+        animator.SetTrigger("StartMoving");
+        yield return new WaitUntil(() => navMeshAgent.remainingDistance <= playEndAnimationDistance);
+        animator.SetTrigger("StopMoving");
+
     }
-    /// <inheritdoc />
+
+    public override void Visualize()
+    {
+        // lineRenderer.SetPositions(path.corners);
+    }
+
     public override void Break()
     {
-
+        animator.SetTrigger("StopMoving");
+        navMeshAgent.CalculatePath(navMeshAgent.transform.position, agentPath);
+        navMeshAgent.SetPath(agentPath);
     }
 }

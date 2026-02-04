@@ -45,7 +45,7 @@ public class RoundClock : Service<RoundClock>
     {
         currentRound++;
         nextRoundTime = Time.time + realSecondsPerRound;
-        RoundProgressed.Invoke(currentRound);
+        RoundProgressed?.Invoke(currentRound);
     }
 
     public void EnterTurnBased()
