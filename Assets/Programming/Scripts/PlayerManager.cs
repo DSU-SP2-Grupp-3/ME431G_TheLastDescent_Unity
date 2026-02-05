@@ -6,7 +6,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField]
     private WorldAgent[] players;
     [SerializeField]
-    private CameraMover cameraMover;
+    private OrthographicCameraMover cameraMover;
     
     private Locator<InputManager> inputManager;
 
@@ -22,7 +22,6 @@ public class PlayerManager : MonoBehaviour
 
     private void SelectPlayer(WorldAgent playerAgent)
     {
-        Debug.Log($"Select {playerAgent.name}");
         if (players.Contains(playerAgent))
         {
             selectedPlayer = playerAgent;

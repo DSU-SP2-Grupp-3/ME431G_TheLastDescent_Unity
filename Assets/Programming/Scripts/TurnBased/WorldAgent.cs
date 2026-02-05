@@ -31,11 +31,11 @@ public class WorldAgent : MonoBehaviour
     {
         commandQueue = new();
         modeSwitcher = new();
-        modeSwitcher.Get().OnEnterTurnBased += RegisterInTurnManager;
     }
 
     private void Start()
     {
+        modeSwitcher.Get().OnEnterTurnBased += RegisterInTurnManager;
         StartCoroutine(ExecuteCommandQueue());
     }
 
