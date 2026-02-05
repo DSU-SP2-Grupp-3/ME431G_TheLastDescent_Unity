@@ -14,10 +14,18 @@ public class AudioManager : MonoBehaviour
     public EventReference[] muRef;
     
     [Header("Ambiance Events")]
-    public EventReference[] ambianceRef;
-    
-    [Header("Oneshot Events")]
-    
+    public EventReference[] ambRef;
+
+    [Header("Sfx Events")] 
+    [Header("Character Sound Effects")]
+    public EventReference[] characterRef;
+    [Header("Enemy Sound Effects")]
+    public EventReference[] enemyRef;
+    [Header("UI Sound Effects")]
+    public EventReference[] UIRef;
+    [Header("Interactables Sound Effects")]
+    public EventReference[] interactRef;
+    [Header("Oneshit Sound Effects")]
     public EventReference[] oneRef;
     
     [HideInInspector] public EventInstance muInstance; //Music
@@ -25,8 +33,6 @@ public class AudioManager : MonoBehaviour
     
     [Header("Debug Mode")]
     public bool debug = false;
-    public bool inCombat = false;
-    [Range(0, 10)] public float combatTime = 5f;
     
     
    void Awake()
@@ -61,28 +67,6 @@ public class AudioManager : MonoBehaviour
     public void SetEventParam(float i, string namePar)
     {
         muInstance.setParameterByName(namePar, i, false);
-    }
-
-    public void Combat()
-    {
-        if (!inCombat)
-        {
-            RuntimeManager.StudioSystem.setParameterByName("Combat", 1);
-            StartCoroutine(CombatTimer());
-            inCombat = true;
-        }
-        else if (inCombat)
-        {
-            StopAllCoroutines();
-            StartCoroutine(CombatTimer());
-        }
-    }
-
-    private IEnumerator CombatTimer()
-    {
-        yield return new WaitForSeconds(combatTime);
-        RuntimeManager.StudioSystem.setParameterByName("Combat", 0);
-        inCombat = false;
     }
     
 }

@@ -265,7 +265,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 687013498}
-  - component: {fileID: 687013497}
+  - component: {fileID: 687013499}
   m_Layer: 0
   m_Name: Test
   m_TagString: Untagged
@@ -273,23 +273,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &687013497
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 687013496}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75e718001e34d904ca5c3c667ed0963f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  forEnum: 1
-  forTest: 0
-  dropDown1: 0
-  dropDown2: 0
-  dropDown3: 1
 --- !u!4 &687013498
 Transform:
   m_ObjectHideFlags: 0
@@ -305,6 +288,32 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &687013499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 687013496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bdfb7ab5e31db94989c5178fc4d7b72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playOnStart: 0
+  startWithParameters: 0
+  allowFadeout: 0
+  debugMode: 0
+  eventTypeSelect: 1
+  actionTypeSelect: 0
+  sfxTypeSelect: 1
+  musicEventSelect: 0
+  charEventSelect: 0
+  enemyEventSelect: 1
+  uiEventSelect: 0
+  interEventSelect: 0
+  ambienceEventSelect: 0
+  parameters: []
 --- !u!1 &700562968
 GameObject:
   m_ObjectHideFlags: 0
@@ -317,7 +326,7 @@ GameObject:
   - component: {fileID: 700562969}
   m_Layer: 0
   m_Name: AudioManager
-  m_TagString: Untagged
+  m_TagString: AudioManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -334,18 +343,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0368fcbeaa9b6264ea34a317a48c9b7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  muRef:
-  - Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
-  ambianceRef: []
+  muRef: []
+  ambRef: []
+  characterRef: []
+  enemyRef: []
+  UIRef: []
+  interactRef: []
   oneRef: []
   debug: 0
-  inCombat: 0
-  combatTime: 5
 --- !u!4 &700562970
 Transform:
   m_ObjectHideFlags: 0

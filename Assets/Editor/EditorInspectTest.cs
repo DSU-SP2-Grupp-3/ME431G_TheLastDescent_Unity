@@ -7,9 +7,6 @@ using UnityEngine;
 public class EditorInspectTest : Editor
 {
     
-    GUIStyle style;
-    GUILayoutOption[] options;
-    
     #region MyRegion
 
     SerializedProperty forEnum;
@@ -36,8 +33,6 @@ public class EditorInspectTest : Editor
     public override void OnInspectorGUI()
     {
         //Content
-        
-        style.fontStyle = FontStyle.Bold;
         
         InspectTest inspectTest = (InspectTest)target;
         
