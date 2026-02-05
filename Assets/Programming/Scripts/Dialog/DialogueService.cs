@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using System.Collections;
 using System;
+using UnityEngine.UI;
 
 public class DialogueService : Service<DialogueService>
 {
@@ -14,6 +15,10 @@ public class DialogueService : Service<DialogueService>
     private DialogueScriptable tempDialogueScriptable;
     [SerializeField]
     private TextMeshProUGUI textField;
+    [SerializeField]
+    private TextMeshProUGUI nameField;
+        [SerializeField]
+    private Image portrait;
 
 
     void Start()
@@ -38,17 +43,23 @@ public class DialogueService : Service<DialogueService>
     {
         while (dialogues.Count > 0)
         {
-            Dialogue ActiveSpeaker = dialogues.Dequeue();
+            Dialogue activeSpeaker = dialogues.Dequeue();
 
             Sentences.Clear();
-            foreach (string sentence in ActiveSpeaker.sentences)
+            foreach (string sentence in activeSpeaker.sentences)
             {
                 Sentences.Enqueue(sentence);
             }
 
+
+            if(activeSpeaker.portrait != null) portrait.sprite = activeSpeaker.portrait;
+
+            nameField.text = activeSpeaker.name;
             yield return StartCoroutine(DisplayNextSentence());
 
         }
+        nameField.text = "";
+        textField.text = "";
         yield return null;
     }
     public IEnumerator DisplayNextSentence()
@@ -69,13 +80,10 @@ public class DialogueService : Service<DialogueService>
             {
                 WrittenSentence += letters.Dequeue();
                 textField.text = WrittenSentence;
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(0.04f);
             }
 
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(1f);
         }
-
-
-        yield return new WaitForSeconds(2f);
     }
 }
