@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TurnManager : MonoBehaviour
 {
@@ -10,10 +11,21 @@ public class TurnManager : MonoBehaviour
     
     private Coroutine cycle;
     public WorldAgentTeam activeTeam { get; private set; }
+    
+    private bool playerReady;
 
+    [SerializeField]
+    private Events turnManagerEvents;
+    
     private void Awake()
     {
         teams = new();
+    }
+
+    private void Start()
+    {
+        Locator<ReadyButton> readyButton = new();
+        readyButton.Get().ReadyButtonPressed += () => playerReady = true;
     }
 
     public void Activate()
@@ -31,7 +43,7 @@ public class TurnManager : MonoBehaviour
     {
         if (!teams.TryAdd(team, new WorldAgentTeam(agent)))
         {
-            teams.Add(team, new WorldAgentTeam(agent));
+            teams[team].AddAgent(agent);
         }
     }
 
@@ -49,13 +61,50 @@ public class TurnManager : MonoBehaviour
     {
         while (true)
         {
+            playerReady = false;
+            yield return new WaitUntil((() => playerReady == true));
+            
+            turnManagerEvents.StartExecutingTurn?.Invoke();
+            
             foreach (WorldAgentTeam team in ConvertTeamsToList())
             {
                 activeTeam = team;
-                yield return team.ExecuteTeamActions();
+                yield return WaitForAll(team.GetTeamCommandQueues());
             }
             activeTeam = null;
+            
+            turnManagerEvents.FinishExecutingTurn?.Invoke();
         }
+    }
+    
+    // https://www.reddit.com/r/Unity3D/comments/11imces/wait_for_all_coroutines_to_finish/
+    public IEnumerator WaitForAll(List<IEnumerator> coroutines)
+    {
+        int coroutineTally = 0;
+
+        for (int i = 0; i < coroutines.Count; i++)
+        {
+            StartCoroutine(RunAwaitedCoroutine(coroutines[i]));
+        }
+
+        while (coroutineTally > 0)
+        {
+            yield return null;
+        }
+
+        IEnumerator RunAwaitedCoroutine(IEnumerator coroutine)
+        {
+            coroutineTally++;
+            yield return StartCoroutine(coroutine);
+            coroutineTally--;
+        }
+    }
+    
+
+    [Serializable]
+    public struct Events
+    {
+        public UnityEvent StartExecutingTurn, FinishExecutingTurn;
     }
     
 }

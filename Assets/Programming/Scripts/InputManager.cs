@@ -10,7 +10,7 @@ public class InputManager : Service<InputManager>
     private LayerMask clickableLayers;
     
     private Camera mainCamera;
-
+    
     private void Awake()
     {
         Register();
@@ -21,7 +21,7 @@ public class InputManager : Service<InputManager>
     {
         Deregister();
     }
-
+    
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))

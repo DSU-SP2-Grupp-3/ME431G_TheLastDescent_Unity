@@ -8,7 +8,7 @@ public class WorldAgent : MonoBehaviour
 {
     public enum Team
     {
-        Ally, Enemy, Neutral 
+        Player, Ally, Enemy, Neutral 
     }
 
     public Team team;
@@ -31,6 +31,7 @@ public class WorldAgent : MonoBehaviour
     {
         commandQueue = new();
         modeSwitcher = new();
+        if (team == Team.Player) active = true;
     }
 
     private void Start()
@@ -46,7 +47,12 @@ public class WorldAgent : MonoBehaviour
 
     private void RegisterInTurnManager(TurnManager turnManager)
     {
-        if (active) turnManager.RegisterAgentInTeam(team, this);
+        if (active)
+        {
+            turnManager.RegisterAgentInTeam(team, this);
+            InterruptCommandQueue();
+            
+        }
     }
 
     public void QueueCommand(Command command)
@@ -56,31 +62,28 @@ public class WorldAgent : MonoBehaviour
 
     public void OverwriteCommand(Command command)
     {
-        currentlyExecutingCommand?.Break();
-        currentlyExecutingCommand = null;
-        if (currentExecutingCommandCoroutine != null) StopCoroutine(currentExecutingCommandCoroutine);
-        currentExecutingCommandCoroutine = null;
-        commandQueue.Clear();
+        InterruptCommandQueue();
         commandQueue.Enqueue(command);
         StartCoroutine(ExecuteCommandQueue());
     }
 
+    private void InterruptCommandQueue()
+    {
+        currentlyExecutingCommand?.Break();
+        currentlyExecutingCommand = null;
+        StopAllCoroutines();
+        commandQueue.Clear();
+    }
+    
     public IEnumerator ExecuteCommandQueue()
     {
-        while (true)
+        while (commandQueue.TryDequeue(out Command command))
         {
-            if (commandQueue.TryDequeue(out Command command))
-            {
-                currentlyExecutingCommand = command;
-                currentExecutingCommandCoroutine = StartCoroutine(command.Execute());
-                yield return currentExecutingCommandCoroutine;
-                currentExecutingCommandCoroutine = null;
-                currentlyExecutingCommand = null;
-            }
-            else
-            {
-                yield return null;
-            }
+            currentlyExecutingCommand = command;
+            currentExecutingCommandCoroutine = StartCoroutine(command.Execute());
+            yield return currentExecutingCommandCoroutine;
+            currentExecutingCommandCoroutine = null;
+            currentlyExecutingCommand = null;
         }
     }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,8 +7,8 @@ public class WorldAgentTeam
 {
     private List<WorldAgent> agents;
 
-    private bool teamReady;
-
+    public int Count => agents.Count;
+    
     public WorldAgentTeam()
     {
         agents = new();
@@ -23,21 +24,16 @@ public class WorldAgentTeam
         agents.Add(agent);
     }
     
-    public void ReadyTeam()
+    public List<IEnumerator> GetTeamCommandQueues()
     {
-        teamReady = true;
-    }
-    
-    public IEnumerator ExecuteTeamActions()
-    {
-        yield return new WaitUntil(() => teamReady);
-
+        List<IEnumerator> queues = new();
         foreach (WorldAgent agent in agents)
         {
-            yield return agent.ExecuteCommandQueue();
+            queues.Add(agent.ExecuteCommandQueue());
         }
 
-        teamReady = false;
+        return queues;
     }
-
+    
+    
 }
