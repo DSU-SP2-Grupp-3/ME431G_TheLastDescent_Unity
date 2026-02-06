@@ -12,24 +12,20 @@ public class AudioManager : MonoBehaviour
 
     [Header("Music Events")] 
     public EventReference[] muRef;
-    
     [Header("Ambiance Events")]
     public EventReference[] ambRef;
-
     [Header("Sfx Events")] 
     [Header("Character Sound Effects")]
     public EventReference[] characterRef;
     [Header("Enemy Sound Effects")]
     public EventReference[] enemyRef;
     [Header("UI Sound Effects")]
-    public EventReference[] UIRef;
+    public EventReference[] uiRef;
     [Header("Interactables Sound Effects")]
     public EventReference[] interactRef;
-    [Header("Oneshit Sound Effects")]
-    public EventReference[] oneRef;
     
     [HideInInspector] public EventInstance muInstance; //Music
-    [HideInInspector] public EventInstance amInstance; //Ambiance
+    [HideInInspector] public EventInstance ambInstance; //Ambiance
     
     [Header("Debug Mode")]
     public bool debug = false;
@@ -48,25 +44,4 @@ public class AudioManager : MonoBehaviour
         DontDestroyOnLoad(this);
         
     } 
-   public void PlayEvent(int i)
-    {
-        muInstance = RuntimeManager.CreateInstance(muRef[i]);
-        muInstance.getPlaybackState(out PLAYBACK_STATE state);
-        if (state == PLAYBACK_STATE.STOPPED || state == PLAYBACK_STATE.STOPPING)
-        {
-            muInstance.start();
-        }
-
-    }
-
-    public void StopEvent()
-    {
-        muInstance.stop(STOP_MODE.ALLOWFADEOUT);
-    }
-
-    public void SetEventParam(float i, string namePar)
-    {
-        muInstance.setParameterByName(namePar, i, false);
-    }
-    
 }

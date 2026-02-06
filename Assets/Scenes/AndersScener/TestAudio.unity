@@ -129,8 +129,8 @@ GameObject:
   m_Component:
   - component: {fileID: 354981578}
   - component: {fileID: 354981577}
-  - component: {fileID: 354981576}
   - component: {fileID: 354981579}
+  - component: {fileID: 354981580}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -138,14 +138,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &354981576
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 354981575}
-  m_Enabled: 1
 --- !u!20 &354981577
 Camera:
   m_ObjectHideFlags: 0
@@ -256,6 +248,20 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &354981580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 354981575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nonRigidbodyVelocity: 0
+  attenuationObject: {fileID: 354981575}
 --- !u!1 &687013496
 GameObject:
   m_ObjectHideFlags: 0
@@ -300,18 +306,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bdfb7ab5e31db94989c5178fc4d7b72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playOnStart: 0
+  playOnStart: 1
   startWithParameters: 0
   allowFadeout: 0
+  toggleRelease: 0
+  positionStatic: 0
+  is3DEvent: 0
   debugMode: 0
-  eventTypeSelect: 1
+  dbInit: 0
+  dbSET: 0
+  dbSAT: 0
+  dbSST: 0
+  dbSEP: 0
+  dbSEI: 0
+  dbPlay: 0
+  dbStop: 0
+  dbCreate: 0
+  eventTypeSelect: 0
   actionTypeSelect: 0
   sfxTypeSelect: 1
-  musicEventSelect: 0
+  musicEventSelect: 3
   charEventSelect: 0
-  enemyEventSelect: 1
+  enemyEventSelect: 2
   uiEventSelect: 0
-  interEventSelect: 0
+  interEventSelect: 1
   ambienceEventSelect: 0
   parameters: []
 --- !u!1 &700562968
@@ -343,13 +361,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0368fcbeaa9b6264ea34a317a48c9b7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  muRef: []
+  muRef:
+  - Guid:
+      Data1: -1442283832
+      Data2: 1240100779
+      Data3: -776651107
+      Data4: -320399868
+    Path: event:/Music/Test
   ambRef: []
   characterRef: []
-  enemyRef: []
-  UIRef: []
+  enemyRef:
+  - Guid:
+      Data1: -180110327
+      Data2: 1245938188
+      Data3: -1066286449
+      Data4: -1494942835
+    Path: event:/SFX/Enemies/Tjockis
+  uiRef: []
   interactRef: []
-  oneRef: []
   debug: 0
 --- !u!4 &700562970
 Transform:

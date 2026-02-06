@@ -10,6 +10,18 @@ public class EditorUEC : Editor
     SerializedProperty startWithParamProp;
     SerializedProperty allowFadeoutProp;
     SerializedProperty debugModeProp;
+    SerializedProperty toggleReleaseProp;
+    SerializedProperty positionStaticProp;
+    SerializedProperty dbInitProp;
+    SerializedProperty dbSETProp;
+    SerializedProperty dbSATProp;
+    SerializedProperty dbSSTProp;
+    SerializedProperty dbSEPProp;
+    SerializedProperty dbSEIProp;
+    SerializedProperty dbPlayProp;
+    SerializedProperty dbStopProp;
+    SerializedProperty dbCreateProp;
+    
     //Enums
     SerializedProperty eventTypeSelect;
     SerializedProperty actionTypeSelect;
@@ -31,7 +43,19 @@ public class EditorUEC : Editor
         playOnStartProp = serializedObject.FindProperty("playOnStart");
         startWithParamProp = serializedObject.FindProperty("startWithParameters");
         allowFadeoutProp = serializedObject.FindProperty("allowFadeout");
+        toggleReleaseProp = serializedObject.FindProperty("toggleRelease");
+        positionStaticProp = serializedObject.FindProperty("positionStatic");
         debugModeProp = serializedObject.FindProperty("debugMode");
+        
+        dbInitProp = serializedObject.FindProperty("dbInit");
+        dbSETProp = serializedObject.FindProperty("dbSET");
+        dbSATProp = serializedObject.FindProperty("dbSAT");
+        dbSSTProp = serializedObject.FindProperty("dbSST");
+        dbSEPProp = serializedObject.FindProperty("dbSEP");
+        dbSEIProp = serializedObject.FindProperty("dbSEI");
+        dbPlayProp = serializedObject.FindProperty("dbPlay");
+        dbStopProp = serializedObject.FindProperty("dbStop");
+        dbCreateProp = serializedObject.FindProperty("dbCreate");
         //Enum
         eventTypeSelect = serializedObject.FindProperty("eventTypeSelect");
         actionTypeSelect = serializedObject.FindProperty("actionTypeSelect");
@@ -54,9 +78,10 @@ public class EditorUEC : Editor
         EditorGUILayout.PropertyField(actionTypeSelect);
         if (actionTypeSelect.enumValueIndex == 0) //Start
         {
+            EditorGUILayout.LabelField("Initiation Settings", EditorStyles.whiteBoldLabel);
             EditorGUILayout.PropertyField(playOnStartProp);
             EditorGUILayout.PropertyField(startWithParamProp);
-            if (startWithParamProp.boolValue == true)
+            if (startWithParamProp.boolValue)
             {
                 EditorGUILayout.PropertyField(Parameters, true);
             }
@@ -78,22 +103,54 @@ public class EditorUEC : Editor
         if (sfxTypeSelect.enumValueIndex == 0) //Character
         {
             EditorGUILayout.PropertyField(charEventSelect);
-            ShowActionMenu();
+            EditorGUILayout.LabelField("Sfx Initiation Settings", EditorStyles.whiteBoldLabel);
+            EditorGUILayout.PropertyField(toggleReleaseProp);
+            EditorGUILayout.PropertyField(positionStaticProp);
+            EditorGUILayout.PropertyField(playOnStartProp);
+            EditorGUILayout.PropertyField(startWithParamProp);
+            if (startWithParamProp.boolValue)
+            {
+                EditorGUILayout.PropertyField(Parameters, true);
+            }
         }
         else if (sfxTypeSelect.enumValueIndex == 1) //Enemy
         {
             EditorGUILayout.PropertyField(enemyEventSelect);
-            ShowActionMenu();
+            EditorGUILayout.LabelField("Sfx Initiation Settings", EditorStyles.whiteBoldLabel);
+            EditorGUILayout.PropertyField(toggleReleaseProp);
+            EditorGUILayout.PropertyField(positionStaticProp);
+            EditorGUILayout.PropertyField(playOnStartProp);
+            EditorGUILayout.PropertyField(startWithParamProp);
+            if (startWithParamProp.boolValue)
+            {
+                EditorGUILayout.PropertyField(Parameters, true);
+            }
         }
         else if (sfxTypeSelect.enumValueIndex == 2) //UI
         {
             EditorGUILayout.PropertyField(uiEventSelect);
-            ShowActionMenu();
+            EditorGUILayout.LabelField("Sfx Initiation Settings", EditorStyles.whiteBoldLabel);
+            EditorGUILayout.PropertyField(toggleReleaseProp);
+            EditorGUILayout.PropertyField(positionStaticProp);
+            EditorGUILayout.PropertyField(playOnStartProp);
+            EditorGUILayout.PropertyField(startWithParamProp);
+            if (startWithParamProp.boolValue)
+            {
+                EditorGUILayout.PropertyField(Parameters, true);
+            }
         }
         else if (sfxTypeSelect.enumValueIndex == 3) // Interactable
         {
             EditorGUILayout.PropertyField(interEventSelect);
-            ShowActionMenu();
+            EditorGUILayout.LabelField("Sfx Initiation Settings", EditorStyles.whiteBoldLabel);
+            EditorGUILayout.PropertyField(toggleReleaseProp);
+            EditorGUILayout.PropertyField(positionStaticProp);
+            EditorGUILayout.PropertyField(playOnStartProp);
+            EditorGUILayout.PropertyField(startWithParamProp);
+            if (startWithParamProp.boolValue)
+            {
+                EditorGUILayout.PropertyField(Parameters, true);
+            }
         }
     }
 
@@ -113,16 +170,42 @@ public class EditorUEC : Editor
         }
         else if (eventTypeSelect.enumValueIndex == 1) //Sfx
         {
+            EditorGUILayout.LabelField("Select Sfx Type", EditorStyles.whiteBoldLabel);
             ShowSfxTypeSelect();
         }
         else if (eventTypeSelect.enumValueIndex == 2) //Ambiance
         {
+            EditorGUILayout.LabelField("Select Ambiance Event", EditorStyles.whiteBoldLabel);
             EditorGUILayout.PropertyField(ambienceEventSelect);
             ShowActionMenu();
         }
         
         EditorGUILayout.LabelField("Other Settings", EditorStyles.whiteBoldLabel);
         EditorGUILayout.PropertyField(debugModeProp);
+        if (debugModeProp.boolValue)
+        {
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PropertyField(dbInitProp);
+            EditorGUILayout.PropertyField(dbSETProp);
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PropertyField(dbSATProp);
+            EditorGUILayout.PropertyField(dbSSTProp);
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PropertyField(dbSEPProp);
+            EditorGUILayout.PropertyField(dbSEIProp);
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PropertyField(dbPlayProp);
+            EditorGUILayout.PropertyField(dbStopProp);
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PropertyField(dbCreateProp);
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.HelpBox("Creamy Thighs", MessageType.Info);
+
+        }
         
         serializedObject.ApplyModifiedProperties();
         
