@@ -34,10 +34,10 @@ public class UniversalEventController : MonoBehaviour
     
     public enum MusicEventSelect
     {
-        Music1,
-        Music2,
-        Music3,
-        Test
+        Test,
+        Test2,
+        Test3,
+        FyraTest
     }
     
     public enum CharEventSelect
@@ -69,6 +69,7 @@ public class UniversalEventController : MonoBehaviour
     {
         Ambience1,
         Ambience2,
+        Amby,
     }
     
     //Parametrar
@@ -444,7 +445,7 @@ public class UniversalEventController : MonoBehaviour
     
     private void SetEventIndex()
     {
-        if (SelectedActionType() == 1) //Music
+        if (SelectedEventType() == 1) //Music
         {
             for (int i = 0; i < audioManager.muRef.Length; i++)
             {
@@ -455,7 +456,7 @@ public class UniversalEventController : MonoBehaviour
                 }
             }
         }
-        else if (SelectedActionType() == 2) //Ambiance
+        else if (SelectedEventType() == 2) //Ambiance
         {
             for (int i = 0; i < audioManager.ambRef.Length; i++)
             {
@@ -466,7 +467,7 @@ public class UniversalEventController : MonoBehaviour
                 }
             }
         }
-        else if (SelectedActionType() == 3) //Sfx
+        else if (SelectedEventType() == 3) //Sfx
         {
             if (SelectedSfxType() == 1) //Character sfx
             {
@@ -612,7 +613,6 @@ public class UniversalEventController : MonoBehaviour
     private void CreateInstance()
     {
         SetEventIndex();
-        CheckFor3D();
         if (SelectedEventType() == 1) //Music
         {
             audioManager.muInstance = RuntimeManager.CreateInstance(audioManager.muRef[eventIndex]);
@@ -631,6 +631,7 @@ public class UniversalEventController : MonoBehaviour
         }
         else if (SelectedEventType() == 3)  //Sfx
         {
+            CheckFor3D();
             if (is3DEvent && positionStatic)
             {
                 RuntimeManager.AttachInstanceToGameObject(SfxInstance, gameObject.GetComponent<Transform>(), true);
@@ -687,6 +688,7 @@ public class UniversalEventController : MonoBehaviour
         }
         else if (SelectedSfxType() == 2)
         {
+            Debug.Log("Bajs");
             RuntimeManager.StudioSystem.getEvent(audioManager.enemyRef[eventIndex].Path, out EventDescription desc);
             desc.is3D(out bool is3D);
             if (is3D)

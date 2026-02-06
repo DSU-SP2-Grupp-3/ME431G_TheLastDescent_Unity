@@ -203,7 +203,6 @@ public class EditorUEC : Editor
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.PropertyField(dbCreateProp);
             EditorGUILayout.EndHorizontal();
-            EditorGUILayout.HelpBox("Creamy Thighs", MessageType.Info);
 
         }
         
