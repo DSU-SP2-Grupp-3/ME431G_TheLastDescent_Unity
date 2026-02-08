@@ -10,6 +10,10 @@ public class DialogueService : Service<DialogueService>
     private Queue<Dialogue> dialogues = new();
 
     private Queue<string> Sentences = new();
+    private Queue<Char> letters = new();
+    string WrittenSentence = "";
+    private Coroutine ClickCheck = null;
+    private bool skipping;
     private Locator<DialogueService> dialogueService;
     [SerializeField]
     private DialogueScriptable tempDialogueScriptable;
@@ -17,14 +21,13 @@ public class DialogueService : Service<DialogueService>
     private TextMeshProUGUI textField;
     [SerializeField]
     private TextMeshProUGUI nameField;
-        [SerializeField]
+    [SerializeField]
     private Image portrait;
 
 
     void Start()
     {
         Register();
-
         //-Ma. For testing purposes, I call this here.
         InitializeDialouge(tempDialogueScriptable.GetDialogues());
     }
@@ -52,7 +55,7 @@ public class DialogueService : Service<DialogueService>
             }
 
 
-            if(activeSpeaker.portrait != null) portrait.sprite = activeSpeaker.portrait;
+            if (activeSpeaker.portrait != null) portrait.sprite = activeSpeaker.portrait;
 
             nameField.text = activeSpeaker.name;
             yield return StartCoroutine(DisplayNextSentence());
@@ -60,11 +63,11 @@ public class DialogueService : Service<DialogueService>
         }
         nameField.text = "";
         textField.text = "";
-        yield return null;
+        EndDialogue();
     }
     public IEnumerator DisplayNextSentence()
     {
-        Queue<Char> letters = new();
+
         while (Sentences.Count > 0)
         {
             string sentence = Sentences.Dequeue();
@@ -75,15 +78,51 @@ public class DialogueService : Service<DialogueService>
                 letters.Enqueue(letter);
             }
 
-            string WrittenSentence = "";
-            while (letters.Count > 0)
-            {
-                WrittenSentence += letters.Dequeue();
-                textField.text = WrittenSentence;
-                yield return new WaitForSeconds(0.04f);
-            }
+            //-Ma. A bit of a mess tbh
 
-            yield return new WaitForSeconds(1f);
+            skipping = false;
+            WrittenSentence = "";
+            ClickCheck = StartCoroutine(OnMouseClick());
+            yield return StartCoroutine(DisplayNextLetter());
+            textField.text = sentence;
+            if (ClickCheck != null) StopCoroutine(ClickCheck);
+            yield return ClickCheck = StartCoroutine(OnMouseClick());
         }
+    }
+    public IEnumerator DisplayNextLetter()
+    {
+        while (letters.Count > 0)
+        {
+            if (skipping == true)
+            {
+                skipping = false;
+                yield break;
+            }
+            WrittenSentence += letters.Dequeue();
+            textField.text = WrittenSentence;
+            yield return new WaitForSeconds(0.04f);
+        }
+    }
+    public IEnumerator OnMouseClick()
+    {
+        yield return new WaitForEndOfFrame();
+        while (true)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                skipping = true;
+                yield break;
+            }
+            yield return null;
+        }
+
+    }
+    private void EndDialogue()
+    {
+        //-Ma. Ran dialogue
+    }
+    void OnDisable()
+    {
+        //Unregister
     }
 }
