@@ -29,7 +29,8 @@ public class MoveCommand : Command
     {
         this.toPosition = toPosition;
         agentPath = new();
-        possible = invokingAgent.navMeshAgent.CalculatePath(toPosition, agentPath);
+        invokingAgent.navMeshAgent.CalculatePath(toPosition, agentPath);
+        possible = agentPath.status == NavMeshPathStatus.PathComplete;
     }
 
     public override IEnumerator Execute()

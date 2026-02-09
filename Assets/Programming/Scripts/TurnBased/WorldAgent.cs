@@ -11,7 +11,8 @@ public class WorldAgent : MonoBehaviour
         Player,
         Ally,
         Enemy,
-        Neutral
+        Neutral,
+        Interactable
     }
 
     public Team team;
@@ -36,7 +37,7 @@ public class WorldAgent : MonoBehaviour
 
     private void Awake()
     {
-        localStats = stats.Clone();
+        if (stats) localStats = stats.Clone();
         commandQueue = new();
         modeSwitcher = new();
         if (team == Team.Player) active = true;
@@ -50,7 +51,7 @@ public class WorldAgent : MonoBehaviour
 
     private void RegisterInTurnManager(TurnManager turnManager)
     {
-        if (active)
+        if (active && team != Team.Interactable)
         {
             turnManager.RegisterAgentInTeam(team, this);
             InterruptCommandQueue();
@@ -84,6 +85,11 @@ public class WorldAgent : MonoBehaviour
         StartCoroutine(ExecuteCommandQueue());
     }
 
+    public void ForceStartCommandQueueExecution()
+    {
+        StartCoroutine(ExecuteCommandQueue());
+    }
+    
     private void InterruptCommandQueue()
     {
         currentlyExecutingCommand?.Break();

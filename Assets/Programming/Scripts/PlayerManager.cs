@@ -6,7 +6,7 @@ public class PlayerManager : MonoBehaviour
 {
     [SerializeField]
     private WorldAgent[] players;
-    [SerializeField]
+    [SerializeField] 
     private OrthographicCameraMover cameraMover;
 
     private Locator<InputManager> inputManager;
@@ -48,7 +48,15 @@ public class PlayerManager : MonoBehaviour
 
     private void ClickedEnvironment(GameObject go)
     {
-        if (go.TryGetComponent<Interactable>(out Interactable interactable))
+        InteractionGroup group = go.GetComponentInParent<InteractionGroup>();
+        if (group)
+        {
+            RealTimeOrTurnBased(
+                () => group.InteractRealTime(selectedPlayer),
+                () => group.InteractTurnBased(selectedPlayer)
+            );
+        }
+        else if (go.TryGetComponent<Interactable>(out Interactable interactable))
         {
             RealTimeOrTurnBased(
                 () => interactable.InteractRealTime(selectedPlayer),
