@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "AiMovement", menuName = "Scriptable Objects/AiMovement")]
-public class AiMovement : ScriptableObject
+public class AIMovement : ScriptableObject
 {
-    
+
 }
