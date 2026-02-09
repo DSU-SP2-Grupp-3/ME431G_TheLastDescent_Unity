@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : Service<PlayerManager>
 {
     [SerializeField]
     private WorldAgent[] players;
@@ -13,6 +13,11 @@ public class PlayerManager : MonoBehaviour
     private Locator<ModeSwitcher> modeSwitcher;
 
     private WorldAgent selectedPlayer;
+
+    private void Awake()
+    {
+        Register();
+    }
 
     private void Start()
     {

@@ -1,7 +1,20 @@
+using System;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "AiMovement", menuName = "Scriptable Objects/AiMovement")]
-public class AIMovement : ScriptableObject
+public class AIMovement : ScriptableObject, CommandProvider
 {
+    private Locator<PlayerManager> agentManager;
 
+    private void OnEnable()
+    {
+        agentManager = new();
+    }
+
+    /// <inheritdoc />
+    public Command[] ProvideCommands()
+    {
+
+        return Array.Empty<Command>();
+    }
 }
