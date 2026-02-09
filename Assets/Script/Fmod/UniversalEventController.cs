@@ -96,8 +96,8 @@ public class UniversalEventController : MonoBehaviour
     [SerializeField] private bool toggleRelease;
     [SerializeField] private bool positionStatic;
     public bool is3DEvent = false;
-    
     private bool initiated;
+    
     [SerializeField] private bool debugMode;
     [Tooltip("Debug Initiate Method.")]
     [SerializeField] private bool dbInit;
