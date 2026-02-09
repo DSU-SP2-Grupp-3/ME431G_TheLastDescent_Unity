@@ -6,5 +6,5 @@ public class AI : MonoBehaviour
     private WorldAgent agent;
     [SerializeField]
     private BehaviourDefinition behaviourDefinition;
-}
 
+}
