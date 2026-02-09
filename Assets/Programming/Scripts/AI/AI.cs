@@ -6,4 +6,5 @@ public class AI : MonoBehaviour
     [SerializeField] private AIAttack attackBehaviour;
     [SerializeField] private AiMovement movementBehaviour;
     [SerializeField] private WorldAgent agent;
+    
 }
