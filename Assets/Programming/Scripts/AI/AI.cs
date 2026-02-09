@@ -3,8 +3,8 @@ using UnityEngine;
 public class AI : MonoBehaviour
 {
     [Header("Scriptable Objects")] 
-    [SerializeField] private AiAttack attackBehaviour;
-    [SerializeField] private AiMovement movementBehaviour;
+    [SerializeField] private AIAttack attackBehaviour;
+    [SerializeField] private AIMovement movementBehaviour;
     [SerializeField] private WorldAgent agent;
     
 

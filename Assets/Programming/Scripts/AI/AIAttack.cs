@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "AIAttack", menuName = "Scriptable Objects/AIAttack")]
-public class AiAttack : ScriptableObject, CommandProvider 
+public class AIAttack : ScriptableObject, CommandProvider 
 {
     protected virtual void Attack(int Damage, float Probability)
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AiBasicMelee : AiAttack
+public class AIBasicMelee : AIAttack
 {
     protected override void Attack(int Damage, float Probability)
     {
