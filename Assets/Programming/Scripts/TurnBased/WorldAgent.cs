@@ -29,6 +29,9 @@ public class WorldAgent : MonoBehaviour
     /// True if this agent should enter into the turn order when turn based mode is activated
     /// </summary>
     private bool active;
+    private Locator<ModeSwitcher> modeSwitcher; 
+    [NonSerialized] public Locator<PlayerManager> agentManager;
+    
     private Queue<Command> commandQueue;
     private Command currentlyExecutingCommand;
     private Coroutine currentExecutingCommandCoroutine;
