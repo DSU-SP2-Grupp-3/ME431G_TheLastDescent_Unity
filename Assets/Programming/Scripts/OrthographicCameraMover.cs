@@ -14,6 +14,6 @@ public class OrthographicCameraMover : MonoBehaviour
     
     private void Update()
     {
-        transform.position = targetGameObject.position + offset;
+        //transform.position = targetGameObject.position + offset;
     }
 }
