@@ -21,8 +21,13 @@ public class AI : MonoBehaviour
     private void Update()
     {
         Movement();
+        DealDamage();
     }
 
+    private void DealDamage()
+    {
+        playerManager.Get().damageManager.DealDamage(3, gameObject);
+    }
     private void Movement()
     {
         playerPositions = playerManager.Get().GetPlayerPositions();

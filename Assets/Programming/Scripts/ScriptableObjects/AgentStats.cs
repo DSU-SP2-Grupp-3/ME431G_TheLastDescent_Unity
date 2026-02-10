@@ -5,10 +5,10 @@ public class AgentStats : ScriptableObject
 {
     [SerializeField]
     private float initHitPoints, initActionPoints, initMovement, initMovementCostModifier;
-    public float hitPoints { get; private set; }
-    public float actionPoints { get; private set; }
-    public float movement { get; private set; }
-    public float movementCostModifier { get; private set; }
+    public float hitPoints { get; set; }
+    public float actionPoints { get; set; }
+    public float movement { get; set; }
+    public float movementCostModifier { get; set; }
 
     public AgentStats Clone()
     {
