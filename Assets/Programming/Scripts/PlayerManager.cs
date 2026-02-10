@@ -36,7 +36,7 @@ public class PlayerManager : Service<PlayerManager>
         {
             // Debug.Log($"Select {playerAgent.name}");
             selectedPlayer = playerAgent;
-            cameraMover.targetGameObject = playerAgent.cameraFocusTransform;
+            // cameraMover.targetGameObject = playerAgent.cameraFocusTransform;
             // todo: camera should move smoothly toward target transform and not follow animations on target -se
         }
     }
