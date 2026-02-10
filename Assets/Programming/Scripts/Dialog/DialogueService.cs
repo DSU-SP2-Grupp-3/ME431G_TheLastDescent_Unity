@@ -14,9 +14,6 @@ public class DialogueService : Service<DialogueService>
     string WrittenSentence = "";
     private Coroutine ClickCheck = null;
     private bool skipping;
-    private Locator<DialogueService> dialogueService;
-    [SerializeField]
-    private DialogueScriptable tempDialogueScriptable;
     [SerializeField]
     private TextMeshProUGUI textField;
     [SerializeField]
@@ -25,13 +22,11 @@ public class DialogueService : Service<DialogueService>
     private Image portrait;
 
 
-    void Start()
+    private void Awake()
     {
         Register();
-        //-Ma. For testing purposes, I call this here.
-        InitializeDialouge(tempDialogueScriptable.GetDialogues());
     }
-    private void InitializeDialouge(Dialogue[] dialogues)
+    public void InitializeDialouge(Dialogue[] dialogues)
     {
         this.dialogues.Clear();
         foreach (Dialogue dialogue in dialogues)
@@ -120,9 +115,5 @@ public class DialogueService : Service<DialogueService>
     private void EndDialogue()
     {
         //-Ma. Ran dialogue
-    }
-    void OnDisable()
-    {
-        //Unregister
     }
 }
