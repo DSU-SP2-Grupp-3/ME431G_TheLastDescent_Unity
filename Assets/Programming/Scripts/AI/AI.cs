@@ -30,5 +30,6 @@ public class AI : MonoBehaviour
         NavMeshPath path = behaviourDefinition.FetchPath(agent.navMeshAgent, playerPositions);
         MoveCommand aiMovement = new MoveCommand(path, agent); 
         agent.QueueCommand(aiMovement);
+        agent.ForceStartCommandQueueExecution();
     }
 }
