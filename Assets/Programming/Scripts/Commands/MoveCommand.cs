@@ -4,7 +4,6 @@ using UnityEngine.AI;
 
 public class MoveCommand : Command
 {
-    // todo: -se: borde inte vara hårdkodad, borde bero på hur långt man går
     public override float cost
     {
         get
@@ -29,9 +28,14 @@ public class MoveCommand : Command
     {
         this.toPosition = toPosition;
         agentPath = new();
-        invokingAgent.navMeshAgent.CalculatePath(toPosition, agentPath);
-        possible = agentPath.status == NavMeshPathStatus.PathComplete;
-    }
+        possible = invokingAgent.navMeshAgent.CalculatePath(toPosition, agentPath);
+    } 
+    
+    public MoveCommand(NavMeshPath path, WorldAgent invokingAgent) : base(invokingAgent)
+    {
+        agentPath = path;
+        possible = path.status == NavMeshPathStatus.PathComplete;
+    } 
 
     public override IEnumerator Execute()
     {
