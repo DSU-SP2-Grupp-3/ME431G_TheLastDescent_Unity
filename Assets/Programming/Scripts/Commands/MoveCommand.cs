@@ -4,7 +4,6 @@ using UnityEngine.AI;
 
 public class MoveCommand : Command
 {
-    // todo: -se: borde inte vara hårdkodad, borde bero på hur långt man går
     public override float cost
     {
         get

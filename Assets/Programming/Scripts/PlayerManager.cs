@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -76,5 +77,10 @@ public class PlayerManager : Service<PlayerManager>
                 turnBased.Invoke();
                 break;
         }
+    }
+
+    public List<Vector3> GetPlayerPositions()
+    {
+        return players.Select(w => w.transform.position).ToList();
     }
 }
