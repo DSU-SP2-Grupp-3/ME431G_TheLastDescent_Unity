@@ -16,10 +16,10 @@ public class DialogueCommand : Command
     public override IEnumerator Execute()
     {
         dialogueServiceLocator = new();
-        yield return null;
         if (dialogueServiceLocator.TryGet(out dialogueService))
         {
-            dialogueService.InitializeDialouge(dialogueScriptable.GetDialogues());
+            yield return dialogueService.StartCoroutine(dialogueService.InitializeDialouge(dialogueScriptable.GetDialogues()));
+            Debug.Log("Done");
         }
 
     }

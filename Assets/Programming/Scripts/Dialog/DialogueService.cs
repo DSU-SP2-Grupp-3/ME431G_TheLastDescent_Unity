@@ -20,21 +20,27 @@ public class DialogueService : Service<DialogueService>
     private TextMeshProUGUI nameField;
     [SerializeField]
     private Image portrait;
+    [SerializeField]
+    private Animator ani;
+    //Temp fix
+    public bool isDone;
 
 
     private void Awake()
     {
         Register();
     }
-    public void InitializeDialouge(Dialogue[] dialogues)
+    public IEnumerator InitializeDialouge(Dialogue[] dialogues)
     {
+        ani.Play("DialogueStart");
         this.dialogues.Clear();
         foreach (Dialogue dialogue in dialogues)
         {
             this.dialogues.Enqueue(dialogue);
         }
 
-        StartCoroutine(RunDialogue());
+        yield return StartCoroutine(RunDialogue());
+        ani.Play("DialogueEnd");
     }
 
     private IEnumerator RunDialogue()
