@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class AI : MonoBehaviour
 {
@@ -9,8 +11,17 @@ public class AI : MonoBehaviour
     private BehaviourDefinition behaviourDefinition;
 
     private List<Vector3> playerPositions;
+
+    private void Update()
+    {
+        Movement();
+    }
+
     private void Movement()
-    { 
-        agent.navMeshAgent.SetPath(behaviourDefinition.FetchNearestPlayer(agent.navMeshAgent, playerPositions));
+    {
+        //sets the ais agent movement
+        NavMeshPath path = behaviourDefinition.FetchPath(agent.navMeshAgent, playerPositions);
+        MoveCommand aiMovement = new MoveCommand(path, agent); 
+        agent.QueueCommand(aiMovement);
     }
 }

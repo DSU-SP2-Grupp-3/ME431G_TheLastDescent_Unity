@@ -12,7 +12,7 @@ public class BehaviourDefinition : ScriptableObject
     [SerializeField] private AIBehaviourType behaviourType;
 
     #region Fetch Nearest Player
-    public NavMeshPath FetchNearestPlayer(NavMeshAgent agent, List<Vector3> playerPositions)
+    public NavMeshPath FetchPath(NavMeshAgent agent, List<Vector3> playerPositions)
     {
         //this should return the path to the closest player. it just needs to be fed a navmesh agent and the player itself
         NavMeshPath outputPath = new NavMeshPath();
