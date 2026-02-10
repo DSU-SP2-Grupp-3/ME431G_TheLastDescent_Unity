@@ -1,6 +1,8 @@
+using System;
 using FMOD;
 using FMOD.Studio;
 using FMODUnity;
+using Unity.VisualScripting;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 using STOP_MODE = FMOD.Studio.STOP_MODE;
@@ -86,6 +88,7 @@ public class UniversalEventController : MonoBehaviour
     
     //Misc
     private GameObject aM;
+    private Locator<AudioManager> aMLocator = new();
     private AudioManager audioManager;
     public EventInstance SfxInstance;
     
@@ -140,9 +143,9 @@ public class UniversalEventController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        aM = GameObject.FindGameObjectWithTag("AudioManager");
-        audioManager = aM.GetComponent<AudioManager>();
-        
+        if(aMLocator.TryGet(out AudioManager audioManager)){this.audioManager = audioManager;}
+        else {new Exception("No audioManager registered in scene"); return;}
+
         CreateInstance();
         if (playOnStart)
         {

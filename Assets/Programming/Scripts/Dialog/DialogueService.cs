@@ -4,6 +4,7 @@ using TMPro;
 using System.Collections;
 using System;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class DialogueService : Service<DialogueService>
 {
@@ -24,7 +25,7 @@ public class DialogueService : Service<DialogueService>
     private Animator ani;
     //Temp fix
     public bool isDone;
-
+    public UnityEvent unityEvent;
 
     private void Awake()
     {
@@ -99,6 +100,7 @@ public class DialogueService : Service<DialogueService>
                 skipping = false;
                 yield break;
             }
+            unityEvent.Invoke();
             WrittenSentence += letters.Dequeue();
             textField.text = WrittenSentence;
             yield return new WaitForSeconds(0.04f);
