@@ -6,10 +6,15 @@ public class Interactable : MonoBehaviour
     // todo: fix if two players interact with the same object on the same turn
     
     [SerializeField]
-    private WorldAgent interactableAgent;
+    protected WorldAgent interactableAgent;
     [SerializeField]
-    private CommandWrapper[] playerCommands, interactableCommands;
-    
+    protected CommandWrapper[] playerCommands, interactableCommands;
+
+    public void InteractRemotely()
+    {
+        QueueInteractablesCommand();
+    }
+
     public void InteractRealTime(WorldAgent agent)
     {
         Command[] unwrappedCommands = playerCommands.Select(c => c.UnwrapCommand(agent)).ToArray();
@@ -32,7 +37,7 @@ public class Interactable : MonoBehaviour
         interactableAgent.ForceStartCommandQueueExecution();
     }
 
-    private Command[] UnwrapCommands(CommandWrapper[] wrappers, WorldAgent agent)
+    protected Command[] UnwrapCommands(CommandWrapper[] wrappers, WorldAgent agent)
     {
         return wrappers.Select(c => c.UnwrapCommand(agent)).ToArray();
     }

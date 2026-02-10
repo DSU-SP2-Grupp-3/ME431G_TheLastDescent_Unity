@@ -1,4 +1,5 @@
 ﻿using System;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class InteractionGroup : MonoBehaviour
@@ -6,7 +7,11 @@ public class InteractionGroup : MonoBehaviour
     [SerializeField]
     private Interactable[] interactables;
     private int interactionIndex;
-    
+
+    public void RemoteInteraction()
+    {
+        interactables[interactionIndex].InteractRemotely();
+    }
 
     public void SetInteractionIndex(int index)
     {
@@ -22,5 +27,4 @@ public class InteractionGroup : MonoBehaviour
     {
         interactables[interactionIndex].InteractTurnBased(agent);
     }
-
 }
