@@ -8,7 +8,11 @@ public class WorldAgent : MonoBehaviour
 {
     public enum Team
     {
-        Player, Ally, Enemy, Neutral 
+        Player,
+        Ally,
+        Enemy,
+        Neutral,
+        Interactable
     }
 
     public Team team;
@@ -16,19 +20,24 @@ public class WorldAgent : MonoBehaviour
     public Animator animator;
     public NavMeshAgent navMeshAgent;
     public Transform cameraFocusTransform;
-    
+
+    [SerializeField]
+    private AgentStats stats;
+    public AgentStats localStats { get; private set; }
+
     /// <summary>
     /// True if this agent should enter into the turn order when turn based mode is activated
     /// </summary>
     private bool active;
     private Locator<ModeSwitcher> modeSwitcher;
-        
+
     private Queue<Command> commandQueue;
     private Command currentlyExecutingCommand;
     private Coroutine currentExecutingCommandCoroutine;
-    
+
     private void Awake()
     {
+        if (stats) localStats = stats.Clone();
         commandQueue = new();
         modeSwitcher = new();
         if (team == Team.Player) active = true;
@@ -40,18 +49,12 @@ public class WorldAgent : MonoBehaviour
         StartCoroutine(ExecuteCommandQueue());
     }
 
-    private void OnDestroy()
-    {
-        modeSwitcher.Get().OnEnterTurnBased -= RegisterInTurnManager;
-    }
-
     private void RegisterInTurnManager(TurnManager turnManager)
     {
-        if (active)
+        if (active && team != Team.Interactable)
         {
             turnManager.RegisterAgentInTeam(team, this);
             InterruptCommandQueue();
-            
         }
     }
 
@@ -60,13 +63,33 @@ public class WorldAgent : MonoBehaviour
         commandQueue.Enqueue(command);
     }
 
-    public void OverwriteCommand(Command command)
+    public void QueueCommands(Command[] commands)
+    {
+        foreach (Command command in commands)
+        {
+            commandQueue.Enqueue(command);
+        }
+    }
+
+    public void OverwriteQueue(Command command)
     {
         InterruptCommandQueue();
-        commandQueue.Enqueue(command);
+        QueueCommand(command);
         StartCoroutine(ExecuteCommandQueue());
     }
 
+    public void OverwriteQueue(Command[] commands)
+    {
+        InterruptCommandQueue();
+        QueueCommands(commands);
+        StartCoroutine(ExecuteCommandQueue());
+    }
+
+    public void ForceStartCommandQueueExecution()
+    {
+        StartCoroutine(ExecuteCommandQueue());
+    }
+    
     private void InterruptCommandQueue()
     {
         currentlyExecutingCommand?.Break();
@@ -74,7 +97,7 @@ public class WorldAgent : MonoBehaviour
         StopAllCoroutines();
         commandQueue.Clear();
     }
-    
+
     public IEnumerator ExecuteCommandQueue()
     {
         while (commandQueue.TryDequeue(out Command command))

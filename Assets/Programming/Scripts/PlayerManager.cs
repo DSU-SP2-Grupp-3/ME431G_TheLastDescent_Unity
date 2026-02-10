@@ -1,13 +1,14 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
     [SerializeField]
     private WorldAgent[] players;
-    [SerializeField]
+    [SerializeField] 
     private OrthographicCameraMover cameraMover;
-    
+
     private Locator<InputManager> inputManager;
     private Locator<ModeSwitcher> modeSwitcher;
 
@@ -19,6 +20,7 @@ public class PlayerManager : MonoBehaviour
         modeSwitcher = new();
         inputManager.Get().ClickedOnPlayer += SelectPlayer;
         inputManager.Get().MovePlayerInput += MoveSelectedPlayer;
+        inputManager.Get().ClickedEnvironment += ClickedEnvironment;
         SelectPlayer(players[0]);
     }
 
@@ -37,20 +39,45 @@ public class PlayerManager : MonoBehaviour
     {
         MoveCommand movePlayer = new MoveCommand(position, selectedPlayer);
         if (!movePlayer.possible) return;
-        
+
+        RealTimeOrTurnBased(
+            () => selectedPlayer.OverwriteQueue(movePlayer),
+            () => selectedPlayer.QueueCommand(movePlayer)
+        );
+    }
+
+    private void ClickedEnvironment(GameObject go)
+    {
+        InteractionGroup group = go.GetComponentInParent<InteractionGroup>();
+        if (group)
+        {
+            RealTimeOrTurnBased(
+                () => group.InteractRealTime(selectedPlayer),
+                () => group.InteractTurnBased(selectedPlayer)
+            );
+        }
+        else if (go.TryGetComponent<Interactable>(out Interactable interactable))
+        {
+            RealTimeOrTurnBased(
+                () => interactable.InteractRealTime(selectedPlayer),
+                () => interactable.InteractTurnBased(selectedPlayer)
+            );
+        }
+    }
+    // undo command for selected player
+    // attack enemy
+    //
+
+    private void RealTimeOrTurnBased(Action realTime, Action turnBased)
+    {
         switch (modeSwitcher.Get().mode)
         {
             case RoundClock.ProgressMode.RealTime:
-                selectedPlayer.OverwriteCommand(movePlayer);
+                realTime.Invoke();
                 break;
             case RoundClock.ProgressMode.TurnBased:
-                selectedPlayer.QueueCommand(movePlayer);
+                turnBased.Invoke();
                 break;
         }
     }
-    
-    // undo command for selected player
-    // attack enemy
-    // 
-    
 }

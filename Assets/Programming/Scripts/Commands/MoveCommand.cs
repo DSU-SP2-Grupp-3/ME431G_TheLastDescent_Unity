@@ -14,39 +14,34 @@ public class MoveCommand : Command
             {
                 length += (agentPath.corners[i] - agentPath.corners[i - 1]).magnitude;
             }
-            return length * costPerUnit;
+            return length * invokingAgent.localStats.movementCostModifier;
         }
     }
 
-    private NavMeshAgent navMeshAgent;
     private Vector3 toPosition;
-    private Animator animator;
-    private float costPerUnit;
-    
+
     public readonly NavMeshPath agentPath;
     public readonly bool possible;
 
     private const float playEndAnimationDistance = 0.5f;
-    
-    public MoveCommand(Vector3 toPosition, WorldAgent agent, float costPerUnit = 1f)
+
+    public MoveCommand(Vector3 toPosition, WorldAgent invokingAgent) : base(invokingAgent)
     {
         this.toPosition = toPosition;
-        navMeshAgent = agent.navMeshAgent;
-        animator = agent.animator;
         agentPath = new();
-        possible = navMeshAgent.CalculatePath(toPosition, agentPath);
+        invokingAgent.navMeshAgent.CalculatePath(toPosition, agentPath);
+        possible = agentPath.status == NavMeshPathStatus.PathComplete;
     }
 
     public override IEnumerator Execute()
     {
         // do not do anything if the path is not valid -se
-        if (!possible) yield return null;
+        if (!possible) yield break;
 
-        navMeshAgent.SetPath(agentPath);
-        animator.SetTrigger("StartMoving");
-        yield return new WaitUntil(() => navMeshAgent.remainingDistance <= playEndAnimationDistance);
-        animator.SetTrigger("StopMoving");
-
+        invokingAgent.navMeshAgent.SetPath(agentPath);
+        invokingAgent.animator.SetTrigger("StartMoving");
+        yield return new WaitUntil(() => invokingAgent.navMeshAgent.remainingDistance <= playEndAnimationDistance);
+        invokingAgent.animator.SetTrigger("StopMoving");
     }
 
     public override void Visualize()
@@ -56,8 +51,8 @@ public class MoveCommand : Command
 
     public override void Break()
     {
-        animator.SetTrigger("StopMoving");
-        navMeshAgent.CalculatePath(navMeshAgent.transform.position, agentPath);
-        navMeshAgent.SetPath(agentPath);
+        invokingAgent.animator.SetTrigger("StopMoving");
+        invokingAgent.navMeshAgent.CalculatePath(invokingAgent.navMeshAgent.transform.position, agentPath);
+        invokingAgent.navMeshAgent.SetPath(agentPath);
     }
 }
