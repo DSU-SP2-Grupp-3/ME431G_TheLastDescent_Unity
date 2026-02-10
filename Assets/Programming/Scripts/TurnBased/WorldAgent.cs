@@ -29,15 +29,13 @@ public class WorldAgent : MonoBehaviour
     /// True if this agent should enter into the turn order when turn based mode is activated
     /// </summary>
     private bool active;
-    private Locator<ModeSwitcher> modeSwitcher;
-    private Locator<PlayerManager> agentManager;
-
     private Queue<Command> commandQueue;
     private Command currentlyExecutingCommand;
     private Coroutine currentExecutingCommandCoroutine;
 
     private void Awake()
     {
+        agentManager = new Locator<PlayerManager>();
         if (stats) localStats = stats.Clone();
         commandQueue = new();
         modeSwitcher = new();
@@ -46,7 +44,8 @@ public class WorldAgent : MonoBehaviour
 
     private void Start()
     {
-        agentManager = new Locator<PlayerManager>();
+        //subscribe TakeDamage to the DamageManager of the PlayerManager
+        agentManager.Get().damageManager.DealDamageEvent += TakeDamage;
         modeSwitcher.Get().OnEnterTurnBased += RegisterInTurnManager;
         StartCoroutine(ExecuteCommandQueue());
     }
@@ -114,13 +113,7 @@ public class WorldAgent : MonoBehaviour
 
     // visualise command queue /se
     // can afford new command /se
-
-    private void OnEnable()
-    {
-        //subscribe TakeDamage to the DamageManager of the PlayerManager
-        agentManager.Get().damageManager.DealDamageEvent += TakeDamage;
-    }
-
+    
     private void OnDisable()
     {
         //unsubscribe TakeDamage to the DamageManager of the PlayerManager
@@ -132,8 +125,8 @@ public class WorldAgent : MonoBehaviour
     {
         if (target == gameObject)
         {
-            Debug.Log($"I have taken {damage}, hp:{localStats.hitPoints} :D", this); 
             localStats.hitPoints -= damage;
+            Debug.Log($"I have taken {damage}, hp:{localStats.hitPoints} :D", this); 
         }
     }
 }
