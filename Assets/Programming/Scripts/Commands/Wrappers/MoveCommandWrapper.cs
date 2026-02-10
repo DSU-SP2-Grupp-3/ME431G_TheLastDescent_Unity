@@ -7,6 +7,7 @@ public class MoveCommandWrapper : CommandWrapper
 
     public override Command UnwrapCommand(WorldAgent agent)
     {
+        Debug.Log(transform.position + relativePosition);
         return new MoveCommand(transform.position + relativePosition, agent);
     }
 }

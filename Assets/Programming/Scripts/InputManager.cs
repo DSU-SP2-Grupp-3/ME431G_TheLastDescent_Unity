@@ -37,7 +37,7 @@ public class InputManager : Service<InputManager>
 
     private void ProcessClick(RaycastHit hit)
     {
-        if (HitLayer(hit, "Environment"))
+        if (HitLayer(hit, "Interactable"))
         {
             ClickedEnvironment?.Invoke(hit.collider.gameObject);
         }
