@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor.Rendering;
 using UnityEngine;
@@ -6,12 +7,25 @@ using UnityEngine.AI;
 [CreateAssetMenu(fileName = "NewBehaviourDefintion", menuName = "AI/Behaviour Definition", order = 0)]
 public class BehaviourDefinition : ScriptableObject
 {
-    [SerializeField] private float attackRange, hitPoints, movement;
-    [SerializeField] [Min(0)] private float minDamage;
-    [SerializeField] [Min(1)] private float maxDamage;
+    [SerializeField]
+    private Stats stats;
     [SerializeField] private AIBehaviourType behaviourType;
 
-    #region Fetch Nearest Player
+    public float attackRange => stats.attackRange;
+    public float hitPoints => stats.hitPoints;
+    public float movement => stats.movement;
+    public float activationDistance => stats.activationDistance;
+
+    public AIBehaviourType.BehaviourResults GetIdleBehaviourResults(WorldAgent agent)
+    {
+        return behaviourType.GetIdleBehaviourResults(stats, agent);
+    }
+
+    public AIBehaviourType.BehaviourResults GetActiveBehaviourResults(WorldAgent agent)
+    {
+        return behaviourType.GetActiveBehaviourResults(stats, agent);
+    }
+    
     public NavMeshPath FetchPath(NavMeshAgent agent, List<Vector3> playerPositions)
     {
         //this should return the path to the closest player. it just needs to be fed a navmesh agent and the player itself
@@ -54,6 +68,15 @@ public class BehaviourDefinition : ScriptableObject
 
         return output;
     }
-    #endregion
-    
+
+    [Serializable]
+    public struct Stats
+    {
+        public float attackRange, hitPoints, movement;
+        [Tooltip("The distance within which if the agent can see a player it should register itself with the turn manager")]
+        public float activationDistance;
+        [Min(0)] public float minDamage;
+        [Min(1)] public float maxDamage;
+        public float wanderingRadius;
+    }
 }

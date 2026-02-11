@@ -14,6 +14,8 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
 
     public RoundClock.ProgressMode mode => roundClock.Get().currentMode;
 
+    private bool automaticTurnBasedEntrance;
+    
     private void Awake()
     {
         Register(); 
@@ -21,35 +23,41 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
         turnManager = GetComponent<TurnManager>();
     }
 
-    private void Start()
+    private void EnterTurnBased()
     {
-        Locator<ToggleTurnBasedButton> toggleTurnBasedButton = new();
-        toggleTurnBasedButton.Get().OnToggleTurnBased += toggledOn =>
-        {
-            if (toggledOn) EnterTurnBased();
-            else EnterRealTime();
-        };
-    }
-
-    public void EnterTurnBased()
-    {
+        Debug.Log("Enter turn based");
         OnEnterTurnBased?.Invoke(turnManager);
         roundClock.Get().EnterTurnBased();
         turnManager.Activate();
     }
 
-    public void EnterRealTime()
+    private void EnterRealTime()
     {
+        Debug.Log("Enter real time");
         OnEnterRealTime?.Invoke(turnManager);
         roundClock.Get().EnterRealTime();
         turnManager.Deactivate();
     }
+
+    public bool TryEnterTurnBased(bool automatic = false)
+    {
+        automaticTurnBasedEntrance = automatic;
+        EnterTurnBased();
+        return true;
+    }
+
+    public bool TryEnterRealTime(bool forced = false)
+    {
+        if (!forced && automaticTurnBasedEntrance) return false;
+        else if (forced) automaticTurnBasedEntrance = false;
+        EnterRealTime();
+        return true;
+    }
+    
 
     public void Toggle()
     {
         if (mode == RoundClock.ProgressMode.RealTime) EnterTurnBased();
         if (mode == RoundClock.ProgressMode.TurnBased) EnterRealTime();
     }
-    
-    public void Nothing() {}
 }

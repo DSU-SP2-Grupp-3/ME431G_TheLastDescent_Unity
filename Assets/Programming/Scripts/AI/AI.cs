@@ -14,15 +14,35 @@ public class AI : MonoBehaviour
     [Tooltip("Temporary!! how much damage it deals when it attacks")] public int damageAmount;
     private List<Vector3> playerPositions;
 
-    
+    private Locator<RoundClock> roundClock;
+    private Locator<AgentManager> agentManager;
+
+    private List<NavMeshAgent> playerNavMeshes;
+
+    private void Start()
+    {
+        roundClock = new();
+        agentManager = new();
+        roundClock.Get().RoundProgressed += RoundUpdate;
+        playerNavMeshes = agentManager.Get().GetPlayerNavMeshAgents();
+    }
+
+    private void RoundUpdate(int round)
+    {
+        if (!agent.active) // perform idle behaviour
+        {
+            Command[] idleCommands = behaviourDefinition.GetIdleBehaviourResults(agent).GetCommands();
+            agent.OverwriteQueue(idleCommands);
+        }
+    }
 
     private void Update()
     {
-        Movement();
-        DealDamage();
-        
-        //should be removed! forces all commands to be run
-        agent.ForceStartCommandQueueExecution();
+        if (!agent.active && CheckIfShouldBeActive())
+        {
+            Debug.Log("activate");
+            agent.Activate();
+        }
     }
     
     private void Movement()
@@ -35,9 +55,24 @@ public class AI : MonoBehaviour
         
         //create and queue a movecommand using the path and the agent
         MoveCommand aiMovement = new MoveCommand(path, agent); 
-        agent.QueueCommand(aiMovement);
+        agent.OverwriteQueue(aiMovement);
         
         
+    }
+
+    private bool CheckIfShouldBeActive()
+    {
+        foreach (NavMeshAgent playerNavMesh in playerNavMeshes)
+        {
+            bool unobstructed = !agent.navMeshAgent.Raycast(playerNavMesh.transform.position, out NavMeshHit hit);
+            float distance = (transform.position - playerNavMesh.transform.position).magnitude;
+            if (unobstructed && distance < behaviourDefinition.activationDistance)
+            {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     private NavMeshPath TrimPathToMoveRange(NavMeshPath inputPath, float moveDistance)

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class AttackCommand : Command
 {
-    protected WorldAgent invokingAgent;
     public override float cost { get; }
 
     public override IEnumerator Execute()
@@ -18,7 +17,7 @@ public class AttackCommand : Command
     {
         
     }
-    public virtual void Visualize() { }
+    public override void Visualize() { }
 
     public AttackCommand(WorldAgent invokingAgent) : base(invokingAgent)
     {

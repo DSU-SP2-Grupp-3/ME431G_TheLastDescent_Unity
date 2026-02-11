@@ -3,18 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WorldAgentTeam
+public class WorldAgentGroup
 {
     private List<WorldAgent> agents;
 
     public int Count => agents.Count;
+
+    public WorldAgent.Team team => agents[0].team;
     
-    public WorldAgentTeam()
+    public WorldAgentGroup()
     {
         agents = new();
     }
 
-    public WorldAgentTeam(WorldAgent initialAgent)
+    public WorldAgentGroup(WorldAgent initialAgent)
     {
         agents = new() { initialAgent };
     }
@@ -24,7 +26,7 @@ public class WorldAgentTeam
         agents.Add(agent);
     }
     
-    public List<IEnumerator> GetTeamCommandQueues()
+    public List<IEnumerator> GetGroupCommandQueues()
     {
         List<IEnumerator> queues = new();
         foreach (WorldAgent agent in agents)
@@ -34,6 +36,4 @@ public class WorldAgentTeam
 
         return queues;
     }
-    
-    
 }

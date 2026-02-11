@@ -7,19 +7,27 @@ using UnityEngine.Events;
 
 public class TurnManager : MonoBehaviour
 {
-    private Dictionary<int, WorldAgentTeam> teams;
+    private Dictionary<int, WorldAgentGroup> groups;
     
     private Coroutine cycle;
-    public WorldAgentTeam activeTeam { get; private set; }
+    public WorldAgentGroup activeGroup { get; private set; }
     
     private bool playerReady;
 
     [SerializeField]
     private Events turnManagerEvents;
+
+    private Locator<RoundClock> roundClock;
+    private Locator<AgentManager> agentManager;
+    private Locator<ModeSwitcher> modeSwitcher;
     
     private void Awake()
     {
-        teams = new();
+        groups = new();
+        roundClock = new();
+        agentManager = new();
+        modeSwitcher = new();
+
     }
 
     private void Start()
@@ -27,7 +35,7 @@ public class TurnManager : MonoBehaviour
         Locator<ReadyButton> readyButton = new();
         readyButton.Get().ReadyButtonPressed += () => playerReady = true;
     }
-
+    
     public void Activate()
     {
         cycle = StartCoroutine(TurnCycle());
@@ -36,14 +44,14 @@ public class TurnManager : MonoBehaviour
     public void Deactivate()
     {
         if (cycle != null) StopCoroutine(cycle);
-        teams.Clear();
+        groups.Clear();
     }
 
     public void RegisterAgentInTeam(int team, WorldAgent agent)
     {
-        if (!teams.TryAdd(team, new WorldAgentTeam(agent)))
+        if (!groups.TryAdd(team, new WorldAgentGroup(agent)))
         {
-            teams[team].AddAgent(agent);
+            groups[team].AddAgent(agent);
         }
     }
 
@@ -52,9 +60,21 @@ public class TurnManager : MonoBehaviour
         RegisterAgentInTeam((int)team, agent);
     }
 
-    private List<WorldAgentTeam> ConvertTeamsToList()
+    public void RegisterAgentAsOneManTeam(WorldAgent agent)
     {
-        return teams.Values.ToList();
+        if (groups.Count == 0)
+        {
+            RegisterAgentInTeam(-1, agent);
+        }
+        else
+        {
+            int min = groups.Keys.Min();
+        }
+    }
+
+    private List<WorldAgentGroup> ConvertTeamsToList()
+    {
+        return groups.Values.ToList();
     }
 
     private IEnumerator TurnCycle()
@@ -66,14 +86,20 @@ public class TurnManager : MonoBehaviour
             
             turnManagerEvents.StartExecutingTurn?.Invoke();
             
-            foreach (WorldAgentTeam team in ConvertTeamsToList())
+            foreach (WorldAgentGroup group in ConvertTeamsToList())
             {
-                activeTeam = team;
-                yield return WaitForAll(team.GetTeamCommandQueues());
+                activeGroup = group;
+                yield return WaitForAll(group.GetGroupCommandQueues());
             }
-            activeTeam = null;
+            activeGroup = null;
             
             turnManagerEvents.FinishExecutingTurn?.Invoke();
+
+            if (AllActiveEnemiesDead())
+            {
+                // force entrance into real time when all enemies have been defeated
+                modeSwitcher.Get().TryEnterRealTime(true);
+            }
         }
     }
     
@@ -98,6 +124,16 @@ public class TurnManager : MonoBehaviour
             yield return StartCoroutine(coroutine);
             coroutineTally--;
         }
+    }
+
+    private bool AgentIsNotDead(WorldAgent agent) => !agent.dead;
+    private bool AgentIsActive(WorldAgent agent) => agent.active;
+    private bool AgentIsEnemy(WorldAgent agent) => agent.team == WorldAgent.Team.Enemy;
+    
+    private bool AllActiveEnemiesDead()
+    {
+        // if there are any enemy agents that are active and not dead return false, otherwise true
+        return !agentManager.Get().GetFilteredAgents(AgentIsNotDead, AgentIsActive, AgentIsEnemy).Any();
     }
     
 

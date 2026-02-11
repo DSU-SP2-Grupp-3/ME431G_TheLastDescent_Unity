@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 
-public class PlayerManager : Service<PlayerManager>
+public class AgentManager : Service<AgentManager>
 {
     [SerializeField]
     private WorldAgent[] players;
+    private List<WorldAgent> allAgents;
     [SerializeField] 
     private OrthographicCameraMover cameraMover;
 
@@ -19,16 +21,23 @@ public class PlayerManager : Service<PlayerManager>
     private void Awake()
     {
         Register();
+        allAgents = new();
+        inputManager = new();
+        modeSwitcher = new();
     }
 
     private void Start()
     {
-        inputManager = new();
-        modeSwitcher = new();
-        inputManager.Get().ClickedOnPlayer += SelectPlayer;
-        inputManager.Get().MovePlayerInput += MoveSelectedPlayer;
-        inputManager.Get().ClickedEnvironment += ClickedEnvironment;
+        InputManager im = inputManager.Get();
+        im.ClickedOnPlayer += SelectPlayer;
+        im.MovePlayerInput += MoveSelectedPlayer;
+        im.ClickedEnvironment += ClickedEnvironment;
         SelectPlayer(players[0]);
+    }
+    
+    public void RegisterAgent(WorldAgent agent) 
+    {
+        allAgents.Add(agent);    
     }
 
     private void SelectPlayer(WorldAgent playerAgent)
@@ -91,5 +100,25 @@ public class PlayerManager : Service<PlayerManager>
     public List<Vector3> GetPlayerPositions()
     {
         return players.Select(w => w.transform.position).ToList();
+    }
+
+    public List<NavMeshAgent> GetPlayerNavMeshAgents()
+    {
+        return players.Select(w => w.navMeshAgent).ToList();
+    }
+
+    /// <summary>
+    /// Returns an IEnumerable of all world agents that pass all filters
+    /// </summary>
+    /// <param name="predicates">A parameterized list of predicate lambdas</param>
+    /// <returns>An IEnumerable of all agents that pass all filters</returns>
+    public IEnumerable<WorldAgent> GetFilteredAgents(params Func<WorldAgent, bool>[] predicates)
+    {
+        IEnumerable<WorldAgent> matchingAgents = allAgents;
+        foreach (Func<WorldAgent, bool> predicate in predicates)
+        {
+            matchingAgents = matchingAgents.Where(predicate);
+        }
+        return matchingAgents;
     }
 }
