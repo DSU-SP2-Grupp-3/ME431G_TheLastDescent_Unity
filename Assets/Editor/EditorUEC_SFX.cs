@@ -10,15 +10,17 @@ public class EditorUEC_SFX : Editor
    //Enum
    SerializedProperty actionTypeSelectProp;
    SerializedProperty findMethodTypeProp;
-   SerializedProperty parametersProp;
    
    //String/StringArray
-   SerializedProperty objectTagProp;
    SerializedProperty objectTagsProp;
    
    //GameObjects
-   SerializedProperty uecObjectProp;
    SerializedProperty uecObjectsProp;
+   
+   //Structs
+   SerializedProperty commandProp;
+   
+   //Booleans
    
 
    #endregion
@@ -27,28 +29,55 @@ public class EditorUEC_SFX : Editor
    {
       actionTypeSelectProp = serializedObject.FindProperty("action");
       findMethodTypeProp = serializedObject.FindProperty("findMethod");
-      parametersProp = serializedObject.FindProperty("parameters");
-      objectTagProp = serializedObject.FindProperty("objectTag");
       objectTagsProp = serializedObject.FindProperty("objectTags");
-      uecObjectProp = serializedObject.FindProperty("uecObject");
       uecObjectsProp = serializedObject.FindProperty("uecObjects");
+      commandProp = serializedObject.FindProperty("commands");
    }
-
-   private void ShowActionType()
+   private void ShowCommands()
    {
-      EditorGUILayout.PropertyField(actionTypeSelectProp);
-      if (actionTypeSelectProp.enumValueIndex == 0) //Play
+      EditorGUILayout.LabelField("Commands", EditorStyles.boldLabel);
+
+      for (int i = 0; i < commandProp.arraySize; i++)
       {
+         var commandsProp = commandProp.GetArrayElementAtIndex(i);
+         var actionTypeProp = commandsProp.FindPropertyRelative("actionType");
+         var eventParamsProp = commandsProp.FindPropertyRelative("eventParameters");
+         var allowFadeoutProp = commandsProp.FindPropertyRelative("allowFadeout");
+
+         EditorGUILayout.BeginVertical("box");
          
+         commandsProp.isExpanded = EditorGUILayout.Foldout(commandsProp.isExpanded, $"Commands {i}", true);
+
+         if (commandsProp.isExpanded)
+         {
+            EditorGUI.indentLevel++;
+            EditorGUILayout.PropertyField(actionTypeProp);
+
+            if (actionTypeProp.enumValueIndex == 1)
+            {
+               EditorGUILayout.PropertyField(allowFadeoutProp);
+            }
+
+            if (actionTypeProp.enumValueIndex == 2)
+            {
+               EditorGUILayout.PropertyField(eventParamsProp, true);
+            }
+            EditorGUI.indentLevel--;
+         }
+         EditorGUILayout.EndVertical();
       }
-      else if (actionTypeSelectProp.enumValueIndex == 1) //Stop
+      EditorGUILayout.Space();
+      EditorGUILayout.BeginHorizontal();
+      if (GUILayout.Button("Add"))
       {
-         
+         commandProp.arraySize++;
       }
-      else if (actionTypeSelectProp.enumValueIndex == 2) //SetParameter 
+
+      if (GUILayout.Button("Remove"))
       {
-         EditorGUILayout.PropertyField(parametersProp);
+         commandProp.arraySize--;
       }
+      EditorGUILayout.EndHorizontal();
    }
 
    public override void OnInspectorGUI()
@@ -62,14 +91,19 @@ public class EditorUEC_SFX : Editor
       {
          EditorGUILayout.LabelField("GameObject(s)", EditorStyles.boldLabel);
          EditorGUILayout.PropertyField(uecObjectsProp);
+         if (uecObjectsProp.arraySize > 0)
+         {
+            ShowCommands();
+         }
       }
       else if (findMethodTypeProp.enumValueIndex == 1)
       {
-         EditorGUILayout.LabelField("Find Object with Tag(s)", EditorStyles.boldLabel);
-      }
-      else if (findMethodTypeProp.enumValueIndex == 2)
-      {
-         EditorGUILayout.LabelField("Find Objects", EditorStyles.boldLabel);
+         EditorGUILayout.LabelField("Find Object(s) with Tag(s)", EditorStyles.boldLabel);
+         EditorGUILayout.PropertyField(objectTagsProp);
+         if (objectTagsProp.arraySize > 0)
+         {
+            ShowCommands();
+         }
       }
       
       serializedObject.ApplyModifiedProperties();

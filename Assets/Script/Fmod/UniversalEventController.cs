@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using FMOD;
 using FMOD.Studio;
 using FMODUnity;
@@ -32,47 +35,16 @@ public class UniversalEventController : MonoBehaviour
         Interactable
     }
     
-    public enum MusicEventSelect
-    {
-        Test,
-        Test2,
-        Test3,
-        FyraTest
-    }
     
-    public enum CharEventSelect
-    {
-        Test1,
-        Test2,
-    }
-
-    public enum EnemyEventSelect
-    {
-        Test1,
-        Test2,
-        Tjockis,
-    }
-
-    public enum UIEventSelect
-    {
-        Test1,
-        Test2,
-    }
-
-    public enum InterEventSelect
-    {
-        Test1,
-        Test2,
-    }
-
-    public enum AmbienceEventSelect
-    {
-        Ambience1,
-        Ambience2,
-        Amby,
-    }
+    //Lists
+    public List<String> musicEventSelectList = new List<String>();
+    public List<String> charEventSelectList = new List<String>();
+    public List<String> enemyEventSelectList = new List<String>();
+    public List<String> uiEventSelectList = new List<String>();
+    public List<String> interEventSelectList = new List<String>();
+    public List<String> ambienceEventSelectList = new List<String>();
     
-    //Parametrar
+    //Structs
     [System.Serializable]
     public struct EventParameter
     {
@@ -122,27 +94,32 @@ public class UniversalEventController : MonoBehaviour
     [SerializeField] private EventTypeSelect eventTypeSelect;
     [SerializeField] private ActionTypeSelect actionTypeSelect;
     [SerializeField] private SfxTypeSelect sfxTypeSelect;
-    [SerializeField] private MusicEventSelect musicEventSelect;
-    [SerializeField] private CharEventSelect charEventSelect;
-    [SerializeField] private EnemyEventSelect enemyEventSelect;
-    [SerializeField] private UIEventSelect uiEventSelect;
-    [SerializeField] private InterEventSelect interEventSelect;
-    [SerializeField] private AmbienceEventSelect ambienceEventSelect;
     
     //Array
     [SerializeField] private EventParameter[] parameters;
     
     //Intergers
     private int eventIndex;
+    [SerializeField] private int muIndex;
+    [SerializeField] private int ambIndex;
+    [SerializeField] private int charIndex;
+    [SerializeField] private int enemyIndex;
+    [SerializeField] private int uiIndex;
+    [SerializeField] private int interIndex;
     
     #endregion
-    
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    private void OnEnable()
     {
+        
         aM = GameObject.FindGameObjectWithTag("AudioManager");
         audioManager = aM.GetComponent<AudioManager>();
         
+    }
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
         CreateInstance();
         if (playOnStart)
         {
@@ -449,7 +426,7 @@ public class UniversalEventController : MonoBehaviour
         {
             for (int i = 0; i < audioManager.muRef.Length; i++)
             {
-                if (audioManager.muRef[i].Path.Contains(musicEventSelect.ToString()))
+                if (audioManager.muRef[i].Path.Contains(musicEventSelectList[muIndex]))
                 {
                     eventIndex = i;
                     break;
@@ -460,7 +437,7 @@ public class UniversalEventController : MonoBehaviour
         {
             for (int i = 0; i < audioManager.ambRef.Length; i++)
             {
-                if (audioManager.ambRef[i].Path.Contains(ambienceEventSelect.ToString()))
+                if (audioManager.ambRef[i].Path.Contains(ambienceEventSelectList[ambIndex]))
                 {
                     eventIndex = i;
                     break;
@@ -473,9 +450,10 @@ public class UniversalEventController : MonoBehaviour
             {
                 for (int i = 0; i < audioManager.characterRef.Length; i++)
                 {
-                    if (audioManager.characterRef[i].Path.Contains(charEventSelect.ToString()))
+                    if (audioManager.characterRef[i].Path.Contains(charEventSelectList[charIndex]))
                     {
                         eventIndex = i;
+                        break;
                     }
                 }
             }
@@ -483,9 +461,10 @@ public class UniversalEventController : MonoBehaviour
             {
                 for (int i = 0; i < audioManager.enemyRef.Length; i++)
                 {
-                    if (audioManager.enemyRef[i].Path.Contains(enemyEventSelect.ToString()))
+                    if (audioManager.enemyRef[i].Path.Contains(enemyEventSelectList[enemyIndex]))
                     {
                         eventIndex = i;
+                        break;
                     }
                 }
             }
@@ -493,9 +472,10 @@ public class UniversalEventController : MonoBehaviour
             {
                 for (int i = 0; i < audioManager.uiRef.Length; i++)
                 {
-                    if (audioManager.uiRef[i].Path.Contains(uiEventSelect.ToString()))
+                    if (audioManager.uiRef[i].Path.Contains(uiEventSelectList[uiIndex]))
                     {
                         eventIndex = i;
+                        break;
                     }
                 }
             }
@@ -503,9 +483,10 @@ public class UniversalEventController : MonoBehaviour
             {
                 for (int i = 0; i < audioManager.interactRef.Length; i++)
                 {
-                    if (audioManager.interactRef[i].Path.Contains(interEventSelect.ToString()))
+                    if (audioManager.interactRef[i].Path.Contains(interEventSelectList[interIndex]))
                     {
                         eventIndex = i;
+                        break;
                     }
                 }
             }
@@ -688,7 +669,6 @@ public class UniversalEventController : MonoBehaviour
         }
         else if (SelectedSfxType() == 2)
         {
-            Debug.Log("Bajs");
             RuntimeManager.StudioSystem.getEvent(audioManager.enemyRef[eventIndex].Path, out EventDescription desc);
             desc.is3D(out bool is3D);
             if (is3D)
@@ -717,4 +697,5 @@ public class UniversalEventController : MonoBehaviour
         }
         
     }
+    
 }
