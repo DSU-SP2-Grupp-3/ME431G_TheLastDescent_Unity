@@ -16,11 +16,13 @@ public class WorldAgent : MonoBehaviour
     }
 
     public Team team;
-
+    [Header("References")]
     public Animator animator;
     public NavMeshAgent navMeshAgent;
+    [Tooltip("Only required if the object will generate a path")]
+    public LineRenderer lineRenderer;
     public Transform cameraFocusTransform;
-
+    
     [SerializeField]
     private AgentStats stats;
     public AgentStats localStats { get; set; } //set could be privated but is not for now
@@ -126,10 +128,32 @@ public class WorldAgent : MonoBehaviour
 
     private void TakeDamage(int damage, GameObject target)
     {
+        //currently functions, would be cool if we implemented resistances or elemental damage or something
         if (target == gameObject)
         {
             localStats.hitPoints -= damage;
-            Debug.Log($"I have taken {damage}, hp:{localStats.hitPoints} :D", this); 
+        }
+    }
+
+    private void Update()
+    {
+        if (navMeshAgent != null)
+        {
+            if (navMeshAgent.pathStatus == NavMeshPathStatus.PathPartial)
+            {
+                DrawPath(navMeshAgent.path);
+            } 
+        }
+    }
+
+    public void DrawPath(NavMeshPath path)
+    {
+        //needs to be improved
+        lineRenderer.positionCount = path.corners.Length;
+        lineRenderer.SetPosition(0, transform.position);
+        for (int i = 1; i < path.corners.Length; i++)
+        {
+            lineRenderer.SetPosition(i, path.corners[i]);
         }
     }
 }
