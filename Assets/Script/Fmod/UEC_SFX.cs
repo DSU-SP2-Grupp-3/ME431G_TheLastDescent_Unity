@@ -1,4 +1,6 @@
+using System;
 using System.Linq;
+using FMOD.Studio;
 using UnityEngine;
 
 public class UEC_SFX : MonoBehaviour
@@ -8,9 +10,8 @@ public class UEC_SFX : MonoBehaviour
     //Enumerables
     public enum FindMethodType
     {
-        GameObject,
-        ObjectWithTag,
-        ObjectsWithTag
+        JustGameObjects,
+        ObjectsWithTags
     }
 
     public enum ActionTypeSelect
@@ -21,7 +22,6 @@ public class UEC_SFX : MonoBehaviour
     }
     
     //Strings
-    public string objectTag;
     public string[] objectTags;
     
     //Structs
@@ -29,7 +29,16 @@ public class UEC_SFX : MonoBehaviour
     public struct EventParameter
     {
         public string name;
-        public string value;
+        public float value;
+    }
+    
+    [System.Serializable]
+    public struct Command
+    {
+        public ActionTypeSelect actionType;
+        public EventParameter[] eventParameters;
+        public bool allowFadeout;
+        
     }
 
     #endregion
@@ -37,47 +46,55 @@ public class UEC_SFX : MonoBehaviour
     #region Deklarationer
     
     //Enum
-    public ActionTypeSelect action;
     public FindMethodType findMethod;
     
-    //Boolean
-    public bool startWithParameter;
+    //Struct
+    public Command[] commands;
     
+    //Boolean
     
     //Misc
-    [SerializeField] private EventParameter[] parameters;
-    public GameObject uecObject;
     public GameObject[] uecObjects;
-    private UniversalEventController uecScript;
     private UniversalEventController[] uecScripts;
     
     #endregion
 
 
-    public void Initiate()
+    public void InitiateCommand(int index)
     {
-        
+        if (commands[index].actionType == ActionTypeSelect.Play)
+        {
+            PlayEvent();
+        }
+        else if (commands[index].actionType == ActionTypeSelect.Stop)
+        {
+            StopEvent();
+        }
+        else if (commands[index].actionType == ActionTypeSelect.SetParameter)
+        {
+            SetParameter();
+        }
     }
-    private void OnDragDrop()
+
+    private void JustObjects()
     {
-        uecScript = uecObject.GetComponent<UniversalEventController>(); 
-    }
-    private void FindObjectWithTag()
-    {
-        uecObjects = GameObject.FindGameObjectsWithTag(objectTag);
-        uecScript = uecObject.GetComponent<UniversalEventController>(); 
+        uecScripts = new UniversalEventController[uecObjects.Length];
+        for (int i = 0; i < uecObjects.Length; i++)
+        {
+            uecScripts[i] = (uecObjects[i].GetComponent<UniversalEventController>());
+        }
     }
 
     private void FindObjectsWithTags()
     {
-
+        uecScripts = new UniversalEventController[uecObjects.Length];
         foreach (var tag in objectTags)
         {
             uecObjects = GameObject.FindGameObjectsWithTag(tag);
 
-            foreach (var x in uecObjects)
+            for (int i = 0; i < uecObjects.Length; i++)
             {
-                uecScripts.Append(x.GetComponent<UniversalEventController>());
+                uecScripts[i] = (uecObjects[i].GetComponent<UniversalEventController>());
             }
         }
         
@@ -85,28 +102,50 @@ public class UEC_SFX : MonoBehaviour
 
     private void PlayEvent()
     {
-        
+        foreach (var uec in uecScripts)
+        {
+            uec.SfxInstance.start();
+        }
     }
 
     private void StopEvent()
     {
-        
+        foreach (var uec in uecScripts)
+        {
+            foreach (var x in commands)
+            {
+                uec.SfxInstance.stop(x.allowFadeout ? STOP_MODE.ALLOWFADEOUT : STOP_MODE.IMMEDIATE);
+            }
+        }
     }
 
     private void SetParameter()
     {
-        
+        foreach (var uec in uecScripts)
+        {
+            foreach (var x in commands)
+            {
+                foreach (var par in x.eventParameters)
+                {
+                    uec.SfxInstance.setParameterByName(par.name, par.value);
+                }
+            }
+        }
     }
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-           
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
+        if (findMethod == FindMethodType.JustGameObjects)
+        {
+            JustObjects();
+        }
+        else if (findMethod == FindMethodType.ObjectsWithTags)
+        {
+            FindObjectsWithTags();
+        }
         
+        
+
     }
 }
