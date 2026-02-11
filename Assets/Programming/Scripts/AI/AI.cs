@@ -33,4 +33,11 @@ public class AI : MonoBehaviour
         agent.QueueCommand(aiMovement);
         agent.ForceStartCommandQueueExecution();
     }
+
+    private NavMeshPath TrimPathToMoveRange()
+    {
+        NavMeshPath trimmedPath = new NavMeshPath();
+        
+        return trimmedPath;
+    }
 }

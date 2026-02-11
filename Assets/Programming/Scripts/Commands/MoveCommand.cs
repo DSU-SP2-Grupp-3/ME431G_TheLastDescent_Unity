@@ -56,7 +56,6 @@ public class MoveCommand : Command
     public override void Break()
     {
         invokingAgent.animator.SetTrigger("StopMoving");
-        invokingAgent.navMeshAgent.CalculatePath(invokingAgent.navMeshAgent.transform.position, agentPath);
-        invokingAgent.navMeshAgent.SetPath(agentPath);
+        invokingAgent.navMeshAgent.ResetPath();
     }
 }
