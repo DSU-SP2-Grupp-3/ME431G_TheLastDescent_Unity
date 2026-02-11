@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 
 // -se:
@@ -9,8 +9,14 @@ using UnityEngine;
 /// </summary>
 public abstract class Command
 {
+    protected WorldAgent invokingAgent;
     public abstract float cost { get; }
     public abstract IEnumerator Execute();
     public abstract void Break();
     public virtual void Visualize() { }
+
+    public Command(WorldAgent invokingAgent)
+    {
+        this.invokingAgent = invokingAgent;
+    }
 }
