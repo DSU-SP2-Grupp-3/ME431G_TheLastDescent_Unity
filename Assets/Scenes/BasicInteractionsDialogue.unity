@@ -3767,6 +3767,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bdfb7ab5e31db94989c5178fc4d7b72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  musicEventSelectList:
+  - Test2
+  - Test3
+  - Test
+  - FyraTest
+  charEventSelectList: []
+  enemyEventSelectList:
+  - Tjockis
+  uiEventSelectList: []
+  interEventSelectList: []
+  ambienceEventSelectList:
+  - Amby
   playOnStart: 0
   startWithParameters: 0
   allowFadeout: 0
@@ -3786,13 +3798,13 @@ MonoBehaviour:
   eventTypeSelect: 2
   actionTypeSelect: 0
   sfxTypeSelect: 2
-  musicEventSelect: 3
-  charEventSelect: 0
-  enemyEventSelect: 0
-  uiEventSelect: 0
-  interEventSelect: 0
-  ambienceEventSelect: 2
   parameters: []
+  muIndex: 0
+  ambIndex: 0
+  charIndex: 0
+  enemyIndex: 0
+  uiIndex: 0
+  interIndex: 0
 --- !u!1 &1637199106
 GameObject:
   m_ObjectHideFlags: 0
@@ -4494,7 +4506,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0368fcbeaa9b6264ea34a317a48c9b7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  muRef: []
+  muRef:
+  - Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: event:/Music/Test2
+  - Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: event:/Music/Test3
+  - Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: event:/Music/Test
+  - Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: event:/Music/FyraTest
   ambRef:
   - Guid:
       Data1: -1444122868
@@ -4503,10 +4539,57 @@ MonoBehaviour:
       Data4: -1035084612
     Path: event:/AMB/Amby
   characterRef: []
-  enemyRef: []
+  enemyRef:
+  - Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: event:/SFX/Enemies/Tjockis
   uiRef: []
   interactRef: []
-  debug: 0
+  muEvents:
+  - Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: event:/Music/Test2
+  - Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: event:/Music/Test3
+  - Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: event:/Music/Test
+  - Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: event:/Music/FyraTest
+  ambEvents:
+  - Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: event:/AMB/Amby
+  characterEvents: []
+  enemyEvents:
+  - Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: event:/SFX/Enemies/Tjockis
+  uiEvents: []
+  interactEvents: []
 --- !u!4 &1760128353
 Transform:
   m_ObjectHideFlags: 0
