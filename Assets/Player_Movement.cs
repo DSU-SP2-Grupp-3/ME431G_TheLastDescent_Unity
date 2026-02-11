@@ -46,6 +46,7 @@ public class Player_Movement : MonoBehaviour
 
     private void DrawPath(NavMeshPath path)
     {
+        //needs to be improved
         lineRenderer.positionCount = path.corners.Length;
         lineRenderer.SetPosition(0, transform.position);
         for (int i = 1; i < path.corners.Length; i++)
