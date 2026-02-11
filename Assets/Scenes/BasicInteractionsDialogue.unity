@@ -3767,18 +3767,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bdfb7ab5e31db94989c5178fc4d7b72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  musicEventSelectList:
-  - Test2
-  - Test3
-  - Test
-  - FyraTest
-  charEventSelectList: []
-  enemyEventSelectList:
-  - Tjockis
-  uiEventSelectList: []
-  interEventSelectList: []
-  ambienceEventSelectList:
-  - Amby
   playOnStart: 0
   startWithParameters: 0
   allowFadeout: 0
@@ -3798,13 +3786,13 @@ MonoBehaviour:
   eventTypeSelect: 2
   actionTypeSelect: 0
   sfxTypeSelect: 2
+  musicEventSelect: 0
+  charEventSelect: 0
+  enemyEventSelect: 0
+  uiEventSelect: 0
+  interEventSelect: 0
+  ambienceEventSelect: 0
   parameters: []
-  muIndex: 0
-  ambIndex: 0
-  charIndex: 0
-  enemyIndex: 0
-  uiIndex: 0
-  interIndex: 0
 --- !u!1 &1637199106
 GameObject:
   m_ObjectHideFlags: 0
@@ -4508,28 +4496,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   muRef:
   - Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
+      Data1: -1920621791
+      Data2: 1308565798
+      Data3: 1006014140
+      Data4: 1805396275
     Path: event:/Music/Test2
   - Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
+      Data1: -384953720
+      Data2: 1113646330
+      Data3: -2048901461
+      Data4: -1018269722
     Path: event:/Music/Test3
   - Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
+      Data1: -1442283832
+      Data2: 1240100779
+      Data3: -776651107
+      Data4: -320399868
     Path: event:/Music/Test
   - Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
+      Data1: -459331280
+      Data2: 1154107452
+      Data3: 17566645
+      Data4: 1938322920
     Path: event:/Music/FyraTest
   ambRef:
   - Guid:
@@ -4541,55 +4529,26 @@ MonoBehaviour:
   characterRef: []
   enemyRef:
   - Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
+      Data1: -180110327
+      Data2: 1245938188
+      Data3: -1066286449
+      Data4: -1494942835
     Path: event:/SFX/Enemies/Tjockis
+  - Guid:
+      Data1: 1880284049
+      Data2: 1198385630
+      Data3: -1463369068
+      Data4: 1797325035
+    Path: event:/SFX/Enemies/Bonkers
+  - Guid:
+      Data1: -816016144
+      Data2: 1084793849
+      Data3: 1939614608
+      Data4: -1022766609
+    Path: event:/SFX/Enemies/Honkers
   uiRef: []
   interactRef: []
-  muEvents:
-  - Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: event:/Music/Test2
-  - Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: event:/Music/Test3
-  - Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: event:/Music/Test
-  - Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: event:/Music/FyraTest
-  ambEvents:
-  - Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: event:/AMB/Amby
-  characterEvents: []
-  enemyEvents:
-  - Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: event:/SFX/Enemies/Tjockis
-  uiEvents: []
-  interactEvents: []
+  debug: 0
 --- !u!4 &1760128353
 Transform:
   m_ObjectHideFlags: 0
