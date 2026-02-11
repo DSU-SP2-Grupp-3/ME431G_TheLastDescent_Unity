@@ -7,7 +7,7 @@ public class PlayerManager : Service<PlayerManager>
 {
     [SerializeField]
     private WorldAgent[] players;
-    [SerializeField] 
+    [SerializeField]
     private OrthographicCameraMover cameraMover;
 
     private Locator<InputManager> inputManager;
@@ -34,9 +34,8 @@ public class PlayerManager : Service<PlayerManager>
     {
         if (players.Contains(playerAgent))
         {
-            // Debug.Log($"Select {playerAgent.name}");
             selectedPlayer = playerAgent;
-            // cameraMover.targetGameObject = playerAgent.cameraFocusTransform;
+            cameraMover.targetGameObject = playerAgent.cameraFocusTransform;
             // todo: camera should move smoothly toward target transform and not follow animations on target -se
         }
     }
