@@ -18,26 +18,44 @@ public class AI : MonoBehaviour
     {
         Movement();
         DealDamage();
+        
+        //should be removed! forces all commands to be run
+        agent.ForceStartCommandQueueExecution();
     }
-
-    private void DealDamage()
-    {
-        agent.agentManager.Get().damageManager.DealDamage(3, gameObject);
-    }
+    
     private void Movement()
     {
         playerPositions = agent.agentManager.Get().GetPlayerPositions();
-        //sets the ais agent movement
+        
+        //sets the ais world navMeshAgent to a new path
         NavMeshPath path = behaviourDefinition.FetchPath(agent.navMeshAgent, playerPositions);
+        path = TrimPathToMoveRange(path, agent.localStats.movement);
+        
+        //create and queue a movecommand using the path and the agent
         MoveCommand aiMovement = new MoveCommand(path, agent); 
         agent.QueueCommand(aiMovement);
-        agent.ForceStartCommandQueueExecution();
+        
+        
     }
 
-    private NavMeshPath TrimPathToMoveRange()
+    private NavMeshPath TrimPathToMoveRange(NavMeshPath inputPath, float moveDistance)
     {
-        NavMeshPath trimmedPath = new NavMeshPath();
-        
-        return trimmedPath;
+        if (agent.navMeshAgent.remainingDistance <= moveDistance)
+        {
+            return inputPath;
+        }
+        else
+        {
+            NavMeshPath trimmedPath = new NavMeshPath();
+            //trim path here
+            
+            return trimmedPath;
+        }
+    }
+    
+    private void DealDamage()
+    {
+        //the gameObject needs to be replaced with the thing that is being harmed, thus i need to find the thing i wish to harm
+        agent.agentManager.Get().damageManager.DealDamage(3, gameObject);
     }
 }
