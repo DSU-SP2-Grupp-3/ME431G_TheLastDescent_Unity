@@ -19,4 +19,11 @@ public abstract class Command
     {
         this.invokingAgent = invokingAgent;
     }
+
+    protected IEnumerator WaitForEndOfAnimation(Animator animator)
+    {
+        // https://discussions.unity.com/t/wait-until-an-animation-is-finished/699955/6
+        yield return null; // -se: wait one frame for animator to update internal state
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
+    }
 }

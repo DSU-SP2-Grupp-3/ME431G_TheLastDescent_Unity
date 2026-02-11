@@ -5,9 +5,9 @@ using UnityEngine.Events;
 public class DamageManager : ScriptableObject
 {
     //Scriptable Object made to make it easier to send damage to world agents
-    public UnityAction<int,GameObject> DealDamageEvent = delegate{};
+    public UnityAction<float, WorldAgent> DealDamageEvent = delegate{};
 
-    public void DealDamage(int damage, GameObject target)
+    public void DealDamage(float damage, WorldAgent target)
     {
         //input the damage dealt, and the worldagent of the targeted target
         DealDamageEvent(damage, target);

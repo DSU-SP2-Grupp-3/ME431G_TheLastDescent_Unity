@@ -48,7 +48,11 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
 
     public bool TryEnterRealTime(bool forced = false)
     {
-        if (!forced && automaticTurnBasedEntrance) return false;
+        if (!forced && automaticTurnBasedEntrance)
+        {
+            Debug.Log("Cannot enter real time");
+            return false;
+        }
         else if (forced) automaticTurnBasedEntrance = false;
         EnterRealTime();
         return true;

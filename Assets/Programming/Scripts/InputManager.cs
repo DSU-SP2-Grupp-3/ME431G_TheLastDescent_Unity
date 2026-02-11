@@ -4,6 +4,7 @@ using UnityEngine;
 public class InputManager : Service<InputManager>
 {
     public event Action<WorldAgent> ClickedOnPlayer;
+    public event Action<WorldAgent> ClickedOnEnemy;
     public event Action<Vector3> MovePlayerInput;
     public event Action<GameObject> ClickedEnvironment;
 
@@ -48,6 +49,10 @@ public class InputManager : Service<InputManager>
         if (HitLayer(hit, "Ground"))
         {
             MovePlayerInput?.Invoke(hit.point);
+        }
+        if (HitLayer(hit, "Enemy"))
+        {
+            ClickedOnEnemy?.Invoke(hit.collider.GetComponentInParent<WorldAgent>());
         }
     }
 

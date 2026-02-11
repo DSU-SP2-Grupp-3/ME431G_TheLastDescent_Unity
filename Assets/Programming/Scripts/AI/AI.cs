@@ -45,6 +45,7 @@ public class AI : MonoBehaviour
         }
     }
     
+    // todo: calculate ap costs via Command.cost and prevent adding commands that would exceed ap cost in turn based
     private void Movement()
     {
         playerPositions = agent.agentManager.Get().GetPlayerPositions();
@@ -75,6 +76,7 @@ public class AI : MonoBehaviour
         return false;
     }
 
+    // todo: move visualisation to seperate Visualiser component and use Command.Visualize to draw them
     private NavMeshPath TrimPathToMoveRange(NavMeshPath inputPath, float moveDistance)
     {
         if (agent.navMeshAgent.remainingDistance <= moveDistance)
@@ -113,11 +115,5 @@ public class AI : MonoBehaviour
             
             return trimmedPath;
         }
-    }
-    
-    private void DealDamage()
-    {
-        //the gameObject needs to be replaced with the thing that is being harmed, thus i need to find the thing i wish to harm
-        agent.agentManager.Get().damageManager.DealDamage(damageAmount, gameObject);
     }
 }

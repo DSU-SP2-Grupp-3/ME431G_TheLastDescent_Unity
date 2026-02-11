@@ -1,10 +1,11 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "WeaponStast", menuName = "Stats/Weapon Stats")]
-public class WeaponsStats : ScriptableObject
+public class WeaponStats : ScriptableObject
 {
     [SerializeField]
     private float minDamage, maxDamage, range;
 
+    public float attackRange => range;
     public float GetDamage() => Random.Range(minDamage, maxDamage);
 }

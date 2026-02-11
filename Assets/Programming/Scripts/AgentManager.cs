@@ -32,6 +32,7 @@ public class AgentManager : Service<AgentManager>
         im.ClickedOnPlayer += SelectPlayer;
         im.MovePlayerInput += MoveSelectedPlayer;
         im.ClickedEnvironment += ClickedEnvironment;
+        im.ClickedOnEnemy += ClickedEnemy;
         SelectPlayer(players[0]);
     }
     
@@ -80,9 +81,24 @@ public class AgentManager : Service<AgentManager>
             );
         }
     }
-    // undo command for selected player
-    // attack enemy
-    //
+
+    private void ClickedEnemy(WorldAgent enemyAgent)
+    {
+        if (enemyAgent.dead) return;
+        
+        MoveInRangeCommand inRangeCommand = new MoveInRangeCommand(
+            enemyAgent.transform.position,
+            selectedPlayer.weaponStats.attackRange, 
+            selectedPlayer
+        );
+        AttackCommand attackCommand = new AttackCommand(selectedPlayer, enemyAgent, damageManager);
+        Command[] commands = new Command[] { inRangeCommand, attackCommand };
+        
+        RealTimeOrTurnBased(
+            () => selectedPlayer.OverwriteQueue(commands),
+            () => selectedPlayer.QueueCommands(commands)
+        );
+    }
 
     private void RealTimeOrTurnBased(Action realTime, Action turnBased)
     {
