@@ -72,7 +72,7 @@ public class AI : MonoBehaviour
                     inputPath.corners[expensiveCorner - 1].x + (distanceRatio * (inputPath.corners[expensiveCorner].x - inputPath.corners[expensiveCorner - 1].x)),
                     inputPath.corners[expensiveCorner - 1].y + (distanceRatio * (inputPath.corners[expensiveCorner].y - inputPath.corners[expensiveCorner - 1].y)),
                     inputPath.corners[expensiveCorner - 1].z + (distanceRatio * (inputPath.corners[expensiveCorner].z - inputPath.corners[expensiveCorner - 1].z))
-                );
+                            );
             
             agent.navMeshAgent.CalculatePath(newDestination, trimmedPath);
             
