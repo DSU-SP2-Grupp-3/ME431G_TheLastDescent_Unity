@@ -137,12 +137,13 @@ public class WorldAgent : MonoBehaviour
 
     private void Update()
     {
-        if (navMeshAgent != null)
+        if (navMeshAgent.isStopped)
         {
-            if (navMeshAgent.pathStatus == NavMeshPathStatus.PathPartial)
-            {
-                DrawPath(navMeshAgent.path);
-            } 
+            lineRenderer.positionCount = 0;
+        }
+        else
+        {
+            DrawPath(navMeshAgent.path);
         }
     }
 

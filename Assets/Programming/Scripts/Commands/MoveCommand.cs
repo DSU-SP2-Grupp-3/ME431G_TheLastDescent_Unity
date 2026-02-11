@@ -50,7 +50,7 @@ public class MoveCommand : Command
 
     public override void Visualize()
     {
-        // lineRenderer.SetPositions(path.corners);
+        
     }
 
     public override void Break()
