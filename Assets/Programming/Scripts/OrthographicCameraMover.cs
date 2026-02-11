@@ -8,12 +8,15 @@ public class OrthographicCameraMover : MonoBehaviour
     [Tooltip("Zoom / Distance to target")]
     public float zoom;
 
-    [SerializeField]
+    [SerializeField] [Tooltip("Används i princip istället för att sätta positionen på kameran")]
     private Vector3 offset;
     
     
     private void Update()
     {
-        //transform.position = targetGameObject.position + offset;
+        transform.position = new Vector3(
+            targetGameObject.position.x + offset.x, 
+            targetGameObject.position.y + offset.y,
+            targetGameObject.position.z + offset.z);
     }
 }

@@ -20,14 +20,24 @@ public class BehaviourDefinition : ScriptableObject
         if (playerPositions != null)
         {
             agent.CalculatePath(playerPositions[0], outputPath);
-            for (int i = 1; i < playerPositions.Count; i++)
+            agent.CalculatePath(playerPositions[1], temporaryPath);
+            if (GetPathLength(temporaryPath) < GetPathLength(outputPath))
             {
-                agent.CalculatePath(playerPositions[i], temporaryPath);
-                if (GetPathLength(outputPath) > GetPathLength(temporaryPath))
-                {
-                    outputPath = temporaryPath;
-                }
+                outputPath = temporaryPath;
             }
+            agent.CalculatePath(playerPositions[2], temporaryPath);
+            if (GetPathLength(temporaryPath) < GetPathLength(outputPath))
+            {
+                outputPath = temporaryPath;
+            }
+            //for (int i = 1; i < playerPositions.Count; i++)
+            //{
+            //    agent.CalculatePath(playerPositions[i], temporaryPath);
+            //    if (GetPathLength(outputPath) > GetPathLength(temporaryPath))
+            //    {
+            //        outputPath = temporaryPath;
+            //    }
+            //}
         }
 
         return outputPath;
