@@ -41,8 +41,8 @@ public class MoveCommand : Command
     {
         // do not do anything if the path is not valid -se
         if (!possible) yield break;
-
         invokingAgent.navMeshAgent.SetPath(agentPath);
+        invokingAgent.DrawPath(invokingAgent.navMeshAgent.path);
         invokingAgent.animator.SetTrigger("StartMoving");
         yield return new WaitUntil(() => invokingAgent.navMeshAgent.remainingDistance <= playEndAnimationDistance);
         invokingAgent.animator.SetTrigger("StopMoving");

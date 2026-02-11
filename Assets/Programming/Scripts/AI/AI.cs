@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,6 +11,7 @@ public class AI : MonoBehaviour
     [SerializeField]
     private BehaviourDefinition behaviourDefinition;
 
+    [Tooltip("Temporary!! how much damage it deals when it attacks")] public int damageAmount;
     private List<Vector3> playerPositions;
 
     
@@ -47,7 +49,23 @@ public class AI : MonoBehaviour
         else
         {
             NavMeshPath trimmedPath = new NavMeshPath();
-            //trim path here
+            int expensiveCorner = 0;
+            float accumulatedDistance = 0;
+            float remainingDistance = 0;
+            //this loop should go through the list and set the expensiveCorner int to the corner that it is too expensive to path to
+            for (int i = 0; i < agent.navMeshAgent.path.corners.Length - 1; i++)
+            {
+                accumulatedDistance += Vector3.Distance(agent.navMeshAgent.path.corners[i], agent.navMeshAgent.path.corners[i + 1]);
+                if (accumulatedDistance > moveDistance)
+                {
+                    accumulatedDistance -= Vector3.Distance(agent.navMeshAgent.path.corners[i], agent.navMeshAgent.path.corners[i + 1]) ;
+                    remainingDistance = agent.localStats.movement - accumulatedDistance;
+                    expensiveCorner = i + 1;
+                    break;
+                }
+            }
+            
+            
             
             return trimmedPath;
         }
@@ -56,6 +74,6 @@ public class AI : MonoBehaviour
     private void DealDamage()
     {
         //the gameObject needs to be replaced with the thing that is being harmed, thus i need to find the thing i wish to harm
-        agent.agentManager.Get().damageManager.DealDamage(3, gameObject);
+        agent.agentManager.Get().damageManager.DealDamage(damageAmount, gameObject);
     }
 }

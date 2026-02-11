@@ -146,7 +146,7 @@ public class WorldAgent : MonoBehaviour
         }
     }
 
-    private void DrawPath(NavMeshPath path)
+    public void DrawPath(NavMeshPath path)
     {
         //needs to be improved
         lineRenderer.positionCount = path.corners.Length;
