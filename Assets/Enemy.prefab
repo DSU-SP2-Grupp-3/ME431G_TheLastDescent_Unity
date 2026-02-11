@@ -120,6 +120,7 @@ GameObject:
   - component: {fileID: 3175031394103182601}
   - component: {fileID: 1387932914355464968}
   - component: {fileID: 2285311374888698852}
+  - component: {fileID: 6815606599757368650}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -158,6 +159,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 1387932914355464968}
   behaviourDefinition: {fileID: 11400000, guid: 61bd246fbda19844697726ea75e8cf55, type: 2}
+  damageAmount: 0
 --- !u!114 &1387932914355464968
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -171,10 +173,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   team: 2
-  animator: {fileID: 0}
+  animator: {fileID: 6815606599757368650}
   navMeshAgent: {fileID: 2285311374888698852}
-  lineRenderer: {fileID: 0}
-  cameraFocusTransform: {fileID: 0}
+  lineRenderer: {fileID: 7656517665084544934}
+  cameraFocusTransform: {fileID: 7300605375101809413}
   stats: {fileID: 11400000, guid: 781734abf7c8bcf4095b28600dd9534d, type: 2}
 --- !u!195 &2285311374888698852
 NavMeshAgent:
@@ -198,6 +200,28 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!95 &6815606599757368650
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7609925883862734477}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8b33dba9b37972c47857ffc0343d56c8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &2622990996006889551
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -258,5 +282,10 @@ PrefabInstance:
 --- !u!4 &1993538721794407816 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4597265435287836103, guid: c6155ba65860a3d42ba9c433be8b0b93, type: 3}
+  m_PrefabInstance: {fileID: 2622990996006889551}
+  m_PrefabAsset: {fileID: 0}
+--- !u!120 &7656517665084544934 stripped
+LineRenderer:
+  m_CorrespondingSourceObject: {fileID: 5631705334890889193, guid: c6155ba65860a3d42ba9c433be8b0b93, type: 3}
   m_PrefabInstance: {fileID: 2622990996006889551}
   m_PrefabAsset: {fileID: 0}
