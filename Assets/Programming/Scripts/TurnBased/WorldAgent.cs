@@ -19,6 +19,7 @@ public class WorldAgent : MonoBehaviour
     [Header("References")]
     public Animator animator;
     public NavMeshAgent navMeshAgent;
+    private bool hasNavMeshAgent = false;
     [Tooltip("Only required if the object will generate a path")]
     public LineRenderer lineRenderer;
     public Transform cameraFocusTransform;
@@ -37,9 +38,10 @@ public class WorldAgent : MonoBehaviour
     private Queue<Command> commandQueue;
     private Command currentlyExecutingCommand;
     private Coroutine currentExecutingCommandCoroutine;
-
+    
     private void Awake()
     {
+        if(navMeshAgent != null){ hasNavMeshAgent = true; }
         agentManager = new Locator<PlayerManager>();
         if (stats) localStats = stats.Clone();
         commandQueue = new();
@@ -137,13 +139,16 @@ public class WorldAgent : MonoBehaviour
 
     private void Update()
     {
-        if (navMeshAgent.isStopped)
+        if (hasNavMeshAgent)
         {
-            lineRenderer.positionCount = 0;
-        }
-        else
-        {
-            DrawPath(navMeshAgent.path);
+            if (navMeshAgent.isStopped)
+            {
+                lineRenderer.positionCount = 0;
+            }
+            else
+            {
+                DrawPath(navMeshAgent.path);
+            }
         }
     }
 
