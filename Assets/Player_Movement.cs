@@ -36,9 +36,8 @@ public class Player_Movement : MonoBehaviour
             }
         }
 
-        if (Mathf.Sqrt(Mathf.Pow(transform.position.x - nmAgent.destination.x, 2) 
-                       + Mathf.Pow(transform.position.z - nmAgent.destination.z, 2)) 
-            < pathcutoff)  /*if distance between transform and destination small*/
+        if (Vector3.Distance(transform.position, nmAgent.destination) 
+            < pathcutoff && Mathf.Abs(transform.position.y - nmAgent.destination.y) < 0.3f)  /*if distance between transform and destination small*/
         {
             lineRenderer.positionCount = 0;
         }
