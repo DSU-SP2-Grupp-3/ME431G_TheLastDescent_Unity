@@ -25,6 +25,7 @@ public class MoveInRangeCommand : Command
     public readonly bool possible;
 
     private const float playEndAnimationDistance = 0.5f;
+    private const float ignoreMovementDistance = 0.1f;
 
     public MoveInRangeCommand(Vector3 toPosition, float range, WorldAgent invokingAgent) : base(invokingAgent)
     {
@@ -39,16 +40,16 @@ public class MoveInRangeCommand : Command
         // if (!possible) yield break;
 
         invokingAgent.navMeshAgent.SetDestination(toPosition);
-
-        invokingAgent.animator.SetTrigger("StartMoving");
-        yield return new WaitUntil(() =>
+        if (WithinDistance())
         {
-            float distanceToTarget = (toPosition - invokingAgent.transform.position).sqrMagnitude;
-            return distanceToTarget <= range * range;
-        });
+            invokingAgent.navMeshAgent.ResetPath();
+            yield break;
+        }
+        
+        invokingAgent.animator.SetTrigger("StartMoving");
+        yield return new WaitUntil(WithinDistance);
         invokingAgent.animator.SetTrigger("StopMoving");
-        invokingAgent.navMeshAgent.CalculatePath(invokingAgent.navMeshAgent.transform.position, agentPath);
-        invokingAgent.navMeshAgent.SetPath(agentPath);
+        invokingAgent.navMeshAgent.ResetPath();
     }
 
     public override void Visualize()
@@ -61,5 +62,10 @@ public class MoveInRangeCommand : Command
         invokingAgent.animator.SetTrigger("StopMoving");
         invokingAgent.navMeshAgent.CalculatePath(invokingAgent.navMeshAgent.transform.position, agentPath);
         invokingAgent.navMeshAgent.SetPath(agentPath);
+    }
+    
+    private bool WithinDistance() {
+        float distanceToTarget = (toPosition - invokingAgent.transform.position).sqrMagnitude;
+        return distanceToTarget <= range * range;
     }
 }

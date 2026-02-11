@@ -27,6 +27,7 @@ public class PlayAnimationCommand : Command
         }
         else
         {
+            // todo: maybe broken, use animation events instead for better reliability
             yield return WaitForEndOfAnimation(animator);
         }
     }

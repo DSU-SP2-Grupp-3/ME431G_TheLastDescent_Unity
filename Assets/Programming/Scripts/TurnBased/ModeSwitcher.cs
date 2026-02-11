@@ -23,27 +23,20 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
         turnManager = GetComponent<TurnManager>();
     }
 
-    private void EnterTurnBased()
-    {
-        Debug.Log("Enter turn based");
-        OnEnterTurnBased?.Invoke(turnManager);
-        roundClock.Get().EnterTurnBased();
-        turnManager.Activate();
-    }
-
-    private void EnterRealTime()
-    {
-        Debug.Log("Enter real time");
-        OnEnterRealTime?.Invoke(turnManager);
-        roundClock.Get().EnterRealTime();
-        turnManager.Deactivate();
-    }
-
     public bool TryEnterTurnBased(bool automatic = false)
     {
         automaticTurnBasedEntrance = automatic;
         EnterTurnBased();
         return true;
+    }
+    
+    private void EnterTurnBased()
+    {
+        // todo: handle if combat is entered while already in turn based
+        Debug.Log("Enter turn based");
+        OnEnterTurnBased?.Invoke(turnManager);
+        roundClock.Get().EnterTurnBased();
+        turnManager.Activate();
     }
 
     public bool TryEnterRealTime(bool forced = false)
@@ -53,15 +46,20 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
             Debug.Log("Cannot enter real time");
             return false;
         }
-        else if (forced) automaticTurnBasedEntrance = false;
+        else if (forced && !automaticTurnBasedEntrance)
+        {
+            Debug.Log("Entered turn based manually, don't automatically exit");
+            return false;
+        }
         EnterRealTime();
         return true;
     }
-    
 
-    public void Toggle()
+    private void EnterRealTime()
     {
-        if (mode == RoundClock.ProgressMode.RealTime) EnterTurnBased();
-        if (mode == RoundClock.ProgressMode.TurnBased) EnterRealTime();
+        Debug.Log("Enter real time");
+        OnEnterRealTime?.Invoke(turnManager);
+        roundClock.Get().EnterRealTime();
+        turnManager.Deactivate();
     }
 }

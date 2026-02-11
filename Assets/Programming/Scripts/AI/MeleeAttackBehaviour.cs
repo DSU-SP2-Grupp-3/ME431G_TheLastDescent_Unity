@@ -1,54 +1,52 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-[CreateAssetMenu(fileName = "NewMeleeBehaviourType", menuName = "AI/Behaviour Type/Melee", order = 0)]
-public class MeleeAttackBehaviour : AIBehaviourType
+[CreateAssetMenu(fileName = "NewMeleeAttackDefinition", menuName = "AI/Behaviour Defintion/Melee Attack", order = 0)]
+public class MeleeAttackBehaviour : BehaviourDefinition
 {
     [SerializeField]
     private WorldAgent.Team teamToAttack;
 
     
-    public override BehaviourResults GetIdleBehaviourResults(BehaviourDefinition.Stats stats, WorldAgent aiAgent)
+    public override BehaviourCommands GetIdleBehaviourCommands(WorldAgent aiAgent, AI.AIParameters parameters)
     {
-        BehaviourResults results = new();
-        if (RandomPoint(aiAgent.initialPosition, stats.wanderingRadius, out Vector3 result))
+        BehaviourCommands commands = new();
+        if (RandomPoint(aiAgent.initialPosition, parameters.wanderingRadius, out Vector3 result))
         {
             MoveCommand moveCommand = new MoveCommand(result, aiAgent);
-            results.AddCommand(moveCommand);
+            commands.AddCommand(moveCommand);
         }
         else
         {
             MoveCommand moveCommand = new MoveCommand(aiAgent.initialPosition, aiAgent);
-            results.AddCommand(moveCommand);
+            commands.AddCommand(moveCommand);
         }
         
         // DebugCommand dbgc = new DebugCommand(aiAgent, "idle AI");
-        return results;
+        return commands;
     }
 
-    public override BehaviourResults GetActiveBehaviourResults(BehaviourDefinition.Stats stats, WorldAgent aiAgent)
+    public override BehaviourCommands GetActiveBehaviourCommands(WorldAgent aiAgent, AI.AIParameters parameters)
     {
-        BehaviourResults results = new();
-        DebugCommand dbgc = new DebugCommand(aiAgent, "active AI");
-        results.AddCommand(dbgc);
-        return results;
+        // AgentManager agentManager = aiAgent.agentManager.Get();
+        
+        BehaviourCommands commands = new();
+        // DebugCommand dbgc = new DebugCommand(aiAgent, "active AI");
+        // commands.AddCommand(dbgc);
+        return commands;
+        
+        // playerPositions = agent.agentManager.Get().GetPlayerPositions();
+        //
+        // //sets the ais world navMeshAgent to a new path
+        // NavMeshPath path = behaviourDefinition.FetchPath(agent.navMeshAgent, playerPositions);
+        // path = TrimPathToMoveRange(path, agent.localStats.movement);
+        //
+        // //create and queue a movecommand using the path and the agent
+        // MoveCommand aiMovement = new MoveCommand(path, agent); 
+        // agent.OverwriteQueue(aiMovement);
+
     }
     
-    // https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMesh.SamplePosition.html
-    bool RandomPoint(Vector3 center, float range, out Vector3 result)
-    {
-        for (int i = 0; i < 30; i++)
-        {
-            Vector3 randomPoint = center + Random.insideUnitSphere * range;
-            NavMeshHit hit;
-            if (NavMesh.SamplePosition(randomPoint, out hit, 1.0f, NavMesh.AllAreas))
-            {
-                result = hit.position;
-                return true;
-            }
-        }
-        result = Vector3.zero;
-        return false;
-    }
+    
 
 }

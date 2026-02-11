@@ -47,7 +47,7 @@ public class TurnManager : MonoBehaviour
         groups.Clear();
     }
 
-    public void RegisterAgentInTeam(int team, WorldAgent agent)
+    public void RegisterAgentInGroup(int team, WorldAgent agent)
     {
         if (!groups.TryAdd(team, new WorldAgentGroup(agent)))
         {
@@ -55,16 +55,16 @@ public class TurnManager : MonoBehaviour
         }
     }
 
-    public void RegisterAgentInTeam(WorldAgent.Team team, WorldAgent agent)
+    public void RegisterAgentInGroup(WorldAgent.Team team, WorldAgent agent)
     {
-        RegisterAgentInTeam((int)team, agent);
+        RegisterAgentInGroup((int)team, agent);
     }
 
     public void RegisterAgentAsOneManTeam(WorldAgent agent)
     {
         if (groups.Count == 0)
         {
-            RegisterAgentInTeam(-1, agent);
+            RegisterAgentInGroup(-1, agent);
         }
         else
         {
@@ -72,7 +72,8 @@ public class TurnManager : MonoBehaviour
         }
     }
 
-    private List<WorldAgentGroup> ConvertTeamsToList()
+    // todo: create defined order for groups
+    private List<WorldAgentGroup> ConvertGroupsToList()
     {
         return groups.Values.ToList();
     }
@@ -86,7 +87,7 @@ public class TurnManager : MonoBehaviour
             
             turnManagerEvents.StartExecutingTurn?.Invoke();
             
-            foreach (WorldAgentGroup group in ConvertTeamsToList())
+            foreach (WorldAgentGroup group in ConvertGroupsToList())
             {
                 activeGroup = group;
                 yield return WaitForAll(group.GetGroupCommandQueues());

@@ -31,6 +31,10 @@ public class WorldAgentGroup
         List<IEnumerator> queues = new();
         foreach (WorldAgent agent in agents)
         {
+            if (agent.TryGetComponent<AI>(out AI ai))
+            {
+                ai.GetActiveCommands();
+            }
             queues.Add(agent.ExecuteCommandQueue());
         }
 

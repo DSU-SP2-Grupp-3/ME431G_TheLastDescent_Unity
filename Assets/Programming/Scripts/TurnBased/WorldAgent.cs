@@ -57,6 +57,7 @@ public class WorldAgent : MonoBehaviour
     private Queue<Command> commandQueue;
     private Command currentlyExecutingCommand;
     private Coroutine currentExecutingCommandCoroutine;
+    public bool queueEmpty => commandQueue.Count == 0;
     
     private void Awake()
     {
@@ -86,18 +87,19 @@ public class WorldAgent : MonoBehaviour
             switch (team)
             {
                 case Team.Player:
-                    turnManager.RegisterAgentInTeam(team, this);
+                    turnManager.RegisterAgentInGroup(team, this);
                     InterruptCommandQueue();
                     break;
                 case Team.Enemy:
                     if (enemyTakesSimulataneousTurns)
                     {
-                        turnManager.RegisterAgentInTeam(team, this);
+                        turnManager.RegisterAgentInGroup(team, this);
                         InterruptCommandQueue();
                     }
                     else
                     {
                         turnManager.RegisterAgentAsOneManTeam(this);
+                        InterruptCommandQueue();
                     }
                     break;
                 case Team.Interactable:
@@ -163,7 +165,7 @@ public class WorldAgent : MonoBehaviour
             currentlyExecutingCommand = null;
         }
     }
-
+    
     public void Activate()
     {
         active = true;
@@ -171,6 +173,7 @@ public class WorldAgent : MonoBehaviour
         {
             // todo: call some enemy group component to activate all enemies in an area whenever one of the enemies is activated
             // todo: check if already in turnbased and enter the combat in that case
+            if (modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased) return; // just don't do anything unless in realtime for now
             modeSwitcher.Get().TryEnterTurnBased(true);
         }
     }
@@ -195,15 +198,19 @@ public class WorldAgent : MonoBehaviour
 
     private void TakeDamage(float damage, WorldAgent target)
     {
+        
         //currently functions, would be cool if we implemented resistances or elemental damage or something
         if (target != this) return;
+        Debug.Log($"{name} receiving {damage} damage");
 
-        if (localStats.TakeDamage(damage))
+        bool dead = localStats.TakeDamage(damage);
+        Debug.Log($"Remaining hit points: {localStats.hitPoints}");
+        
+        if (dead)
         {
             Die();
         }
         
-        Debug.Log($"Remaining hit points: {localStats.hitPoints}");
         
     }
 

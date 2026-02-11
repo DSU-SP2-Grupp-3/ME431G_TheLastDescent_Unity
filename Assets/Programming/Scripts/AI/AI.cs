@@ -11,9 +11,9 @@ public class AI : MonoBehaviour
     [SerializeField]
     private BehaviourDefinition behaviourDefinition;
 
-    [Tooltip("Temporary!! how much damage it deals when it attacks")] public int damageAmount;
-    private List<Vector3> playerPositions;
-
+    [SerializeField]
+    private AIParameters parameters;
+    
     private Locator<RoundClock> roundClock;
     private Locator<AgentManager> agentManager;
 
@@ -29,9 +29,10 @@ public class AI : MonoBehaviour
 
     private void RoundUpdate(int round)
     {
+        // todo: perhaps don't do anything at all when very far away from the players, to avoid unnecessary calculations
         if (!agent.active) // perform idle behaviour
         {
-            Command[] idleCommands = behaviourDefinition.GetIdleBehaviourResults(agent).GetCommands();
+            Command[] idleCommands = behaviourDefinition.GetIdleBehaviourCommands(agent, parameters).GetCommands();
             agent.OverwriteQueue(idleCommands);
         }
     }
@@ -45,29 +46,14 @@ public class AI : MonoBehaviour
         }
     }
     
-    // todo: calculate ap costs via Command.cost and prevent adding commands that would exceed ap cost in turn based
-    private void Movement()
-    {
-        playerPositions = agent.agentManager.Get().GetPlayerPositions();
-        
-        //sets the ais world navMeshAgent to a new path
-        NavMeshPath path = behaviourDefinition.FetchPath(agent.navMeshAgent, playerPositions);
-        path = TrimPathToMoveRange(path, agent.localStats.movement);
-        
-        //create and queue a movecommand using the path and the agent
-        MoveCommand aiMovement = new MoveCommand(path, agent); 
-        agent.OverwriteQueue(aiMovement);
-        
-        
-    }
-
+    
     private bool CheckIfShouldBeActive()
     {
         foreach (NavMeshAgent playerNavMesh in playerNavMeshes)
         {
             bool unobstructed = !agent.navMeshAgent.Raycast(playerNavMesh.transform.position, out NavMeshHit hit);
             float distance = (transform.position - playerNavMesh.transform.position).magnitude;
-            if (unobstructed && distance < behaviourDefinition.activationDistance)
+            if (unobstructed && distance < parameters.activationDistance)
             {
                 return true;
             }
@@ -76,44 +62,18 @@ public class AI : MonoBehaviour
         return false;
     }
 
-    // todo: move visualisation to seperate Visualiser component and use Command.Visualize to draw them
-    private NavMeshPath TrimPathToMoveRange(NavMeshPath inputPath, float moveDistance)
+    public void GetActiveCommands()
     {
-        if (agent.navMeshAgent.remainingDistance <= moveDistance)
-        {
-            return inputPath;
-        }
-        else
-        {
-            NavMeshPath trimmedPath = new NavMeshPath();
-            float accumulatedDistance = 0;
-            int expensiveCorner = 0;
-            float remainingDistance = 0;
-            //this loop should go through the list and set the expensiveCorner int to the corner that it is too expensive to path to
-            for (int i = 1; i < inputPath.corners.Length; i++)
-            {
-                accumulatedDistance += Vector3.Distance(inputPath.corners[i-1],inputPath.corners[i]);
-                if (accumulatedDistance > moveDistance)
-                {
-                    accumulatedDistance -= Vector3.Distance(inputPath.corners[i-1], inputPath.corners[i]) ;
-                    remainingDistance = agent.localStats.movement - accumulatedDistance;
-                    expensiveCorner = i;
-                    break;
-                }
-            }
+        Debug.Assert(agent.queueEmpty);
+        Command[] commands = behaviourDefinition.GetActiveBehaviourCommands(agent, parameters).GetCommands();
+        agent.QueueCommands(commands);
+    }
+   
 
-            float distanceRatio = remainingDistance / Vector3.Distance(inputPath.corners[expensiveCorner - 1], inputPath.corners[expensiveCorner]);
-            //x3 = x1 + t(x2-x1), t=d/D
-            Vector3 newDestination = 
-                new Vector3(
-                    inputPath.corners[expensiveCorner - 1].x + (distanceRatio * (inputPath.corners[expensiveCorner].x - inputPath.corners[expensiveCorner - 1].x)),
-                    inputPath.corners[expensiveCorner - 1].y + (distanceRatio * (inputPath.corners[expensiveCorner].y - inputPath.corners[expensiveCorner - 1].y)),
-                    inputPath.corners[expensiveCorner - 1].z + (distanceRatio * (inputPath.corners[expensiveCorner].z - inputPath.corners[expensiveCorner - 1].z))
-                            );
-            
-            agent.navMeshAgent.CalculatePath(newDestination, trimmedPath);
-            
-            return trimmedPath;
-        }
+    [Serializable]
+    public struct AIParameters
+    {
+        public float wanderingRadius;
+        public float activationDistance;
     }
 }
