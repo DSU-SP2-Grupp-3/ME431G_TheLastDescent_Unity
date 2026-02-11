@@ -3672,6 +3672,7 @@ GameObject:
   - component: {fileID: 1612848134}
   - component: {fileID: 1612848135}
   - component: {fileID: 1612848136}
+  - component: {fileID: 1612848137}
   m_Layer: 5
   m_Name: Dialogue
   m_TagString: Untagged
@@ -3717,6 +3718,21 @@ MonoBehaviour:
   portrait: {fileID: 1600624885}
   ani: {fileID: 1612848136}
   isDone: 0
+  unityEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1612848137}
+        m_TargetAssemblyTypeName: UniversalEventController, Assembly-CSharp
+        m_MethodName: Initiate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!95 &1612848136
 Animator:
   serializedVersion: 7
@@ -3739,6 +3755,44 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1612848137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1612848133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bdfb7ab5e31db94989c5178fc4d7b72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playOnStart: 0
+  startWithParameters: 0
+  allowFadeout: 0
+  toggleRelease: 0
+  positionStatic: 0
+  is3DEvent: 0
+  debugMode: 0
+  dbInit: 0
+  dbSET: 0
+  dbSAT: 0
+  dbSST: 0
+  dbSEP: 0
+  dbSEI: 0
+  dbPlay: 0
+  dbStop: 0
+  dbCreate: 0
+  eventTypeSelect: 2
+  actionTypeSelect: 0
+  sfxTypeSelect: 2
+  musicEventSelect: 3
+  charEventSelect: 0
+  enemyEventSelect: 0
+  uiEventSelect: 0
+  interEventSelect: 0
+  ambienceEventSelect: 2
+  parameters: []
 --- !u!1 &1637199106
 GameObject:
   m_ObjectHideFlags: 0
@@ -4411,6 +4465,63 @@ Transform:
   m_Children: []
   m_Father: {fileID: 747258411}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1760128351
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1760128353}
+  - component: {fileID: 1760128352}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: AudioManager
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1760128352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1760128351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0368fcbeaa9b6264ea34a317a48c9b7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  muRef: []
+  ambRef:
+  - Guid:
+      Data1: -1444122868
+      Data2: 1239154085
+      Data3: -556623954
+      Data4: -1035084612
+    Path: event:/AMB/Amby
+  characterRef: []
+  enemyRef: []
+  uiRef: []
+  interactRef: []
+  debug: 0
+--- !u!4 &1760128353
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1760128351}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 776.43475, y: -108.41236, z: -186.80867}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1775685494
 GameObject:
   m_ObjectHideFlags: 0
@@ -4933,3 +5044,4 @@ SceneRoots:
   - {fileID: 499533428}
   - {fileID: 1705864631}
   - {fileID: 1058115822}
+  - {fileID: 1760128353}
