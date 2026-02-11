@@ -14,6 +14,7 @@ public class PlayerManager : Service<PlayerManager>
     private Locator<ModeSwitcher> modeSwitcher;
 
     private WorldAgent selectedPlayer;
+    public DamageManager damageManager;
 
     private void Awake()
     {

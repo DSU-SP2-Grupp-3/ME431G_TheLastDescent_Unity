@@ -10,25 +10,27 @@ public class AI : MonoBehaviour
     [SerializeField]
     private BehaviourDefinition behaviourDefinition;
 
-    private Locator<PlayerManager> playerManager;
     private List<Vector3> playerPositions;
 
-    private void Start()
-    {
-        playerManager = new Locator<PlayerManager>();
-    }
+    
 
     private void Update()
     {
         Movement();
+        DealDamage();
     }
 
+    private void DealDamage()
+    {
+        agent.agentManager.Get().damageManager.DealDamage(3, gameObject);
+    }
     private void Movement()
     {
-        playerPositions = playerManager.Get().GetPlayerPositions();
+        playerPositions = agent.agentManager.Get().GetPlayerPositions();
         //sets the ais agent movement
         NavMeshPath path = behaviourDefinition.FetchPath(agent.navMeshAgent, playerPositions);
         MoveCommand aiMovement = new MoveCommand(path, agent); 
         agent.QueueCommand(aiMovement);
+        agent.ForceStartCommandQueueExecution();
     }
 }
