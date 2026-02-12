@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -48,6 +49,8 @@ public class MoveCommand : Command, IMoveCommand
 
     public MoveCommand(NavMeshPath path, WorldAgent invokingAgent) : base(invokingAgent)
     {
+        this.fromPosition = path.corners[0];
+        this.toPosition = path.corners.Last();
         agentPath = path;
         possible = path.status == NavMeshPathStatus.PathComplete;
     }
