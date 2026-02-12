@@ -242,7 +242,8 @@ public class WorldAgent : MonoBehaviour
             moveCommandsInQueue.Prepend(moveCommand);
         }
 
-        return moveCommandsInQueue.Last().ToPosition();
+        if (moveCommandsInQueue.Any()) return moveCommandsInQueue.Last().ToPosition();
+        else return transform.position;
     }
 
     public void TriggerAnimationEvent(string id)
