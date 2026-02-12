@@ -36,7 +36,7 @@ public class AttackCommand : Command
         invokingAgent.AnimationEventTriggered -= CaptureAnimationEvent;
     }
 
-    public override void Visualize() { }
+    public override void Visualize(Visualizer visualizer) { }
 
     private void CaptureAnimationEvent(string trigger)
     {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,7 +10,7 @@ public class WorldAgent : MonoBehaviour
     private static bool enemyTakesSimulataneousTurns = false;
 
     public event Action<string> AnimationEventTriggered;
-    
+
     public enum Team
     {
         Player,
@@ -26,7 +27,7 @@ public class WorldAgent : MonoBehaviour
     [Tooltip("Only required if the object will generate a path")]
     public LineRenderer lineRenderer;
     public Transform cameraFocusTransform;
-    
+
     [SerializeField]
     private AgentStats stats;
     public AgentStats localStats { get; set; } //set could be privated but is not for now
@@ -44,21 +45,22 @@ public class WorldAgent : MonoBehaviour
             }
         }
     }
-    
+
     /// True if this agent should enter into the turn order when turn based mode is activated
     public bool active { get; private set; }
     /// Dead agents are for most purposes non existant, do not partake in turn order and do not execute commands
     public bool dead { get; private set; }
     public Vector3 initialPosition { get; private set; }
-    
-    private Locator<ModeSwitcher> modeSwitcher; 
-    [NonSerialized] public Locator<AgentManager> agentManager;
-    
+
+    private Locator<ModeSwitcher> modeSwitcher;
+    [NonSerialized]
+    public Locator<AgentManager> agentManager;
+
     private Queue<Command> commandQueue;
     private Command currentlyExecutingCommand;
     private Coroutine currentExecutingCommandCoroutine;
     public bool queueEmpty => commandQueue.Count == 0;
-    
+
     private void Awake()
     {
         initialPosition = transform.position;
@@ -73,7 +75,7 @@ public class WorldAgent : MonoBehaviour
     {
         AgentManager am = agentManager.Get();
         am.RegisterAgent(this);
-        
+
         //subscribe TakeDamage to the DamageManager of the PlayerManager
         am.damageManager.DealDamageEvent += TakeDamage;
         modeSwitcher.Get().OnEnterTurnBased += RegisterInTurnManager;
@@ -145,7 +147,7 @@ public class WorldAgent : MonoBehaviour
     {
         StartCoroutine(ExecuteCommandQueue());
     }
-    
+
     private void InterruptCommandQueue()
     {
         currentlyExecutingCommand?.Break();
@@ -165,7 +167,7 @@ public class WorldAgent : MonoBehaviour
             currentlyExecutingCommand = null;
         }
     }
-    
+
     public void Activate()
     {
         active = true;
@@ -173,7 +175,8 @@ public class WorldAgent : MonoBehaviour
         {
             // todo: call some enemy group component to activate all enemies in an area whenever one of the enemies is activated
             // todo: check if already in turnbased and enter the combat in that case
-            if (modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased) return; // just don't do anything unless in realtime for now
+            if (modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased)
+                return; // just don't do anything unless in realtime for now
             modeSwitcher.Get().TryEnterTurnBased(true);
         }
     }
@@ -186,10 +189,10 @@ public class WorldAgent : MonoBehaviour
         animator.SetTrigger("Die");
         agentManager.Get().damageManager.DealDamageEvent -= TakeDamage;
     }
-    
+
     // visualise command queue /se
     // can afford new command /se
-    
+
     private void OnDisable()
     {
         //unsubscribe TakeDamage to the DamageManager of the PlayerManager
@@ -198,47 +201,48 @@ public class WorldAgent : MonoBehaviour
 
     private void TakeDamage(float damage, WorldAgent target)
     {
-        
         //currently functions, would be cool if we implemented resistances or elemental damage or something
         if (target != this) return;
         Debug.Log($"{name} receiving {damage} damage");
 
         bool dead = localStats.TakeDamage(damage);
         Debug.Log($"Remaining hit points: {localStats.hitPoints}");
-        
+
         if (dead)
         {
             Die();
         }
-        
-        
     }
 
-    private void Update()
-    {
-        if (navMeshAgent && lineRenderer)
-        {
-            if (navMeshAgent.isStopped)
-            {
-                lineRenderer.positionCount = 0;
-            }
-            else
-            {
-                DrawPath(navMeshAgent.path);
-            }
-        }
-    }
+    // private void Update()
+    // {
+    //     if (navMeshAgent && lineRenderer)
+    //     {
+    //         if (navMeshAgent.isStopped)
+    //         {
+    //             lineRenderer.positionCount = 0;
+    //         }
+    //         else
+    //         {
+    //             DrawPath(navMeshAgent.path);
+    //         }
+    //     }
+    // }
 
-    public void DrawPath(NavMeshPath path)
+    public Vector3 GetLastMoveCommandToPosition()
     {
-        //needs to be improved
-        if (!lineRenderer) return;
-        lineRenderer.positionCount = path.corners.Length;
-        lineRenderer.SetPosition(0, transform.position);
-        for (int i = 1; i < path.corners.Length; i++)
+        IEnumerable<IMoveCommand> moveCommandsInQueue = commandQueue
+                                                        .Where(c => c is IMoveCommand)
+                                                        .Select(c => c as IMoveCommand);
+
+        // if currently executing a move command then it should be first in the queue
+        // it won't appear in the commandQueue tho since it has been dequeued, so we add it manually
+        if (currentlyExecutingCommand is IMoveCommand moveCommand)
         {
-            lineRenderer.SetPosition(i, path.corners[i]);
+            moveCommandsInQueue.Prepend(moveCommand);
         }
+
+        return moveCommandsInQueue.Last().ToPosition();
     }
 
     public void TriggerAnimationEvent(string id)
