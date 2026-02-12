@@ -52,7 +52,7 @@ public class MoveInRangeCommand : Command
         invokingAgent.navMeshAgent.ResetPath();
     }
 
-    public override void Visualize()
+    public override void Visualize(Visualizer visualizer)
     {
         // lineRenderer.SetPositions(path.corners);
     }

@@ -229,17 +229,7 @@ public class WorldAgent : MonoBehaviour
         }
     }
 
-    public void DrawPath(NavMeshPath path)
-    {
-        //needs to be improved
-        if (!lineRenderer) return;
-        lineRenderer.positionCount = path.corners.Length;
-        lineRenderer.SetPosition(0, transform.position);
-        for (int i = 1; i < path.corners.Length; i++)
-        {
-            lineRenderer.SetPosition(i, path.corners[i]);
-        }
-    }
+    
 
     public void TriggerAnimationEvent(string id)
     {

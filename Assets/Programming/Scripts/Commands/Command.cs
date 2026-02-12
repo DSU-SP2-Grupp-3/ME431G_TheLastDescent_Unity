@@ -13,7 +13,7 @@ public abstract class Command
     public abstract float cost { get; }
     public abstract IEnumerator Execute();
     public abstract void Break();
-    public virtual void Visualize() { }
+    public virtual void Visualize(Visualizer visualizer) { }
 
     public Command(WorldAgent invokingAgent)
     {
