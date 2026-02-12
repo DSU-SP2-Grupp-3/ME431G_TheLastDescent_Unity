@@ -4,6 +4,7 @@ using UnityEngine.AI;
 
 public class MoveCommand : Command
 {
+    // todo: calculate ap costs via Command.cost and prevent adding commands that would exceed ap cost in turn based
     public override float cost
     {
         get
@@ -23,6 +24,7 @@ public class MoveCommand : Command
     public readonly bool possible;
 
     private const float playEndAnimationDistance = 0.5f;
+    private const float ignoreMovementDistance = 0.1f;
 
     public MoveCommand(Vector3 toPosition, WorldAgent invokingAgent) : base(invokingAgent)
     {
@@ -39,24 +41,30 @@ public class MoveCommand : Command
 
     public override IEnumerator Execute()
     {
+        
         // do not do anything if the path is not valid -se
         if (!possible) yield break;
-
+        
+        // todo: move animation only plays once for some reason
+        
         invokingAgent.navMeshAgent.SetPath(agentPath);
+        if (invokingAgent.navMeshAgent.remainingDistance < ignoreMovementDistance) yield break;
+        
+        invokingAgent.DrawPath(invokingAgent.navMeshAgent.path); // todo: should be moved to visualiser 
         invokingAgent.animator.SetTrigger("StartMoving");
         yield return new WaitUntil(() => invokingAgent.navMeshAgent.remainingDistance <= playEndAnimationDistance);
         invokingAgent.animator.SetTrigger("StopMoving");
     }
 
+    // todo: move visualisation to seperate Visualiser component and use Command.Visualize to draw them
     public override void Visualize()
     {
-        // lineRenderer.SetPositions(path.corners);
+        
     }
 
     public override void Break()
     {
         invokingAgent.animator.SetTrigger("StopMoving");
-        invokingAgent.navMeshAgent.CalculatePath(invokingAgent.navMeshAgent.transform.position, agentPath);
-        invokingAgent.navMeshAgent.SetPath(agentPath);
+        invokingAgent.navMeshAgent.ResetPath();
     }
 }

@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class ToggleTurnBasedButton : Service<ToggleTurnBasedButton>
 {
-    public event Action<bool> OnToggleTurnBased;
-    
     [SerializeField]
     private TMP_Text text;
     [SerializeField]
@@ -13,25 +11,39 @@ public class ToggleTurnBasedButton : Service<ToggleTurnBasedButton>
     [SerializeField]
     private bool inTurnBased;
 
+    private Locator<ModeSwitcher> modeSwitcher;
+
     private void Awake()
     {
         Register();
     }
 
+    private void Start()
+    {
+        modeSwitcher = new();
+        modeSwitcher.Get().OnEnterRealTime += (_) =>
+        {
+            inTurnBased = false;
+            text.text = inRealTimeText;
+        };
+        modeSwitcher.Get().OnEnterTurnBased += (_) =>
+        {
+            inTurnBased = true;
+            text.text = inTurnBasedText;
+        };
+    }
+
     public void Toggle()
     {
-        inTurnBased = !inTurnBased;
-        OnToggleTurnBased?.Invoke(inTurnBased);
-        
-        if (inTurnBased)
+        switch (inTurnBased)
         {
-            text.text = inTurnBasedText;
+            case true:
+                modeSwitcher.Get().TryEnterRealTime();
+                break;
+            case false:
+                modeSwitcher.Get().TryEnterTurnBased();
+                break;
         }
-        else
-        {
-            text.text = inRealTimeText;
-        }
-        
     }
 
 }
