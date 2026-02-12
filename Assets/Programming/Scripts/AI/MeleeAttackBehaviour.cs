@@ -30,7 +30,7 @@ public class MeleeAttackBehaviour : BehaviourDefinition
 
     public override BehaviourCommands GetActiveBehaviourCommands(WorldAgent aiAgent, AI.AIParameters parameters)
     {
-        AgentManager agentManager = aiAgent.agentManager.Get();
+        AgentManager agentManager = aiAgent.manager;
         BehaviourCommands commands = new();
 
         List<WorldAgent> targets = agentManager.GetFilteredAgents((w => w.team == teamToAttack)).ToList();
@@ -39,11 +39,13 @@ public class MeleeAttackBehaviour : BehaviourDefinition
         //sets the ais world navMeshAgent to a new path
         NavMeshPath path = new();
         aiAgent.navMeshAgent.CalculatePath(closestTarget.transform.position, path);
+        aiAgent.navMeshAgent.SetPath(path); // SetPath here so remainingDistance can be calculated in TrimPathToMoveRange
         bool trimmed = TrimPathToMoveRange(aiAgent, ref path, aiAgent.localStats.movement);
-        Debug.Log($"Enemy path was trimmed: {trimmed}");
-        
-        
-        if (!trimmed)
+
+        bool canAttackWithinRemainingDistance =
+            aiAgent.navMeshAgent.remainingDistance 
+            < aiAgent.localStats.movement + aiAgent.weaponStats.attackRange;
+        if (!trimmed || canAttackWithinRemainingDistance)
         {
             //create and queue a movecommand using the path and the agent
             MoveInRangeCommand aiMovement = new MoveInRangeCommand(

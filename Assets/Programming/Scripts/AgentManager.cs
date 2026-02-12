@@ -43,7 +43,7 @@ public class AgentManager : Service<AgentManager>
 
     private void SelectPlayer(WorldAgent playerAgent)
     {
-        if (players.Contains(playerAgent))
+        if (players.Contains(playerAgent) && !playerAgent.dead)
         {
             // Debug.Log($"Select {playerAgent.name}");
             selectedPlayer = playerAgent;
