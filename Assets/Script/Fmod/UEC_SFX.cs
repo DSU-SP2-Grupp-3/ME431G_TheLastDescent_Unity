@@ -48,8 +48,8 @@ public class UEC_SFX : MonoBehaviour
     [SerializeField] private EventParameter[] parameters;
     public GameObject uecObject;
     public GameObject[] uecObjects;
-    private UniversalEventController uecScript;
-    private UniversalEventController[] uecScripts;
+    private UniversalEventControllerScriptable uecScript;
+    private UniversalEventControllerScriptable[] uecScripts;
     
     #endregion
 
@@ -60,12 +60,12 @@ public class UEC_SFX : MonoBehaviour
     }
     private void OnDragDrop()
     {
-        uecScript = uecObject.GetComponent<UniversalEventController>(); 
+        uecScript = uecObject.GetComponent<UniversalEventControllerScriptable>(); 
     }
     private void FindObjectWithTag()
     {
         uecObjects = GameObject.FindGameObjectsWithTag(objectTag);
-        uecScript = uecObject.GetComponent<UniversalEventController>(); 
+        uecScript = uecObject.GetComponent<UniversalEventControllerScriptable>(); 
     }
 
     private void FindObjectsWithTags()
@@ -77,7 +77,7 @@ public class UEC_SFX : MonoBehaviour
 
             foreach (var x in uecObjects)
             {
-                uecScripts.Append(x.GetComponent<UniversalEventController>());
+                uecScripts.Append(x.GetComponent<UniversalEventControllerScriptable>());
             }
         }
         

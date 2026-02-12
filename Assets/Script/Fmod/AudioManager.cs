@@ -3,6 +3,7 @@ using System.Collections;
 using FMOD.Studio;
 using FMODUnity;
 using UnityEngine;
+using UnityEngine.Events;
 using STOP_MODE = FMOD.Studio.STOP_MODE;
 
 
@@ -27,10 +28,12 @@ public class AudioManager : Service<AudioManager>
     
     [Header("Debug Mode")]
     public bool debug = false;
+    public UnityEvent PreloadUECSFiles;
     
     
    void Awake()
     {
         Register();
+        PreloadUECSFiles.Invoke();
     } 
 }
