@@ -53,9 +53,11 @@ public class WorldAgent : MonoBehaviour
     public Vector3 initialPosition { get; private set; }
 
     private Locator<ModeSwitcher> modeSwitcher;
-    [NonSerialized]
-    public Locator<AgentManager> agentManager;
-
+    private Locator<AgentManager> agentManager;
+    private Locator<TurnManager> turnManager;
+    
+    public AgentManager manager => agentManager.Get();
+    
     private Queue<Command> commandQueue;
     private Command currentlyExecutingCommand;
     private Coroutine currentExecutingCommandCoroutine;
@@ -64,10 +66,14 @@ public class WorldAgent : MonoBehaviour
     private void Awake()
     {
         initialPosition = transform.position;
-        agentManager = new Locator<AgentManager>();
-        if (stats) localStats = stats.Clone();
+        
         commandQueue = new();
+        
+        agentManager = new();
         modeSwitcher = new();
+        turnManager = new();
+        
+        if (stats) localStats = stats.Clone();
         if (team == Team.Player) active = true;
     }
 
@@ -176,13 +182,19 @@ public class WorldAgent : MonoBehaviour
             // todo: call some enemy group component to activate all enemies in an area whenever one of the enemies is activated
             // todo: check if already in turnbased and enter the combat in that case
             if (modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased)
-                return; // just don't do anything unless in realtime for now
-            modeSwitcher.Get().TryEnterTurnBased(true);
+            {
+                RegisterInTurnManager(turnManager.Get());
+            }
+            else
+            {
+                modeSwitcher.Get().TryEnterTurnBased(true);
+            }
         }
     }
 
     public void Die()
     {
+        // todo: emit event here so agent manager can check if all players are dead
         Debug.Log($"Agent {name} has died");
         InterruptCommandQueue();
         dead = true;

@@ -5,9 +5,11 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class TurnManager : MonoBehaviour
+public class TurnManager : Service<TurnManager>
 {
     private Dictionary<int, WorldAgentGroup> groups;
+    private List<WorldAgentGroup> orderedGroups;
+    private List<(WorldAgent, int)> slackers;
     
     private Coroutine cycle;
     public WorldAgentGroup activeGroup { get; private set; }
@@ -20,14 +22,18 @@ public class TurnManager : MonoBehaviour
     private Locator<RoundClock> roundClock;
     private Locator<AgentManager> agentManager;
     private Locator<ModeSwitcher> modeSwitcher;
+
+    private bool executingTurn;
     
     private void Awake()
     {
+        Register();
         groups = new();
+        orderedGroups = new();
+        slackers = new();
         roundClock = new();
         agentManager = new();
         modeSwitcher = new();
-
     }
 
     private void Start()
@@ -49,14 +55,13 @@ public class TurnManager : MonoBehaviour
 
     public void RegisterAgentInGroup(int team, WorldAgent agent)
     {
-        if (!groups.TryAdd(team, new WorldAgentGroup(agent)))
+        if (executingTurn)
+        {
+            slackers.Add((agent, team));
+        }
+        else if (!groups.TryAdd(team, new WorldAgentGroup(agent)))
         {
             groups[team].AddAgent(agent);
-        }
-        else if (modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased)
-        {
-            // enter agent into combat
-
         }
     }
 
@@ -74,14 +79,13 @@ public class TurnManager : MonoBehaviour
         else
         {
             int min = groups.Keys.Min();
+            RegisterAgentInGroup(min, agent);
         }
     }
 
-    // todo: create defined order for groups
-    private List<WorldAgentGroup> ConvertGroupsToList()
+    private void OrderGroups()
     {
-        List<WorldAgentGroup> orderedGroups = new();
-
+        orderedGroups.Clear();
         WorldAgentGroup players = groups.Where((pair) => pair.Key == (int)WorldAgent.Team.Player).First().Value;
         List<WorldAgentGroup> theRest = groups
                                         .Where((pair) => pair.Key != (int)WorldAgent.Team.Player)
@@ -89,10 +93,17 @@ public class TurnManager : MonoBehaviour
                                         .ToList();
         orderedGroups.Add(players);
         orderedGroups.AddRange(theRest);
-
-        return orderedGroups;
     }
 
+    private void AddSlackersToGroups()
+    {
+        foreach ((WorldAgent agent, int team) slacker in slackers)
+        {
+            RegisterAgentInGroup(slacker.team, slacker.agent);
+        }
+        slackers.Clear();
+    }
+    
     private IEnumerator TurnCycle()
     {
         while (true)
@@ -101,22 +112,29 @@ public class TurnManager : MonoBehaviour
             yield return new WaitUntil((() => playerReady == true));
             
             turnManagerEvents.StartExecutingTurn?.Invoke();
-
+            executingTurn = true;
             
-            foreach (WorldAgentGroup group in ConvertGroupsToList())
+            OrderGroups();
+            for (int i = 0; i < orderedGroups.Count; i++)
             {
-                activeGroup = group;
-                yield return WaitForAll(group.GetGroupCommandQueues());
+                activeGroup = orderedGroups[i];
+                yield return WaitForAll(activeGroup.GetGroupCommandQueues());
             }
+            
             activeGroup = null;
             
-            turnManagerEvents.FinishExecutingTurn?.Invoke();
 
+            turnManagerEvents.FinishExecutingTurn?.Invoke();
+            executingTurn = false;
+
+            AddSlackersToGroups();
+            
             if (AllActiveEnemiesDead())
             {
                 // force entrance into real time when all enemies have been defeated
                 modeSwitcher.Get().TryEnterRealTime(true);
             }
+            
         }
     }
     

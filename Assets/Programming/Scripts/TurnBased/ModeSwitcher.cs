@@ -10,7 +10,7 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
 
     private Locator<RoundClock> roundClock;
 
-    private TurnManager turnManager;
+    private Locator<TurnManager> turnManager;
 
     public RoundClock.ProgressMode mode => roundClock.Get().currentMode;
 
@@ -20,7 +20,7 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
     {
         Register(); 
         roundClock = new();
-        turnManager = GetComponent<TurnManager>();
+        turnManager = new();
     }
 
     public bool TryEnterTurnBased(bool automatic = false)
@@ -32,11 +32,10 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
     
     private void EnterTurnBased()
     {
-        // todo: handle if combat is entered while already in turn based
         Debug.Log("Enter turn based");
-        OnEnterTurnBased?.Invoke(turnManager);
+        OnEnterTurnBased?.Invoke(turnManager.Get());
         roundClock.Get().EnterTurnBased();
-        turnManager.Activate();
+        turnManager.Get().Activate();
     }
 
     public bool TryEnterRealTime(bool forced = false)
@@ -58,8 +57,8 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
     private void EnterRealTime()
     {
         Debug.Log("Enter real time");
-        OnEnterRealTime?.Invoke(turnManager);
+        OnEnterRealTime?.Invoke(turnManager.Get());
         roundClock.Get().EnterRealTime();
-        turnManager.Deactivate();
+        turnManager.Get().Deactivate();
     }
 }

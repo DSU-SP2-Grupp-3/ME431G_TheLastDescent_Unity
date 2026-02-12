@@ -30,7 +30,7 @@ public class MeleeAttackBehaviour : BehaviourDefinition
 
     public override BehaviourCommands GetActiveBehaviourCommands(WorldAgent aiAgent, AI.AIParameters parameters)
     {
-        AgentManager agentManager = aiAgent.agentManager.Get();
+        AgentManager agentManager = aiAgent.manager;
         BehaviourCommands commands = new();
 
         List<WorldAgent> targets = agentManager.GetFilteredAgents((w => w.team == teamToAttack)).ToList();
