@@ -10,6 +10,7 @@ public class WorldAgent : MonoBehaviour
     private static bool enemyTakesSimulataneousTurns = false;
 
     public event Action<string> AnimationEventTriggered;
+    public event Action<WorldAgent> ForcedEnterTurnBased;
 
     public enum Team
     {
@@ -179,16 +180,19 @@ public class WorldAgent : MonoBehaviour
         active = true;
         if (team == Team.Enemy)
         {
-            // todo: call some enemy group component to activate all enemies in an area whenever one of the enemies is activated
-            // todo: check if already in turnbased and enter the combat in that case
+            Debug.Log($"Enemy: {name} activated!");
             if (modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased)
             {
                 RegisterInTurnManager(turnManager.Get());
             }
             else
             {
-                modeSwitcher.Get().TryEnterTurnBased(true);
+                if (modeSwitcher.Get().TryEnterTurnBased(true))
+                {
+                    ForcedEnterTurnBased?.Invoke(this);   
+                }
             }
+            
         }
     }
 

@@ -9,7 +9,7 @@ public class TurnManager : Service<TurnManager>
 {
     private Dictionary<int, WorldAgentGroup> groups;
     private List<WorldAgentGroup> orderedGroups;
-    private List<(WorldAgent, int)> slackers;
+    private List<(WorldAgent agent, int team)> slackers;
     
     private Coroutine cycle;
     public WorldAgentGroup activeGroup { get; private set; }
@@ -72,15 +72,14 @@ public class TurnManager : Service<TurnManager>
 
     public void RegisterAgentAsOneManTeam(WorldAgent agent)
     {
-        if (groups.Count == 0)
+        int min = -1;
+        if (groups.Count > 0) min = Math.Min(groups.Keys.Min(), -1);
+        if (slackers.Count > 0)
         {
-            RegisterAgentInGroup(-1, agent);
+            int slackersMin = slackers.Select(pair => pair.team).Min();
+            min = Math.Min(min, slackersMin);
         }
-        else
-        {
-            int min = groups.Keys.Min();
-            RegisterAgentInGroup(min, agent);
-        }
+        RegisterAgentInGroup(min - 1, agent);
     }
 
     private void OrderGroups()
