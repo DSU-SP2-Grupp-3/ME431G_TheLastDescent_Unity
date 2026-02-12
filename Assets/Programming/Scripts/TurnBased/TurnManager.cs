@@ -53,6 +53,11 @@ public class TurnManager : MonoBehaviour
         {
             groups[team].AddAgent(agent);
         }
+        else if (modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased)
+        {
+            // enter agent into combat
+
+        }
     }
 
     public void RegisterAgentInGroup(WorldAgent.Team team, WorldAgent agent)
@@ -96,6 +101,7 @@ public class TurnManager : MonoBehaviour
             yield return new WaitUntil((() => playerReady == true));
             
             turnManagerEvents.StartExecutingTurn?.Invoke();
+
             
             foreach (WorldAgentGroup group in ConvertGroupsToList())
             {
