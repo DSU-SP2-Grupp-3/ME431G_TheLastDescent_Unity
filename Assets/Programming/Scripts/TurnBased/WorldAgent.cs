@@ -86,6 +86,7 @@ public class WorldAgent : MonoBehaviour
         //subscribe TakeDamage to the DamageManager of the PlayerManager
         am.damageManager.DealDamageEvent += TakeDamage;
         modeSwitcher.Get().OnEnterTurnBased += RegisterInTurnManager;
+        modeSwitcher.Get().OnEnterRealTime += ExitTurnBased;
         StartCoroutine(ExecuteCommandQueue());
     }
 
@@ -119,6 +120,13 @@ public class WorldAgent : MonoBehaviour
                     break;
             }
         }
+    }
+
+    private void ExitTurnBased(TurnManager _)
+    {
+        // todo: thought this would fix funky animation behaviour where stop moving trigger is permanently on
+        // todo: it did not but the queue should still be interrupted when entering real time I think /se
+        InterruptCommandQueue();
     }
 
     public void QueueCommand(Command command)
