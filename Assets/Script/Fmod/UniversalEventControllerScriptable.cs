@@ -7,7 +7,8 @@ using UnityEngine;
 using Debug = UnityEngine.Debug;
 using STOP_MODE = FMOD.Studio.STOP_MODE;
 
-public class UniversalEventController : MonoBehaviour
+[CreateAssetMenu(menuName = "Audio/UECS")]
+public class UniversalEventControllerScriptable : ScriptableObject
 {
     #region Definitioner
     //Enumerables
@@ -141,9 +142,14 @@ public class UniversalEventController : MonoBehaviour
     //-Ma. Vi kommer behöva göra om detta till att ladda in markerade ljud i början av varje scen 
     //eftersom scriptable objects inte kan koppla sig till en audio manager innan scenen existerar.
     //ScriptableObjects är en potentiel lag maskin i dags läget.
+    public void CallUEC()
+    {
+        if (audioManager != null) { Initiate(); return; }
+        RunStartupSequence();
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void RunStartupSequence()
     {
         if (aMLocator.TryGet(out AudioManager audioManager)) { this.audioManager = audioManager; }
         else { new Exception("No audioManager registered in scene"); return; }
