@@ -41,8 +41,11 @@ public class MoveCommand : Command
 
     public override IEnumerator Execute()
     {
+        
         // do not do anything if the path is not valid -se
         if (!possible) yield break;
+        
+        // todo: move animation only plays once for some reason
         
         invokingAgent.navMeshAgent.SetPath(agentPath);
         if (invokingAgent.navMeshAgent.remainingDistance < ignoreMovementDistance) yield break;

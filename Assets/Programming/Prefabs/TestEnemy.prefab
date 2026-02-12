@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6913362169945385132}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CameraFocus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 7192969803080640472}
   - component: {fileID: 9163769210025672173}
   - component: {fileID: 5474678374904609022}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TestEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -81,8 +81,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 7192969803080640472}
-  behaviourDefinition: {fileID: 11400000, guid: 61bd246fbda19844697726ea75e8cf55, type: 2}
-  damageAmount: 1
+  behaviourDefinition: {fileID: 11400000, guid: 89f338f6e3a506a4ba3834b87ee938f9, type: 2}
+  parameters:
+    wanderingRadius: 3
+    activationDistance: 10
 --- !u!114 &7192969803080640472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100,7 +102,8 @@ MonoBehaviour:
   navMeshAgent: {fileID: 9163769210025672173}
   lineRenderer: {fileID: 0}
   cameraFocusTransform: {fileID: 6913362169945385132}
-  stats: {fileID: 11400000, guid: 781734abf7c8bcf4095b28600dd9534d, type: 2}
+  stats: {fileID: 11400000, guid: 99bfa7c8d88a5f2428c9ec23ca256013, type: 2}
+  equippedWeapon: {fileID: 11400000, guid: a975a668248ddab4fb8254746403b0c6, type: 2}
 --- !u!195 &9163769210025672173
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -157,7 +160,7 @@ GameObject:
   - component: {fileID: 2933929244947276961}
   - component: {fileID: 9200230276699247645}
   - component: {fileID: 369172508386459422}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}

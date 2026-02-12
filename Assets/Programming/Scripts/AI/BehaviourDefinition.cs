@@ -9,21 +9,37 @@ public abstract class BehaviourDefinition : ScriptableObject
 {
     public abstract BehaviourCommands GetIdleBehaviourCommands(WorldAgent aiAgent, AI.AIParameters parameters);
     public abstract BehaviourCommands GetActiveBehaviourCommands(WorldAgent aiAgent, AI.AIParameters parameters);
+
+    protected WorldAgent GetNearestAgent(Vector3 fromPosition, List<WorldAgent> candidates)
+    {
+        float shortestSqrDistance = float.MaxValue;
+        WorldAgent shortest = null;
+        foreach (WorldAgent candidate in candidates)
+        {
+            float sqrMagnitude = (fromPosition - candidate.transform.position).sqrMagnitude;
+            if (sqrMagnitude < shortestSqrDistance)
+            {
+                shortestSqrDistance = sqrMagnitude;
+                shortest = candidate;
+            }
+        }
+        return shortest;
+    } 
     
-    protected NavMeshPath GetPathToNearestAgent(NavMeshAgent agent, List<Vector3> agentPositions)
+    protected NavMeshPath GetPathToNearestPosition(NavMeshAgent agent, List<Vector3> positions)
     {
         //this should return the path to the closest player. it just needs to be fed a navmesh agent and the player itself
         NavMeshPath outputPath = new NavMeshPath();
         NavMeshPath temporaryPath = new NavMeshPath();
-        if (agentPositions != null)
+        if (positions != null)
         {
-            agent.CalculatePath(agentPositions[0], outputPath);
-            agent.CalculatePath(agentPositions[1], temporaryPath);
+            agent.CalculatePath(positions[0], outputPath);
+            agent.CalculatePath(positions[1], temporaryPath);
             if (GetPathLength(temporaryPath) < GetPathLength(outputPath))
             {
                 outputPath = temporaryPath;
             }
-            agent.CalculatePath(agentPositions[2], temporaryPath);
+            agent.CalculatePath(positions[2], temporaryPath);
             if (GetPathLength(temporaryPath) < GetPathLength(outputPath))
             {
                 outputPath = temporaryPath;
@@ -53,15 +69,21 @@ public abstract class BehaviourDefinition : ScriptableObject
         return output;
     }
     
-    protected NavMeshPath TrimPathToMoveRange(WorldAgent agent, NavMeshPath inputPath, float moveDistance)
+    /// <summary>
+    /// Trims the inputPath down based on the maximum distance provided
+    /// </summary>
+    /// <param name="agent">The world agent whose path is being trimmed</param>
+    /// <param name="inputPath">The path being trimmed</param>
+    /// <param name="moveDistance">The maxmimum distance the path must be trimmed to</param>
+    /// <returns>True if the path was trimmed, otherwise false</returns>
+    protected bool TrimPathToMoveRange(WorldAgent agent, ref NavMeshPath inputPath, float moveDistance)
     {
         if (agent.navMeshAgent.remainingDistance <= moveDistance)
         {
-            return inputPath;
+            return false;
         }
         else
         {
-            NavMeshPath trimmedPath = new NavMeshPath();
             float accumulatedDistance = 0;
             int expensiveCorner = 0;
             float remainingDistance = 0;
@@ -87,9 +109,9 @@ public abstract class BehaviourDefinition : ScriptableObject
                     inputPath.corners[expensiveCorner - 1].z + (distanceRatio * (inputPath.corners[expensiveCorner].z - inputPath.corners[expensiveCorner - 1].z))
                 );
             
-            agent.navMeshAgent.CalculatePath(newDestination, trimmedPath);
+            agent.navMeshAgent.CalculatePath(newDestination, inputPath);
             
-            return trimmedPath;
+            return true;
         }
     }
     

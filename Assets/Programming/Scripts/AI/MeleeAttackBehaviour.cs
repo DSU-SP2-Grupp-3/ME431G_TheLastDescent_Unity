@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -28,23 +30,40 @@ public class MeleeAttackBehaviour : BehaviourDefinition
 
     public override BehaviourCommands GetActiveBehaviourCommands(WorldAgent aiAgent, AI.AIParameters parameters)
     {
-        // AgentManager agentManager = aiAgent.agentManager.Get();
-        
+        AgentManager agentManager = aiAgent.agentManager.Get();
         BehaviourCommands commands = new();
-        // DebugCommand dbgc = new DebugCommand(aiAgent, "active AI");
-        // commands.AddCommand(dbgc);
-        return commands;
-        
-        // playerPositions = agent.agentManager.Get().GetPlayerPositions();
-        //
-        // //sets the ais world navMeshAgent to a new path
-        // NavMeshPath path = behaviourDefinition.FetchPath(agent.navMeshAgent, playerPositions);
-        // path = TrimPathToMoveRange(path, agent.localStats.movement);
-        //
-        // //create and queue a movecommand using the path and the agent
-        // MoveCommand aiMovement = new MoveCommand(path, agent); 
-        // agent.OverwriteQueue(aiMovement);
 
+        List<WorldAgent> targets = agentManager.GetFilteredAgents((w => w.team == teamToAttack)).ToList();
+        WorldAgent closestTarget = GetNearestAgent(aiAgent.transform.position, targets);
+        
+        //sets the ais world navMeshAgent to a new path
+        NavMeshPath path = new();
+        aiAgent.navMeshAgent.CalculatePath(closestTarget.transform.position, path);
+        bool trimmed = TrimPathToMoveRange(aiAgent, ref path, aiAgent.localStats.movement);
+        Debug.Log($"Enemy path was trimmed: {trimmed}");
+        
+        
+        if (!trimmed)
+        {
+            //create and queue a movecommand using the path and the agent
+            MoveInRangeCommand aiMovement = new MoveInRangeCommand(
+                path.corners.Last(), 
+                aiAgent.weaponStats.attackRange, 
+                aiAgent
+            ); 
+            commands.AddCommand(aiMovement);
+            
+            // if the path does not need to be trimmed then we attack the player as well
+            AttackCommand attackPlayerCommand = new AttackCommand(aiAgent, closestTarget, agentManager.damageManager);
+            commands.AddCommand(attackPlayerCommand);
+        }
+        else
+        {
+            MoveCommand aiMovement = new MoveCommand(path, aiAgent);
+            commands.AddCommand(aiMovement);
+        }
+        
+        return commands;
     }
     
     

@@ -75,7 +75,17 @@ public class TurnManager : MonoBehaviour
     // todo: create defined order for groups
     private List<WorldAgentGroup> ConvertGroupsToList()
     {
-        return groups.Values.ToList();
+        List<WorldAgentGroup> orderedGroups = new();
+
+        WorldAgentGroup players = groups.Where((pair) => pair.Key == (int)WorldAgent.Team.Player).First().Value;
+        List<WorldAgentGroup> theRest = groups
+                                        .Where((pair) => pair.Key != (int)WorldAgent.Team.Player)
+                                        .Select(pair => pair.Value)
+                                        .ToList();
+        orderedGroups.Add(players);
+        orderedGroups.AddRange(theRest);
+
+        return orderedGroups;
     }
 
     private IEnumerator TurnCycle()

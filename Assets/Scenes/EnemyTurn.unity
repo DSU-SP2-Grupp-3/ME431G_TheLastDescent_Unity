@@ -404,14 +404,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 860385213}
     - target: {fileID: 6370970628745274942, guid: 97ed44b748dc0c841b16e6a5fe72b766, type: 3}
-      propertyPath: damageManager
-      value: 
-      objectReference: {fileID: 11400000, guid: 8bf77c0c527a44d4297df7af4e954cc4, type: 2}
-    - target: {fileID: 6370970628745274942, guid: 97ed44b748dc0c841b16e6a5fe72b766, type: 3}
-      propertyPath: players.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6370970628745274942, guid: 97ed44b748dc0c841b16e6a5fe72b766, type: 3}
       propertyPath: 'players.Array.data[0]'
       value: 
       objectReference: {fileID: 1392156547}
@@ -419,10 +411,6 @@ PrefabInstance:
       propertyPath: 'players.Array.data[1]'
       value: 
       objectReference: {fileID: 12003998}
-    - target: {fileID: 6370970628745274942, guid: 97ed44b748dc0c841b16e6a5fe72b766, type: 3}
-      propertyPath: 'players.Array.data[2]'
-      value: 
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -497,8 +485,8 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 0
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
+  m_Camera: {fileID: 860385216}
+  m_PlaneDistance: 1
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -1868,45 +1856,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 29195333682023347, guid: b59844bebbb656048ae83fcbc48a0693, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3336956259090082529, guid: b59844bebbb656048ae83fcbc48a0693, type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4281112615519480919, guid: b59844bebbb656048ae83fcbc48a0693, type: 3}
-      propertyPath: behaviourDefinition
-      value: 
-      objectReference: {fileID: 11400000, guid: 89f338f6e3a506a4ba3834b87ee938f9, type: 2}
-    - target: {fileID: 4281112615519480919, guid: b59844bebbb656048ae83fcbc48a0693, type: 3}
-      propertyPath: parameters.wanderingRadius
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 4281112615519480919, guid: b59844bebbb656048ae83fcbc48a0693, type: 3}
-      propertyPath: parameters.activationDistance
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 6647577457735645191, guid: b59844bebbb656048ae83fcbc48a0693, type: 3}
       propertyPath: m_Name
       value: TestEnemy
-      objectReference: {fileID: 0}
-    - target: {fileID: 6647577457735645191, guid: b59844bebbb656048ae83fcbc48a0693, type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 7192969803080640472, guid: b59844bebbb656048ae83fcbc48a0693, type: 3}
-      propertyPath: stats
-      value: 
-      objectReference: {fileID: 11400000, guid: 99bfa7c8d88a5f2428c9ec23ca256013, type: 2}
-    - target: {fileID: 7192969803080640472, guid: b59844bebbb656048ae83fcbc48a0693, type: 3}
-      propertyPath: equippedWeapon
-      value: 
-      objectReference: {fileID: 11400000, guid: a975a668248ddab4fb8254746403b0c6, type: 2}
-    - target: {fileID: 7971850940135506053, guid: b59844bebbb656048ae83fcbc48a0693, type: 3}
-      propertyPath: m_Layer
-      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 8239414914510319209, guid: b59844bebbb656048ae83fcbc48a0693, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1959,12 +1911,12 @@ SceneRoots:
   m_Roots:
   - {fileID: 860385217}
   - {fileID: 2042319188}
+  - {fileID: 1015072548}
   - {fileID: 127120342}
   - {fileID: 1024512675}
   - {fileID: 1514897812}
   - {fileID: 22539815}
   - {fileID: 352944740}
-  - {fileID: 1015072548}
   - {fileID: 1392156546}
   - {fileID: 12003997}
   - {fileID: 1376701033222747012}
