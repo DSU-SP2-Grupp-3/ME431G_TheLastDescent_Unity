@@ -235,6 +235,8 @@ public class WorldAgent : MonoBehaviour
                                                         .Where(c => c is IMoveCommand)
                                                         .Select(c => c as IMoveCommand);
 
+        // if currently executing a move command then it should be first in the queue
+        // it won't appear in the commandQueue tho since it has been dequeued, so we add it manually
         if (currentlyExecutingCommand is IMoveCommand moveCommand)
         {
             moveCommandsInQueue.Prepend(moveCommand);
