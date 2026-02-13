@@ -51,7 +51,7 @@ public class AgentManager : Service<AgentManager>
         }
     }
 
-    private void SelectPlayer(WorldAgent playerAgent)
+    public void SelectPlayer(WorldAgent playerAgent)
     {
         if (players.Contains(playerAgent) && !playerAgent.dead)
         {
