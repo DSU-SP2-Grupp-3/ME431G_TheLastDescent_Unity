@@ -238,20 +238,20 @@ public class WorldAgent : MonoBehaviour
         }
     }
 
-    // private void Update()
-    // {
-    //     if (navMeshAgent && lineRenderer)
-    //     {
-    //         if (navMeshAgent.isStopped)
-    //         {
-    //             lineRenderer.positionCount = 0;
-    //         }
-    //         else
-    //         {
-    //             DrawPath(navMeshAgent.path);
-    //         }
-    //     }
-    // }
+    private void Update()
+    {
+        if (navMeshAgent && lineRenderer)
+        {
+            if (navMeshAgent.isStopped)
+            {
+                lineRenderer.positionCount = 0;
+            }
+            else
+            {
+                Visualizer.DrawPath(navMeshAgent.path, this);
+            }
+        }
+    }
 
     public Vector3 GetLastMoveCommandToPosition()
     {

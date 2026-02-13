@@ -74,7 +74,7 @@ public class MoveCommand : Command, IMoveCommand
 
     public override void Visualize(Visualizer visualizer)
     {
-        visualizer.DrawPath(agentPath, invokingAgent);
+        // visualizer.DrawPath(agentPath, invokingAgent);
     }
 
     public override void Break()

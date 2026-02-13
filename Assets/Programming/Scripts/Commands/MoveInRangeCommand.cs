@@ -65,7 +65,7 @@ public class MoveInRangeCommand : Command, IMoveCommand
         // fixing this is not super high priority but if we can fix it before st1 would be nice
         NavMeshPath path = new();
         NavMesh.CalculatePath(fromPosition, toPosition, NavMesh.AllAreas, path);
-        visualizer.DrawPath(path, invokingAgent);
+        // visualizer.DrawPath(path, invokingAgent);
     }
 
     public override void Break()
