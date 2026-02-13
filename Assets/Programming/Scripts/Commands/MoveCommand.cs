@@ -35,8 +35,8 @@ public class MoveCommand : Command, IMoveCommand
         this.toPosition = toPosition;
         this.fromPosition = fromPosition;
         agentPath = new();
-        possible = invokingAgent.navMeshAgent.CalculatePath(toPosition, agentPath);
         NavMesh.CalculatePath(fromPosition, toPosition, NavMesh.AllAreas, agentPath);
+        possible = agentPath.status == NavMeshPathStatus.PathComplete;
     }
 
     public MoveCommand(Vector3 toPosition, WorldAgent invokingAgent) : base(invokingAgent)
@@ -44,7 +44,8 @@ public class MoveCommand : Command, IMoveCommand
         this.fromPosition = invokingAgent.GetLastMoveCommandToPosition();
         this.toPosition = toPosition;
         agentPath = new();
-        possible = invokingAgent.navMeshAgent.CalculatePath(toPosition, agentPath);
+        NavMesh.CalculatePath(fromPosition, toPosition, NavMesh.AllAreas, agentPath);
+        possible = agentPath.status == NavMeshPathStatus.PathComplete;
     }
 
     public MoveCommand(NavMeshPath path, WorldAgent invokingAgent) : base(invokingAgent)

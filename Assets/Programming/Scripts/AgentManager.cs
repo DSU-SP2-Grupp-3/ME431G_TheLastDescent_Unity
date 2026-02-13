@@ -6,6 +6,8 @@ using UnityEngine.AI;
 
 public class AgentManager : Service<AgentManager>
 {
+    public event Action<WorldAgent> AgentRegistered;
+
     private List<WorldAgent> players;
     private List<WorldAgent> allAgents;
     private Locator<OrthographicCameraMover> cameraMover;
@@ -19,6 +21,7 @@ public class AgentManager : Service<AgentManager>
     private void Awake()
     {
         Register();
+        players = new();
         allAgents = new();
         inputManager = new();
         modeSwitcher = new();
@@ -32,15 +35,19 @@ public class AgentManager : Service<AgentManager>
         im.MovePlayerInput += MoveSelectedPlayer;
         im.ClickedEnvironment += ClickedEnvironment;
         im.ClickedOnEnemy += ClickedEnemy;
-        SelectPlayer(players[0]);
     }
 
     public void RegisterAgent(WorldAgent agent)
     {
         allAgents.Add(agent);
+        AgentRegistered?.Invoke(agent);
         if (agent.team == WorldAgent.Team.Player)
         {
             players.Add(agent);
+            if (players.Count == 1)
+            {
+                SelectPlayer(players[0]);
+            }
         }
     }
 
@@ -59,12 +66,19 @@ public class AgentManager : Service<AgentManager>
     private void MoveSelectedPlayer(Vector3 position)
     {
         MoveCommand movePlayer = new MoveCommand(position, selectedPlayer);
+
         if (!movePlayer.possible) return;
 
         RealTimeOrTurnBased(
             () => selectedPlayer.OverwriteQueue(movePlayer),
-            () => selectedPlayer.QueueCommand(movePlayer)
+            () =>
+            {
+                if (!CanQueueCommand(movePlayer)) return;
+                selectedPlayer.QueueCommand(movePlayer);
+            }
         );
+
+        Debug.Log(selectedPlayer.TotalCommandQueueCost());
     }
 
     private void ClickedEnvironment(GameObject go)
@@ -94,9 +108,15 @@ public class AgentManager : Service<AgentManager>
             },
             () =>
             {
-                selectedPlayer.QueueCommands(result.invokingAgentCommands);
-                selectedPlayer.QueueCommand(result.QueueInteractablesCommand(selectedPlayer));
-            });
+                InvokeActionCommand queueInteractables = result.QueueInteractablesCommand(selectedPlayer);
+                if (CanQueueCommands(result.invokingAgentCommands) && CanQueueCommand(queueInteractables))
+                {
+                    selectedPlayer.QueueCommands(result.invokingAgentCommands);
+                    selectedPlayer.QueueCommand(result.QueueInteractablesCommand(selectedPlayer));
+                }
+            }
+        );
+        Debug.Log(selectedPlayer.TotalCommandQueueCost());
     }
 
     private void ClickedEnemy(WorldAgent enemyAgent)
@@ -113,26 +133,43 @@ public class AgentManager : Service<AgentManager>
 
         RealTimeOrTurnBased(
             () => selectedPlayer.OverwriteQueue(commands),
-            () => selectedPlayer.QueueCommands(commands)
+            () =>
+            {
+                if (!CanQueueCommands(commands)) return;
+                selectedPlayer.QueueCommands(commands);
+            }
         );
+        Debug.Log(selectedPlayer.TotalCommandQueueCost());
     }
 
     private bool CanQueueCommand(Command command)
     {
         // don't queue null command, obviously
         if (command == null) return false;
-        // check if queueing command will exceed the allowed ap cost for the player based on WorldAgent.localStats
+        if (selectedPlayer.TotalCommandQueueCost() + command.cost > selectedPlayer.localStats.actionPoints)
+        {
+            Debug.Log($"Not enough AP remaining to queue command {command}");
+            return false;
+        }
         return true;
-        // Debug.Log($"Not enough AP remaining to queue command {command}");
     }
 
     private bool CanQueueCommands(Command[] commands)
     {
-        // don't queue empty commandsw
+        // don't queue empty commands
         if (commands.Length == 0) return false;
+        float queueCost = 0f;
+        foreach (Command command in commands)
+        {
+            queueCost += command.cost;
+            if (selectedPlayer.TotalCommandQueueCost() + queueCost > selectedPlayer.localStats.actionPoints)
+            {
+                Debug.Log($"Not enough AP remaining to queue commands starting with {commands[0]}");
+                return false;
+            }
+        }
         // check if queueing command will exceed the allowed ap cost for the player based on WorldAgent.localStats
         return true;
-        // Debug.Log($"Not enough AP remaining to queue commands starting with {commands[0]}");
     }
 
     private void RealTimeOrTurnBased(Action realTime, Action turnBased)
@@ -148,14 +185,11 @@ public class AgentManager : Service<AgentManager>
         }
     }
 
+    public List<WorldAgent> GetPlayerAgents() => players;
+
     public List<Vector3> GetPlayerPositions()
     {
         return players.Select(w => w.transform.position).ToList();
-    }
-
-    public List<NavMeshAgent> GetPlayerNavMeshAgents()
-    {
-        return players.Select(w => w.navMeshAgent).ToList();
     }
 
     /// <summary>

@@ -87,7 +87,6 @@ public class WorldAgent : MonoBehaviour
         am.damageManager.DealDamageEvent += TakeDamage;
         modeSwitcher.Get().OnEnterTurnBased += RegisterInTurnManager;
         modeSwitcher.Get().OnEnterRealTime += ExitTurnBased;
-        StartCoroutine(ExecuteCommandQueue());
     }
 
     private void RegisterInTurnManager(TurnManager turnManager)
@@ -270,7 +269,7 @@ public class WorldAgent : MonoBehaviour
         else return transform.position;
     }
 
-    public float GetCommandQueueTotalCost()
+    public float TotalCommandQueueCost()
     {
         float totalCost = 0f;
         foreach (Command command in commandQueue)

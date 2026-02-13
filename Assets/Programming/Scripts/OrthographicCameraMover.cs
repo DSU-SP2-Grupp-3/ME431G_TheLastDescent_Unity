@@ -11,6 +11,11 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
     [Tooltip("Används i princip istället för att sätta positionen på kameran")]
     private Vector3 offset;
 
+    private void Awake()
+    {
+        Register();
+    }
+
     public void SetCameraTarget(Transform target)
     {
         targetGameObject = target;

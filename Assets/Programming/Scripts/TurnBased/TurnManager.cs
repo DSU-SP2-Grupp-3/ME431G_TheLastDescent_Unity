@@ -10,10 +10,10 @@ public class TurnManager : Service<TurnManager>
     private Dictionary<int, WorldAgentGroup> groups;
     private List<WorldAgentGroup> orderedGroups;
     private List<(WorldAgent agent, int team)> slackers;
-    
+
     private Coroutine cycle;
     public WorldAgentGroup activeGroup { get; private set; }
-    
+
     private bool playerReady;
 
     [SerializeField]
@@ -24,7 +24,7 @@ public class TurnManager : Service<TurnManager>
     private Locator<ModeSwitcher> modeSwitcher;
 
     private bool executingTurn;
-    
+
     private void Awake()
     {
         Register();
@@ -41,7 +41,7 @@ public class TurnManager : Service<TurnManager>
         Locator<ReadyButton> readyButton = new();
         readyButton.Get().ReadyButtonPressed += () => playerReady = true;
     }
-    
+
     public void Activate()
     {
         cycle = StartCoroutine(TurnCycle());
@@ -102,41 +102,40 @@ public class TurnManager : Service<TurnManager>
         }
         slackers.Clear();
     }
-    
+
     private IEnumerator TurnCycle()
     {
         while (true)
         {
             playerReady = false;
             yield return new WaitUntil((() => playerReady == true));
-            
+
             turnManagerEvents.StartExecutingTurn?.Invoke();
             executingTurn = true;
-            
+
             OrderGroups();
             for (int i = 0; i < orderedGroups.Count; i++)
             {
                 activeGroup = orderedGroups[i];
                 yield return WaitForAll(activeGroup.GetGroupCommandQueues());
             }
-            
+
             activeGroup = null;
-            
 
             turnManagerEvents.FinishExecutingTurn?.Invoke();
             executingTurn = false;
 
             AddSlackersToGroups();
-            
+
+            // todo: this check should be made after each command performed by a player, in case an enemy dies halfway through player turn
             if (AllActiveEnemiesDead())
             {
                 // force entrance into real time when all enemies have been defeated
                 modeSwitcher.Get().TryEnterRealTime(true);
             }
-            
         }
     }
-    
+
     // https://www.reddit.com/r/Unity3D/comments/11imces/wait_for_all_coroutines_to_finish/
     public IEnumerator WaitForAll(List<IEnumerator> coroutines)
     {
@@ -163,18 +162,16 @@ public class TurnManager : Service<TurnManager>
     private bool AgentIsNotDead(WorldAgent agent) => !agent.dead;
     private bool AgentIsActive(WorldAgent agent) => agent.active;
     private bool AgentIsEnemy(WorldAgent agent) => agent.team == WorldAgent.Team.Enemy;
-    
+
     private bool AllActiveEnemiesDead()
     {
         // if there are any enemy agents that are active and not dead return false, otherwise true
         return !agentManager.Get().GetFilteredAgents(AgentIsNotDead, AgentIsActive, AgentIsEnemy).Any();
     }
-    
 
     [Serializable]
     public struct Events
     {
         public UnityEvent StartExecutingTurn, FinishExecutingTurn;
     }
-    
 }
