@@ -212,6 +212,7 @@ public class WorldAgent : MonoBehaviour
         dead = true;
         animator.SetTrigger("Die");
         agentManager.Get().damageManager.DealDamageEvent -= TakeDamage;
+        navMeshAgent.enabled = false;
     }
 
     // visualise command queue /se
