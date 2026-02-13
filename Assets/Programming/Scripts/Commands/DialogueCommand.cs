@@ -8,8 +8,6 @@ public class DialogueCommand : Command
     private DialogueScriptable dialogueScriptable;
     public DialogueCommand(DialogueScriptable dialogueScriptable, WorldAgent invokingAgent) : base(invokingAgent)
     {
-        //-Ma. if This is in push, remove please
-        Debug.Log("DialogueStarted");
         this.dialogueScriptable = dialogueScriptable;
 
     }
