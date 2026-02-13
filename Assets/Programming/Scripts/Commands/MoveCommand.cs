@@ -1,8 +1,9 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class MoveCommand : Command
+public class MoveCommand : Command, IMoveCommand
 {
     // todo: calculate ap costs via Command.cost and prevent adding commands that would exceed ap cost in turn based
     public override float cost
@@ -19,6 +20,7 @@ public class MoveCommand : Command
     }
 
     private Vector3 toPosition;
+    private Vector3 fromPosition;
 
     public readonly NavMeshPath agentPath;
     public readonly bool possible;
@@ -26,40 +28,53 @@ public class MoveCommand : Command
     private const float playEndAnimationDistance = 0.5f;
     private const float ignoreMovementDistance = 0.1f;
 
+    public Vector3 ToPosition() => toPosition;
+
+    public MoveCommand(Vector3 fromPosition, Vector3 toPosition, WorldAgent invokingAgent) : base(invokingAgent)
+    {
+        this.toPosition = toPosition;
+        this.fromPosition = fromPosition;
+        agentPath = new();
+        possible = invokingAgent.navMeshAgent.CalculatePath(toPosition, agentPath);
+        NavMesh.CalculatePath(fromPosition, toPosition, NavMesh.AllAreas, agentPath);
+    }
+
     public MoveCommand(Vector3 toPosition, WorldAgent invokingAgent) : base(invokingAgent)
     {
+        this.fromPosition = invokingAgent.GetLastMoveCommandToPosition();
         this.toPosition = toPosition;
         agentPath = new();
         possible = invokingAgent.navMeshAgent.CalculatePath(toPosition, agentPath);
-    } 
-    
+    }
+
     public MoveCommand(NavMeshPath path, WorldAgent invokingAgent) : base(invokingAgent)
     {
+        this.fromPosition = path.corners[0];
+        this.toPosition = path.corners.Last();
         agentPath = path;
         possible = path.status == NavMeshPathStatus.PathComplete;
-    } 
+    }
 
     public override IEnumerator Execute()
     {
-        
         // do not do anything if the path is not valid -se
         if (!possible) yield break;
-        
+
         // todo: move animation only plays once for some reason
-        
+
         invokingAgent.navMeshAgent.SetPath(agentPath);
         if (invokingAgent.navMeshAgent.remainingDistance < ignoreMovementDistance) yield break;
-        
-        invokingAgent.DrawPath(invokingAgent.navMeshAgent.path); // todo: should be moved to visualiser 
+
+        //Visualize();
+
         invokingAgent.animator.SetTrigger("StartMoving");
         yield return new WaitUntil(() => invokingAgent.navMeshAgent.remainingDistance <= playEndAnimationDistance);
         invokingAgent.animator.SetTrigger("StopMoving");
     }
 
-    // todo: move visualisation to seperate Visualiser component and use Command.Visualize to draw them
-    public override void Visualize()
+    public override void Visualize(Visualizer visualizer)
     {
-        
+        visualizer.DrawPath(agentPath, invokingAgent);
     }
 
     public override void Break()
