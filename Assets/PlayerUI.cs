@@ -30,7 +30,7 @@ public class PlayerUI : MonoBehaviour
 
         
         hitPointsText.text = $"HP: {player.localStats.hitPoints}/{maxHP}";
-        actionPointsText.text = $"AP: {player.localStats.actionPoints}/{player.localStats.initActionPoints}";
+        actionPointsText.text = $"AP: {player.localStats.actionPoints}/{maxAP}";
     }
 
     public void ClickedOnPlayer()
