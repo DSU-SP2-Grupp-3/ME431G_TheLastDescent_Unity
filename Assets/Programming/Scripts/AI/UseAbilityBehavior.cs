@@ -3,13 +3,11 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
-[CreateAssetMenu(fileName = "NewMeleeAttackDefinition", menuName = "AI/Behaviour Defintion/Melee Attack", order = 0)]
-public class MeleeAttackBehaviour : BehaviourDefinition
+[CreateAssetMenu(fileName = "NewUseAbilityDefinition", menuName = "AI/Behaviour Defintion/Use Ability", order = 0)]
+public class UseAbilityBehavior : BehaviourDefinition
 {
     [SerializeField]
     private WorldAgent.Team teamToAttack;
-
-
     public override BehaviourCommands GetIdleBehaviourCommands(WorldAgent aiAgent, AI.AIParameters parameters)
     {
         BehaviourCommands commands = new();
@@ -23,7 +21,7 @@ public class MeleeAttackBehaviour : BehaviourDefinition
             MoveCommand moveCommand = new MoveCommand(aiAgent.initialPosition, aiAgent);
             commands.AddCommand(moveCommand);
         }
-
+        
         // DebugCommand dbgc = new DebugCommand(aiAgent, "idle AI");
         return commands;
     }
@@ -35,7 +33,7 @@ public class MeleeAttackBehaviour : BehaviourDefinition
 
         List<WorldAgent> targets = agentManager.GetFilteredAgents((w => w.team == teamToAttack)).ToList();
         WorldAgent closestTarget = GetNearestAgent(aiAgent.transform.position, targets);
-
+        
         //sets the ais world navMeshAgent to a new path
         NavMeshPath path = new();
         aiAgent.navMeshAgent.CalculatePath(closestTarget.transform.position, path);
@@ -43,25 +41,22 @@ public class MeleeAttackBehaviour : BehaviourDefinition
         bool trimmed = TrimPathToMoveRange(aiAgent, ref path, aiAgent.localStats.movement);
 
         bool canAttackWithinRemainingDistance =
-            aiAgent.navMeshAgent.remainingDistance
+            aiAgent.navMeshAgent.remainingDistance 
             < aiAgent.localStats.movement + aiAgent.weaponStats.attackRange;
         if (!trimmed || canAttackWithinRemainingDistance)
         {
             //create and queue a movecommand using the path and the agent
             MoveInRangeCommand aiMovement = new MoveInRangeCommand(
-                path.corners.Last(),
-                aiAgent.weaponStats.attackRange,
+                path.corners.Last(), 
+                aiAgent.weaponStats.attackRange, 
                 aiAgent
-            );
+            ); 
             commands.AddCommand(aiMovement);
-
+            
             // if the path does not need to be trimmed then we attack the player as well
-
-            /*
+            AttackCommand attackPlayerCommand = new AttackCommand(aiAgent, closestTarget, agentManager.damageManager);
             LookAtCommand lookAtCommand = new LookAtCommand(aiAgent, closestTarget);
             commands.AddCommand(lookAtCommand);
-            */ 
-            AttackCommand attackPlayerCommand = new AttackCommand(aiAgent, closestTarget, agentManager.damageManager);
             commands.AddCommand(attackPlayerCommand);
         }
         else
@@ -69,10 +64,10 @@ public class MeleeAttackBehaviour : BehaviourDefinition
             MoveCommand aiMovement = new MoveCommand(path, aiAgent);
             commands.AddCommand(aiMovement);
         }
-
+        
         return commands;
     }
-
-
+    
+    
 
 }
