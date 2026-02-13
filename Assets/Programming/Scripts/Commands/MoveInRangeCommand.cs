@@ -4,7 +4,6 @@ using UnityEngine.AI;
 
 public class MoveInRangeCommand : Command, IMoveCommand
 {
-    // todo: -se: borde inte vara hårdkodad, borde bero på hur långt man går
     public override float cost
     {
         get
@@ -14,7 +13,7 @@ public class MoveInRangeCommand : Command, IMoveCommand
             {
                 length += (agentPath.corners[i] - agentPath.corners[i - 1]).magnitude;
             }
-            return length * invokingAgent.localStats.movementCostModifier;
+            return (length - range) * invokingAgent.localStats.movementCostModifier;
         }
     }
 
@@ -37,6 +36,8 @@ public class MoveInRangeCommand : Command, IMoveCommand
         this.toPosition = toPosition;
         this.range = range;
         agentPath = new();
+        NavMesh.CalculatePath(fromPosition, toPosition, NavMesh.AllAreas, agentPath);
+        possible = agentPath.status != NavMeshPathStatus.PathInvalid;
     }
 
     public override IEnumerator Execute()
@@ -60,12 +61,7 @@ public class MoveInRangeCommand : Command, IMoveCommand
 
     public override void Visualize(Visualizer visualizer)
     {
-        // todo: don't think this works if either position is outside navmesh
-        // SetDestination seems to still work but can't precalculate path
-        // fixing this is not super high priority but if we can fix it before st1 would be nice
-        NavMeshPath path = new();
-        NavMesh.CalculatePath(fromPosition, toPosition, NavMesh.AllAreas, path);
-        // visualizer.DrawPath(path, invokingAgent);
+        visualizer.DrawPath(agentPath, invokingAgent);
     }
 
     public override void Break()

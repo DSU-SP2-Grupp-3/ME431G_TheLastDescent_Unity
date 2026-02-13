@@ -4,10 +4,32 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "AgentStats", menuName = "Stats/Agent Stats")]
 public class AgentStats : ScriptableObject
 {
+    public event Action<float> HitPointsChanged;
+    public event Action<float> ActionPointsChanged;
+
     [SerializeField]
-    private float initHitPoints, initActionPoints, initMovement, initMovementCostModifier;
-    public float hitPoints { get; set; }
-    public float actionPoints { get; set; }
+    public float initHitPoints, initActionPoints, initMovement, initMovementCostModifier;
+    private float _hitPoints;
+    public float hitPoints
+    {
+        get => _hitPoints;
+        set
+        {
+            _hitPoints = value;
+            HitPointsChanged?.Invoke(_hitPoints);
+        }
+    }
+    private float _actionPoints;
+
+    public float actionPoints
+    {
+        get => _actionPoints;
+        set
+        {
+            _actionPoints = value + _actionPoints > initActionPoints ? initHitPoints : value;
+            ActionPointsChanged?.Invoke(_actionPoints);
+        }
+    }
     public float movement { get; set; }
     public float movementCostModifier { get; set; }
 

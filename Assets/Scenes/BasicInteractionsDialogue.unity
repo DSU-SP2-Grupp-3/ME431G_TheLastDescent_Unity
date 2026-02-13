@@ -928,8 +928,10 @@ MonoBehaviour:
   team: 0
   animator: {fileID: 306374937}
   navMeshAgent: {fileID: 306374934}
+  lineRenderer: {fileID: 0}
   cameraFocusTransform: {fileID: 495731673}
   stats: {fileID: 11400000, guid: 781734abf7c8bcf4095b28600dd9534d, type: 2}
+  equippedWeapon: {fileID: 0}
 --- !u!95 &306374937
 Animator:
   serializedVersion: 7
@@ -1426,6 +1428,7 @@ MonoBehaviour:
   - {fileID: 933085537}
   - {fileID: 1609634796}
   cameraMover: {fileID: 53403564}
+  damageManager: {fileID: 11400000, guid: 8bf77c0c527a44d4297df7af4e954cc4, type: 2}
 --- !u!1 &540073923
 GameObject:
   m_ObjectHideFlags: 0
@@ -2332,8 +2335,10 @@ MonoBehaviour:
   team: 0
   animator: {fileID: 933085539}
   navMeshAgent: {fileID: 933085540}
+  lineRenderer: {fileID: 0}
   cameraFocusTransform: {fileID: 798990937}
   stats: {fileID: 11400000, guid: a2cd790a8156f144f9c816b44d47befa, type: 2}
+  equippedWeapon: {fileID: 0}
 --- !u!120 &933085538
 LineRenderer:
   serializedVersion: 2
@@ -3106,8 +3111,10 @@ MonoBehaviour:
   team: 4
   animator: {fileID: 0}
   navMeshAgent: {fileID: 0}
+  lineRenderer: {fileID: 0}
   cameraFocusTransform: {fileID: 0}
   stats: {fileID: 0}
+  equippedWeapon: {fileID: 0}
 --- !u!1 &1401669113
 GameObject:
   m_ObjectHideFlags: 0
@@ -3775,8 +3782,10 @@ MonoBehaviour:
   team: 0
   animator: {fileID: 1609634798}
   navMeshAgent: {fileID: 1609634799}
+  lineRenderer: {fileID: 0}
   cameraFocusTransform: {fileID: 959964289}
   stats: {fileID: 11400000, guid: d6721126d80926842a2ee2ad999f40a8, type: 2}
+  equippedWeapon: {fileID: 0}
 --- !u!120 &1609634797
 LineRenderer:
   serializedVersion: 2
@@ -4302,8 +4311,10 @@ MonoBehaviour:
   team: 4
   animator: {fileID: 0}
   navMeshAgent: {fileID: 0}
+  lineRenderer: {fileID: 0}
   cameraFocusTransform: {fileID: 0}
   stats: {fileID: 0}
+  equippedWeapon: {fileID: 0}
 --- !u!114 &1647604158
 MonoBehaviour:
   m_ObjectHideFlags: 0

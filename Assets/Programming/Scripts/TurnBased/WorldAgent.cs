@@ -56,9 +56,9 @@ public class WorldAgent : MonoBehaviour
     private Locator<ModeSwitcher> modeSwitcher;
     private Locator<AgentManager> agentManager;
     private Locator<TurnManager> turnManager;
-    
+
     public AgentManager manager => agentManager.Get();
-    
+
     private Queue<Command> commandQueue;
     private Command currentlyExecutingCommand;
     private Coroutine currentExecutingCommandCoroutine;
@@ -67,13 +67,13 @@ public class WorldAgent : MonoBehaviour
     private void Awake()
     {
         initialPosition = transform.position;
-        
+
         commandQueue = new();
-        
+
         agentManager = new();
         modeSwitcher = new();
         turnManager = new();
-        
+
         if (stats) localStats = stats.Clone();
         if (team == Team.Player) active = true;
     }
@@ -87,7 +87,6 @@ public class WorldAgent : MonoBehaviour
         am.damageManager.DealDamageEvent += TakeDamage;
         modeSwitcher.Get().OnEnterTurnBased += RegisterInTurnManager;
         modeSwitcher.Get().OnEnterRealTime += ExitTurnBased;
-        StartCoroutine(ExecuteCommandQueue());
     }
 
     private void RegisterInTurnManager(TurnManager turnManager)
@@ -197,10 +196,9 @@ public class WorldAgent : MonoBehaviour
             {
                 if (modeSwitcher.Get().TryEnterTurnBased(true))
                 {
-                    ForcedEnterTurnBased?.Invoke(this);   
+                    ForcedEnterTurnBased?.Invoke(this);
                 }
             }
-            
         }
     }
 
@@ -212,6 +210,7 @@ public class WorldAgent : MonoBehaviour
         dead = true;
         animator.SetTrigger("Die");
         agentManager.Get().damageManager.DealDamageEvent -= TakeDamage;
+        navMeshAgent.enabled = false;
     }
 
     // visualise command queue /se
@@ -268,6 +267,16 @@ public class WorldAgent : MonoBehaviour
 
         if (moveCommandsInQueue.Any()) return moveCommandsInQueue.Last().ToPosition();
         else return transform.position;
+    }
+
+    public float TotalCommandQueueCost()
+    {
+        float totalCost = 0f;
+        foreach (Command command in commandQueue)
+        {
+            totalCost += command.cost;
+        }
+        return totalCost;
     }
 
     public void TriggerAnimationEvent(string id)
