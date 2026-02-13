@@ -11,7 +11,7 @@ public class UniversalEventController : MonoBehaviour
 {
     #region Definitioner
     //Enumerables
-    
+
     public enum EventTypeSelect
     {
         Music,
@@ -33,7 +33,7 @@ public class UniversalEventController : MonoBehaviour
         UI,
         Interactable
     }
-    
+
     public enum MusicEventSelect
     {
         Test,
@@ -41,7 +41,7 @@ public class UniversalEventController : MonoBehaviour
         Test3,
         FyraTest
     }
-    
+
     public enum CharEventSelect
     {
         Test1,
@@ -73,7 +73,7 @@ public class UniversalEventController : MonoBehaviour
         Ambience2,
         Amby,
     }
-    
+
     //Parametrar
     [System.Serializable]
     public struct EventParameter
@@ -81,17 +81,17 @@ public class UniversalEventController : MonoBehaviour
         public string name;
         public float value;
     }
-    
+
     #endregion
-    
+
     #region Deklarationer
-    
+
     //Misc
     private GameObject aM;
     private Locator<AudioManager> aMLocator = new();
     private AudioManager audioManager;
     public EventInstance SfxInstance;
-    
+
     //Boolean
     [SerializeField] private bool playOnStart;
     [SerializeField] private bool startWithParameters;
@@ -100,7 +100,7 @@ public class UniversalEventController : MonoBehaviour
     [SerializeField] private bool positionStatic;
     public bool is3DEvent = false;
     private bool initiated;
-    
+
     [SerializeField] private bool debugMode;
     [Tooltip("Debug Initiate Method.")]
     [SerializeField] private bool dbInit;
@@ -120,7 +120,7 @@ public class UniversalEventController : MonoBehaviour
     [SerializeField] private bool dbStop;
     [Tooltip("Debug CreateInstance Method.")]
     [SerializeField] private bool dbCreate;
-    
+
     //Enum
     [SerializeField] private EventTypeSelect eventTypeSelect;
     [SerializeField] private ActionTypeSelect actionTypeSelect;
@@ -131,20 +131,22 @@ public class UniversalEventController : MonoBehaviour
     [SerializeField] private UIEventSelect uiEventSelect;
     [SerializeField] private InterEventSelect interEventSelect;
     [SerializeField] private AmbienceEventSelect ambienceEventSelect;
-    
+
     //Array
     [SerializeField] private EventParameter[] parameters;
-    
+
     //Intergers
     private int eventIndex;
-    
     #endregion
-    
+    //-Ma. Vi kommer behöva göra om detta till att ladda in markerade ljud i början av varje scen 
+    //eftersom scriptable objects inte kan koppla sig till en audio manager innan scenen existerar.
+    //ScriptableObjects är en potentiel lag maskin i dags läget.
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if(aMLocator.TryGet(out AudioManager audioManager)){this.audioManager = audioManager;}
-        else {new Exception("No audioManager registered in scene"); return;}
+        if (aMLocator.TryGet(out AudioManager audioManager)) { this.audioManager = audioManager; }
+        else { new Exception("No audioManager registered in scene"); return; }
 
         CreateInstance();
         if (playOnStart)
@@ -152,7 +154,7 @@ public class UniversalEventController : MonoBehaviour
             Initiate();
             if (debugMode)
             {
-                Debug.Log("[" + gameObject.name + "] " + " was initiated on Start().");
+                Debug.Log("[" + name + "] " + " was initiated on Start().");
             }
         }
     }
@@ -162,7 +164,7 @@ public class UniversalEventController : MonoBehaviour
     {
         if (is3DEvent && !positionStatic)
         {
-            RuntimeManager.AttachInstanceToGameObject(SfxInstance, gameObject.GetComponent<Transform>(), false);
+            //RuntimeManager.AttachInstanceToGameObject(SfxInstance, GetComponent<Transform>(), false);
         }
     }
 
@@ -175,13 +177,13 @@ public class UniversalEventController : MonoBehaviour
                 SetEventParameters();
                 if (debugMode && dbInit)
                 {
-                    Debug.Log("[" + gameObject.name + "] " + " was initiated with StartWithParameters");
+                    Debug.Log("[" + name + "] " + " was initiated with StartWithParameters");
                 }
             }
             PlayEvent();
             if (debugMode && dbInit)
             {
-                Debug.Log("[" + gameObject.name + "] " + " Initiated SFX Event");
+                Debug.Log("[" + name + "] " + " Initiated SFX Event");
             }
         }
         else
@@ -193,13 +195,13 @@ public class UniversalEventController : MonoBehaviour
                     SetEventParameters();
                     if (debugMode && dbInit)
                     {
-                        Debug.Log("[" + gameObject.name + "] " + " was initiated with StartWithParameters.");
+                        Debug.Log("[" + name + "] " + " was initiated with StartWithParameters.");
                     }
                 }
                 PlayEvent();
                 if (debugMode && dbInit)
                 {
-                    Debug.Log("[" + gameObject.name + "] " + " was initiated with Play.");
+                    Debug.Log("[" + name + "] " + " was initiated with Play.");
                 }
             }
             else if (SelectedActionType() == 2) //Stop
@@ -207,7 +209,7 @@ public class UniversalEventController : MonoBehaviour
                 StopEvent();
                 if (debugMode && dbInit)
                 {
-                    Debug.Log("[" + gameObject.name + "] " + " was initiated with Stop.");
+                    Debug.Log("[" + name + "] " + " was initiated with Stop.");
                 }
             }
             else if (SelectedActionType() == 3) //Set Parameter
@@ -215,11 +217,11 @@ public class UniversalEventController : MonoBehaviour
                 SetEventParameters();
                 if (debugMode && dbInit)
                 {
-                    Debug.Log("[" + gameObject.name + "] " + " was initiated with SetParameter.");
+                    Debug.Log("[" + name + "] " + " was initiated with SetParameter.");
                 }
             }
         }
-        
+
     }
 
     private int SelectedEventType()
@@ -239,7 +241,7 @@ public class UniversalEventController : MonoBehaviour
         }
         if (debugMode && dbSET)
         {
-            Debug.Log("[" + gameObject.name + "] " + "Event Type set to " + eventTypeSelect);
+            Debug.Log("[" + name + "] " + "Event Type set to " + eventTypeSelect);
         }
         return eventType;
     }
@@ -256,12 +258,12 @@ public class UniversalEventController : MonoBehaviour
                 actionType = 2;
                 break;
             case ActionTypeSelect.SetParameter:
-                actionType = 3;    
+                actionType = 3;
                 break;
         }
         if (debugMode && dbSAT)
         {
-            Debug.Log("[" + gameObject.name + "] " + "Action Type set to " + actionTypeSelect);
+            Debug.Log("[" + name + "] " + "Action Type set to " + actionTypeSelect);
         }
         return actionType;
     }
@@ -287,7 +289,7 @@ public class UniversalEventController : MonoBehaviour
 
         if (debugMode && dbSST)
         {
-            Debug.Log("[" + gameObject.name + "] " + "Sfx Type set to " + sfxTypeSelect);
+            Debug.Log("[" + name + "] " + "Sfx Type set to " + sfxTypeSelect);
         }
         return sfxType;
     }
@@ -296,8 +298,8 @@ public class UniversalEventController : MonoBehaviour
     {
         if (parameters == null || parameters.Length == 0)
         {
-            if (debugMode && dbSEP){}
-            Debug.LogError("[" + gameObject.name + "] " + "Parameter array empty or null!");
+            if (debugMode && dbSEP) { }
+            Debug.LogError("[" + name + "] " + "Parameter array empty or null!");
         }
         else
         {
@@ -324,30 +326,30 @@ public class UniversalEventController : MonoBehaviour
                         {
                             valOver = false;
                         }
-                        
+
                     }
-                    
+
                     if (matchFound && valOver == false)
                     {
                         //Vid korrekt namngiven parameter och värdet är inom parameterns maximala värde.
                         audioManager.muInstance.setParameterByName(x.name, x.value);
-                        if (debugMode && dbSEP){Debug.Log("[" + gameObject.name + "] " + x.name + " is set to " + x.value);}
-                        
+                        if (debugMode && dbSEP) { Debug.Log("[" + name + "] " + x.name + " is set to " + x.value); }
+
                     }
-                    else if (matchFound && valOver) 
+                    else if (matchFound && valOver)
                     {
                         //Om parametervärdet överskrids
-                        if (debugMode && dbSEP){Debug.LogError("[" + gameObject.name + "] " + x.name+ " found, but its maximum value was outside of allowed range.");}
-                        
+                        if (debugMode && dbSEP) { Debug.LogError("[" + name + "] " + x.name + " found, but its maximum value was outside of allowed range."); }
+
                     }
                     else
                     {
                         //Om parameternamnet ej hittas i eventet
-                        if (debugMode && dbSEP){Debug.LogError("[" + gameObject.name + "] " + "Could not set parameter!" + x.name + " not found.");}
-                        
-                    
+                        if (debugMode && dbSEP) { Debug.LogError("[" + name + "] " + "Could not set parameter!" + x.name + " not found."); }
+
+
                     }
-                    
+
                 }
             }
             else if (SelectedEventType() == 2) //Ambiance
@@ -373,27 +375,27 @@ public class UniversalEventController : MonoBehaviour
                         {
                             valOver = false;
                         }
-                        
+
                     }
-                    
+
                     if (matchFound && valOver == false)
                     {
                         //Vid korrekt namngiven parameter och värdet är inom parameterns maximala värde.
                         audioManager.ambInstance.setParameterByName(x.name, x.value);
-                        if (debugMode && dbSEP){Debug.Log("[" + gameObject.name + "] " + x.name + " is set to " + x.value);}
+                        if (debugMode && dbSEP) { Debug.Log("[" + name + "] " + x.name + " is set to " + x.value); }
                     }
-                    else if (matchFound && valOver) 
+                    else if (matchFound && valOver)
                     {
                         //Om parametervärdet överskrids
-                        if (debugMode && dbSEP){Debug.LogError("[" + gameObject.name + "] " + x.name+ " found, but its maximum value was outside of allowed range.");}
+                        if (debugMode && dbSEP) { Debug.LogError("[" + name + "] " + x.name + " found, but its maximum value was outside of allowed range."); }
                     }
                     else
                     {
                         //Om parameternamnet ej hittas i eventet
-                        if (debugMode && dbSEP){Debug.LogError("[" + gameObject.name + "] " + "Could not set parameter!" + x.name + " not found.");}
-                    
+                        if (debugMode && dbSEP) { Debug.LogError("[" + name + "] " + "Could not set parameter!" + x.name + " not found."); }
+
                     }
-                    
+
                 }
             }
             else if (SelectedEventType() == 3) //Sfx
@@ -419,33 +421,33 @@ public class UniversalEventController : MonoBehaviour
                         {
                             valOver = false;
                         }
-                        
+
                     }
-                    
+
                     if (matchFound && valOver == false)
                     {
                         //Vid korrekt namngiven parameter och värdet är inom parameterns maximala värde.
                         SfxInstance.setParameterByName(x.name, x.value);
-                        if (debugMode && dbSEP){Debug.Log("[" + gameObject.name + "] " + x.name + " is set to " + x.value);}
+                        if (debugMode && dbSEP) { Debug.Log("[" + name + "] " + x.name + " is set to " + x.value); }
                     }
-                    else if (matchFound && valOver) 
+                    else if (matchFound && valOver)
                     {
                         //Om parametervärdet överskrids
-                        if (debugMode && dbSEP){Debug.LogError("[" + gameObject.name + "] " + x.name+ " found, but its maximum value was outside of allowed range.");}
+                        if (debugMode && dbSEP) { Debug.LogError("[" + name + "] " + x.name + " found, but its maximum value was outside of allowed range."); }
                     }
                     else
                     {
                         //Om parameternamnet ej hittas i eventet
-                        if (debugMode && dbSEP){Debug.LogError("[" + gameObject.name + "] " + "Could not set parameter!" + x.name + " not found.");}
-                    
+                        if (debugMode && dbSEP) { Debug.LogError("[" + name + "] " + "Could not set parameter!" + x.name + " not found."); }
+
                     }
-                    
+
                 }
             }
         }
-        
+
     }
-    
+
     private void SetEventIndex()
     {
         if (SelectedEventType() == 1) //Music
@@ -513,10 +515,10 @@ public class UniversalEventController : MonoBehaviour
                 }
             }
         }
-        
+
         if (debugMode && dbSEI)
         {
-            Debug.Log("[" + gameObject.name + "] " + "Event Index set to " + eventIndex);
+            Debug.Log("[" + name + "] " + "Event Index set to " + eventIndex);
         }
     }
 
@@ -529,14 +531,14 @@ public class UniversalEventController : MonoBehaviour
             desc.getPath(out string path);
             if (state == PLAYBACK_STATE.STOPPED || state == PLAYBACK_STATE.STOPPING)
             {
-            
-                if (debugMode && dbSET){Debug.Log("[" + gameObject.name + "] " + "Playing: " + path);}
-                
+
+                if (debugMode && dbSET) { Debug.Log("[" + name + "] " + "Playing: " + path); }
+
                 audioManager.muInstance.start();
             }
             else
             {
-                if (debugMode && dbSET){Debug.Log("[" + gameObject.name + "] " + path + " is already playing!");}
+                if (debugMode && dbSET) { Debug.Log("[" + name + "] " + path + " is already playing!"); }
             }
         }
         else if (SelectedEventType() == 2) //Ambiance
@@ -546,12 +548,12 @@ public class UniversalEventController : MonoBehaviour
             desc.getPath(out string path);
             if (state == PLAYBACK_STATE.STOPPED || state == PLAYBACK_STATE.STOPPING)
             {
-                if (debugMode && dbSET){Debug.Log("[" + gameObject.name + "] " + "Playing: " + path);}
+                if (debugMode && dbSET) { Debug.Log("[" + name + "] " + "Playing: " + path); }
                 audioManager.ambInstance.start();
             }
             else
             {
-                if (debugMode && dbSET){Debug.Log("[" + gameObject.name + "] " + path + " is already playing!");}
+                if (debugMode && dbSET) { Debug.Log("[" + name + "] " + path + " is already playing!"); }
             }
         }
         else if (SelectedEventType() == 3) //Sfx
@@ -561,20 +563,20 @@ public class UniversalEventController : MonoBehaviour
             desc.getPath(out string path);
             if (state == PLAYBACK_STATE.STOPPED || state == PLAYBACK_STATE.STOPPING)
             {
-                if (debugMode && dbSET){Debug.Log("[" + gameObject.name + "] " + "Playing: " + path);}
+                if (debugMode && dbSET) { Debug.Log("[" + name + "] " + "Playing: " + path); }
                 SfxInstance.start();
                 if (toggleRelease)
                 {
-                    if (debugMode && dbSET){Debug.Log("[" + gameObject.name + "] " + "Release toggled ON for: " + path);}
+                    if (debugMode && dbSET) { Debug.Log("[" + name + "] " + "Release toggled ON for: " + path); }
                     SfxInstance.release();
                 }
             }
             else
             {
-                if (debugMode && dbSET) {Debug.Log("[" + gameObject.name + "] " + path + " is already playing!");}
+                if (debugMode && dbSET) { Debug.Log("[" + name + "] " + path + " is already playing!"); }
             }
         }
-        
+
     }
 
     private void StopEvent()
@@ -586,13 +588,13 @@ public class UniversalEventController : MonoBehaviour
             desc.getPath(out string path);
             if (state == PLAYBACK_STATE.PLAYING)
             {
-                if (debugMode && dbStop){Debug.Log("[" + gameObject.name + "] " + "Stopping: " + path);}
+                if (debugMode && dbStop) { Debug.Log("[" + name + "] " + "Stopping: " + path); }
                 audioManager.muInstance.stop(allowFadeout ? STOP_MODE.ALLOWFADEOUT : STOP_MODE.IMMEDIATE);
                 audioManager.muInstance.release();
             }
             else
             {
-                if (debugMode && dbStop){Debug.Log("[" + gameObject.name + "] " + path + " is already stopped!");}
+                if (debugMode && dbStop) { Debug.Log("[" + name + "] " + path + " is already stopped!"); }
             }
         }
         else if (SelectedEventType() == 2) //Ambiance
@@ -602,13 +604,13 @@ public class UniversalEventController : MonoBehaviour
             desc.getPath(out string path);
             if (state == PLAYBACK_STATE.PLAYING)
             {
-                if (debugMode && dbStop){Debug.Log("[" + gameObject.name + "] " + "Stopping: " + path);}
+                if (debugMode && dbStop) { Debug.Log("[" + name + "] " + "Stopping: " + path); }
                 audioManager.ambInstance.stop(allowFadeout ? STOP_MODE.ALLOWFADEOUT : STOP_MODE.IMMEDIATE);
                 audioManager.ambInstance.release();
             }
             else
             {
-                if (debugMode && dbStop){Debug.Log("[" + gameObject.name + "] " + path + " is already stopped!");}
+                if (debugMode && dbStop) { Debug.Log("[" + name + "] " + path + " is already stopped!"); }
             }
         }
     }
@@ -621,7 +623,7 @@ public class UniversalEventController : MonoBehaviour
             audioManager.muInstance = RuntimeManager.CreateInstance(audioManager.muRef[eventIndex]);
             if (debugMode && dbCreate)
             {
-                Debug.Log("[" + gameObject.name + "] " + "muInstance is created with " + audioManager.muRef[eventIndex].Path);
+                Debug.Log("[" + name + "] " + "muInstance is created with " + audioManager.muRef[eventIndex].Path);
             }
         }
         else if (SelectedEventType() == 2) //Ambiance
@@ -629,7 +631,7 @@ public class UniversalEventController : MonoBehaviour
             audioManager.ambInstance = RuntimeManager.CreateInstance(audioManager.ambRef[eventIndex]);
             if (debugMode && dbCreate)
             {
-                Debug.Log("[" + gameObject.name + "] " + "ambInstance is created with " + audioManager.ambRef[eventIndex].Path);
+                Debug.Log("[" + name + "] " + "ambInstance is created with " + audioManager.ambRef[eventIndex].Path);
             }
         }
         else if (SelectedEventType() == 3)  //Sfx
@@ -637,10 +639,10 @@ public class UniversalEventController : MonoBehaviour
             CheckFor3D();
             if (is3DEvent && positionStatic)
             {
-                RuntimeManager.AttachInstanceToGameObject(SfxInstance, gameObject.GetComponent<Transform>(), true);
+                //RuntimeManager.AttachInstanceToGameObject(SfxInstance, GetComponent<Transform>(), true);
                 if (debugMode && dbCreate)
                 {
-                    Debug.Log("[" + gameObject.name + "] " + "was attached with SfxInstance, and is positioned statically.");
+                    Debug.Log("[" + name + "] " + "was attached with SfxInstance, and is positioned statically.");
                 }
             }
             if (SelectedSfxType() == 1) //Character
@@ -648,7 +650,7 @@ public class UniversalEventController : MonoBehaviour
                 SfxInstance = RuntimeManager.CreateInstance(audioManager.characterRef[eventIndex]);
                 if (debugMode && dbCreate)
                 {
-                    Debug.Log("[" + gameObject.name + "] " + "SfxInstance is created with " + audioManager.characterRef[eventIndex].Path);
+                    Debug.Log("[" + name + "] " + "SfxInstance is created with " + audioManager.characterRef[eventIndex].Path);
                 }
             }
             else if (SelectedSfxType() == 2) //Enemy
@@ -656,7 +658,7 @@ public class UniversalEventController : MonoBehaviour
                 SfxInstance = RuntimeManager.CreateInstance(audioManager.enemyRef[eventIndex]);
                 if (debugMode && dbCreate)
                 {
-                    Debug.Log("[" + gameObject.name + "] " + "SfxInstance is created with " + audioManager.enemyRef[eventIndex].Path);
+                    Debug.Log("[" + name + "] " + "SfxInstance is created with " + audioManager.enemyRef[eventIndex].Path);
                 }
             }
             else if (SelectedSfxType() == 3) //UI
@@ -664,7 +666,7 @@ public class UniversalEventController : MonoBehaviour
                 SfxInstance = RuntimeManager.CreateInstance(audioManager.uiRef[eventIndex]);
                 if (debugMode && dbCreate)
                 {
-                    Debug.Log("[" + gameObject.name + "] " + "SfxInstance is created with " + audioManager.uiRef[eventIndex].Path);
+                    Debug.Log("[" + name + "] " + "SfxInstance is created with " + audioManager.uiRef[eventIndex].Path);
                 }
             }
             else if (SelectedSfxType() == 4) //Interactable
@@ -672,7 +674,7 @@ public class UniversalEventController : MonoBehaviour
                 SfxInstance = RuntimeManager.CreateInstance(audioManager.interactRef[eventIndex]);
                 if (debugMode && dbCreate)
                 {
-                    Debug.Log("[" + gameObject.name + "] " + "SfxInstance is created with " + audioManager.interactRef[eventIndex].Path);
+                    Debug.Log("[" + name + "] " + "SfxInstance is created with " + audioManager.interactRef[eventIndex].Path);
                 }
             }
         }
@@ -718,6 +720,6 @@ public class UniversalEventController : MonoBehaviour
                 is3DEvent = true;
             }
         }
-        
+
     }
 }

@@ -10,6 +10,7 @@ public class WorldAgent : MonoBehaviour
     private static bool enemyTakesSimulataneousTurns = false;
 
     public event Action<string> AnimationEventTriggered;
+    public event Action<WorldAgent> ForcedEnterTurnBased;
 
     public enum Team
     {
@@ -53,8 +54,10 @@ public class WorldAgent : MonoBehaviour
     public Vector3 initialPosition { get; private set; }
 
     private Locator<ModeSwitcher> modeSwitcher;
-    [NonSerialized]
-    public Locator<AgentManager> agentManager;
+    private Locator<AgentManager> agentManager;
+    private Locator<TurnManager> turnManager;
+
+    public AgentManager manager => agentManager.Get();
 
     private Queue<Command> commandQueue;
     private Command currentlyExecutingCommand;
@@ -64,10 +67,14 @@ public class WorldAgent : MonoBehaviour
     private void Awake()
     {
         initialPosition = transform.position;
-        agentManager = new Locator<AgentManager>();
-        if (stats) localStats = stats.Clone();
+
         commandQueue = new();
+
+        agentManager = new();
         modeSwitcher = new();
+        turnManager = new();
+
+        if (stats) localStats = stats.Clone();
         if (team == Team.Player) active = true;
     }
 
@@ -79,7 +86,7 @@ public class WorldAgent : MonoBehaviour
         //subscribe TakeDamage to the DamageManager of the PlayerManager
         am.damageManager.DealDamageEvent += TakeDamage;
         modeSwitcher.Get().OnEnterTurnBased += RegisterInTurnManager;
-        StartCoroutine(ExecuteCommandQueue());
+        modeSwitcher.Get().OnEnterRealTime += ExitTurnBased;
     }
 
     private void RegisterInTurnManager(TurnManager turnManager)
@@ -112,6 +119,13 @@ public class WorldAgent : MonoBehaviour
                     break;
             }
         }
+    }
+
+    private void ExitTurnBased(TurnManager _)
+    {
+        // todo: thought this would fix funky animation behaviour where stop moving trigger is permanently on
+        // todo: it did not but the queue should still be interrupted when entering real time I think /se
+        InterruptCommandQueue();
     }
 
     public void QueueCommand(Command command)
@@ -173,21 +187,30 @@ public class WorldAgent : MonoBehaviour
         active = true;
         if (team == Team.Enemy)
         {
-            // todo: call some enemy group component to activate all enemies in an area whenever one of the enemies is activated
-            // todo: check if already in turnbased and enter the combat in that case
+            Debug.Log($"Enemy: {name} activated!");
             if (modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased)
-                return; // just don't do anything unless in realtime for now
-            modeSwitcher.Get().TryEnterTurnBased(true);
+            {
+                RegisterInTurnManager(turnManager.Get());
+            }
+            else
+            {
+                if (modeSwitcher.Get().TryEnterTurnBased(true))
+                {
+                    ForcedEnterTurnBased?.Invoke(this);
+                }
+            }
         }
     }
 
     public void Die()
     {
+        // todo: emit event here so agent manager can check if all players are dead
         Debug.Log($"Agent {name} has died");
         InterruptCommandQueue();
         dead = true;
         animator.SetTrigger("Die");
         agentManager.Get().damageManager.DealDamageEvent -= TakeDamage;
+        navMeshAgent.enabled = false;
     }
 
     // visualise command queue /se
@@ -244,6 +267,16 @@ public class WorldAgent : MonoBehaviour
 
         if (moveCommandsInQueue.Any()) return moveCommandsInQueue.Last().ToPosition();
         else return transform.position;
+    }
+
+    public float TotalCommandQueueCost()
+    {
+        float totalCost = 0f;
+        foreach (Command command in commandQueue)
+        {
+            totalCost += command.cost;
+        }
+        return totalCost;
     }
 
     public void TriggerAnimationEvent(string id)

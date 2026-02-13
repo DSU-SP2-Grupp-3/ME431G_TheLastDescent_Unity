@@ -5,13 +5,15 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class TurnManager : MonoBehaviour
+public class TurnManager : Service<TurnManager>
 {
     private Dictionary<int, WorldAgentGroup> groups;
-    
+    private List<WorldAgentGroup> orderedGroups;
+    private List<(WorldAgent agent, int team)> slackers;
+
     private Coroutine cycle;
     public WorldAgentGroup activeGroup { get; private set; }
-    
+
     private bool playerReady;
 
     [SerializeField]
@@ -20,14 +22,18 @@ public class TurnManager : MonoBehaviour
     private Locator<RoundClock> roundClock;
     private Locator<AgentManager> agentManager;
     private Locator<ModeSwitcher> modeSwitcher;
-    
+
+    private bool executingTurn;
+
     private void Awake()
     {
+        Register();
         groups = new();
+        orderedGroups = new();
+        slackers = new();
         roundClock = new();
         agentManager = new();
         modeSwitcher = new();
-
     }
 
     private void Start()
@@ -35,7 +41,7 @@ public class TurnManager : MonoBehaviour
         Locator<ReadyButton> readyButton = new();
         readyButton.Get().ReadyButtonPressed += () => playerReady = true;
     }
-    
+
     public void Activate()
     {
         cycle = StartCoroutine(TurnCycle());
@@ -49,7 +55,11 @@ public class TurnManager : MonoBehaviour
 
     public void RegisterAgentInGroup(int team, WorldAgent agent)
     {
-        if (!groups.TryAdd(team, new WorldAgentGroup(agent)))
+        if (executingTurn)
+        {
+            slackers.Add((agent, team));
+        }
+        else if (!groups.TryAdd(team, new WorldAgentGroup(agent)))
         {
             groups[team].AddAgent(agent);
         }
@@ -62,21 +72,19 @@ public class TurnManager : MonoBehaviour
 
     public void RegisterAgentAsOneManTeam(WorldAgent agent)
     {
-        if (groups.Count == 0)
+        int min = -1;
+        if (groups.Count > 0) min = Math.Min(groups.Keys.Min(), -1);
+        if (slackers.Count > 0)
         {
-            RegisterAgentInGroup(-1, agent);
+            int slackersMin = slackers.Select(pair => pair.team).Min();
+            min = Math.Min(min, slackersMin);
         }
-        else
-        {
-            int min = groups.Keys.Min();
-        }
+        RegisterAgentInGroup(min - 1, agent);
     }
 
-    // todo: create defined order for groups
-    private List<WorldAgentGroup> ConvertGroupsToList()
+    private void OrderGroups()
     {
-        List<WorldAgentGroup> orderedGroups = new();
-
+        orderedGroups.Clear();
         WorldAgentGroup players = groups.Where((pair) => pair.Key == (int)WorldAgent.Team.Player).First().Value;
         List<WorldAgentGroup> theRest = groups
                                         .Where((pair) => pair.Key != (int)WorldAgent.Team.Player)
@@ -84,8 +92,15 @@ public class TurnManager : MonoBehaviour
                                         .ToList();
         orderedGroups.Add(players);
         orderedGroups.AddRange(theRest);
+    }
 
-        return orderedGroups;
+    private void AddSlackersToGroups()
+    {
+        foreach ((WorldAgent agent, int team) slacker in slackers)
+        {
+            RegisterAgentInGroup(slacker.team, slacker.agent);
+        }
+        slackers.Clear();
     }
 
     private IEnumerator TurnCycle()
@@ -94,18 +109,25 @@ public class TurnManager : MonoBehaviour
         {
             playerReady = false;
             yield return new WaitUntil((() => playerReady == true));
-            
-            turnManagerEvents.StartExecutingTurn?.Invoke();
-            
-            foreach (WorldAgentGroup group in ConvertGroupsToList())
-            {
-                activeGroup = group;
-                yield return WaitForAll(group.GetGroupCommandQueues());
-            }
-            activeGroup = null;
-            
-            turnManagerEvents.FinishExecutingTurn?.Invoke();
 
+            turnManagerEvents.StartExecutingTurn?.Invoke();
+            executingTurn = true;
+
+            OrderGroups();
+            for (int i = 0; i < orderedGroups.Count; i++)
+            {
+                activeGroup = orderedGroups[i];
+                yield return WaitForAll(activeGroup.GetGroupCommandQueues());
+            }
+
+            activeGroup = null;
+
+            turnManagerEvents.FinishExecutingTurn?.Invoke();
+            executingTurn = false;
+
+            AddSlackersToGroups();
+
+            // todo: this check should be made after each command performed by a player, in case an enemy dies halfway through player turn
             if (AllActiveEnemiesDead())
             {
                 // force entrance into real time when all enemies have been defeated
@@ -113,7 +135,7 @@ public class TurnManager : MonoBehaviour
             }
         }
     }
-    
+
     // https://www.reddit.com/r/Unity3D/comments/11imces/wait_for_all_coroutines_to_finish/
     public IEnumerator WaitForAll(List<IEnumerator> coroutines)
     {
@@ -140,18 +162,16 @@ public class TurnManager : MonoBehaviour
     private bool AgentIsNotDead(WorldAgent agent) => !agent.dead;
     private bool AgentIsActive(WorldAgent agent) => agent.active;
     private bool AgentIsEnemy(WorldAgent agent) => agent.team == WorldAgent.Team.Enemy;
-    
+
     private bool AllActiveEnemiesDead()
     {
         // if there are any enemy agents that are active and not dead return false, otherwise true
         return !agentManager.Get().GetFilteredAgents(AgentIsNotDead, AgentIsActive, AgentIsEnemy).Any();
     }
-    
 
     [Serializable]
     public struct Events
     {
         public UnityEvent StartExecutingTurn, FinishExecutingTurn;
     }
-    
 }

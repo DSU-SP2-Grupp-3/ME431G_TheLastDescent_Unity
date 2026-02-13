@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -13,24 +14,32 @@ public class AI : MonoBehaviour
 
     [SerializeField]
     private AIParameters parameters;
-    
+
     private Locator<RoundClock> roundClock;
     private Locator<AgentManager> agentManager;
-
-    private List<NavMeshAgent> playerNavMeshes;
+    List<NavMeshAgent> playerNavMeshes;
 
     private void Start()
     {
         roundClock = new();
+        playerNavMeshes = new();
         agentManager = new();
+        agentManager.Get().AgentRegistered += UpdatePlayerNavMeshes;
         roundClock.Get().RoundProgressed += RoundUpdate;
-        playerNavMeshes = agentManager.Get().GetPlayerNavMeshAgents();
+    }
+
+    private void UpdatePlayerNavMeshes(WorldAgent registeredAgent)
+    {
+        if (registeredAgent.team == WorldAgent.Team.Player)
+        {
+            playerNavMeshes.Add(registeredAgent.navMeshAgent);
+        }
     }
 
     private void RoundUpdate(int round)
     {
         // todo: perhaps don't do anything at all when very far away from the players, to avoid unnecessary calculations
-        if (!agent.active) // perform idle behaviour
+        if (!agent.active && !agent.dead) // perform idle behaviour
         {
             Command[] idleCommands = behaviourDefinition.GetIdleBehaviourCommands(agent, parameters).GetCommands();
             agent.OverwriteQueue(idleCommands);
@@ -45,8 +54,7 @@ public class AI : MonoBehaviour
             agent.Activate();
         }
     }
-    
-    
+
     private bool CheckIfShouldBeActive()
     {
         foreach (NavMeshAgent playerNavMesh in playerNavMeshes)
@@ -58,17 +66,17 @@ public class AI : MonoBehaviour
                 return true;
             }
         }
-        
+
         return false;
     }
 
     public void GetActiveCommands()
     {
+        if (agent.dead) return;
         Debug.Assert(agent.queueEmpty);
         Command[] commands = behaviourDefinition.GetActiveBehaviourCommands(agent, parameters).GetCommands();
         agent.QueueCommands(commands);
     }
-   
 
     [Serializable]
     public struct AIParameters

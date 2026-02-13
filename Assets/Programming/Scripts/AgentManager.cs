@@ -6,11 +6,11 @@ using UnityEngine.AI;
 
 public class AgentManager : Service<AgentManager>
 {
-    [SerializeField]
-    private WorldAgent[] players;
+    public event Action<WorldAgent> AgentRegistered;
+
+    private List<WorldAgent> players;
     private List<WorldAgent> allAgents;
-    [SerializeField] 
-    private OrthographicCameraMover cameraMover;
+    private Locator<OrthographicCameraMover> cameraMover;
 
     private Locator<InputManager> inputManager;
     private Locator<ModeSwitcher> modeSwitcher;
@@ -21,9 +21,11 @@ public class AgentManager : Service<AgentManager>
     private void Awake()
     {
         Register();
+        players = new();
         allAgents = new();
         inputManager = new();
         modeSwitcher = new();
+        cameraMover = new();
     }
 
     private void Start()
@@ -33,71 +35,141 @@ public class AgentManager : Service<AgentManager>
         im.MovePlayerInput += MoveSelectedPlayer;
         im.ClickedEnvironment += ClickedEnvironment;
         im.ClickedOnEnemy += ClickedEnemy;
-        SelectPlayer(players[0]);
     }
-    
-    public void RegisterAgent(WorldAgent agent) 
+
+    public void RegisterAgent(WorldAgent agent)
     {
-        allAgents.Add(agent);    
+        allAgents.Add(agent);
+        AgentRegistered?.Invoke(agent);
+        if (agent.team == WorldAgent.Team.Player)
+        {
+            players.Add(agent);
+            if (players.Count == 1)
+            {
+                SelectPlayer(players[0]);
+            }
+        }
     }
 
     public void SelectPlayer(WorldAgent playerAgent)
     {
-        if (players.Contains(playerAgent))
+        if (players.Contains(playerAgent) && !playerAgent.dead)
         {
             // Debug.Log($"Select {playerAgent.name}");
             selectedPlayer = playerAgent;
             // cameraMover.targetGameObject = playerAgent.cameraFocusTransform;
             // todo: camera should move smoothly toward target transform and not follow animations on target -se
+            cameraMover.Get().SetCameraTarget(selectedPlayer.cameraFocusTransform);
         }
     }
 
     private void MoveSelectedPlayer(Vector3 position)
     {
         MoveCommand movePlayer = new MoveCommand(position, selectedPlayer);
+
         if (!movePlayer.possible) return;
 
         RealTimeOrTurnBased(
             () => selectedPlayer.OverwriteQueue(movePlayer),
-            () => selectedPlayer.QueueCommand(movePlayer)
+            () =>
+            {
+                if (!CanQueueCommand(movePlayer)) return;
+                selectedPlayer.QueueCommand(movePlayer);
+            }
         );
+
+        Debug.Log(selectedPlayer.TotalCommandQueueCost());
     }
 
     private void ClickedEnvironment(GameObject go)
     {
+        Interactable.InteractionResult result;
         InteractionGroup group = go.GetComponentInParent<InteractionGroup>();
         if (group)
         {
-            RealTimeOrTurnBased(
-                () => group.InteractRealTime(selectedPlayer),
-                () => group.InteractTurnBased(selectedPlayer)
-            );
+            group.UnwrapInteractableCommands(selectedPlayer, out result);
         }
         else if (go.TryGetComponent<Interactable>(out Interactable interactable))
         {
-            RealTimeOrTurnBased(
-                () => interactable.InteractRealTime(selectedPlayer),
-                () => interactable.InteractTurnBased(selectedPlayer)
-            );
+            interactable.UnwrapInteractableCommands(selectedPlayer, out result);
         }
+        else
+        {
+            // didn't click on interactable, return
+            return;
+        }
+
+        // queue the right commands based on turn based or real time
+        RealTimeOrTurnBased(
+            () =>
+            {
+                selectedPlayer.OverwriteQueue(result.invokingAgentCommands);
+                selectedPlayer.QueueCommand(result.QueueInteractablesCommand(selectedPlayer));
+            },
+            () =>
+            {
+                InvokeActionCommand queueInteractables = result.QueueInteractablesCommand(selectedPlayer);
+                if (CanQueueCommands(result.invokingAgentCommands) && CanQueueCommand(queueInteractables))
+                {
+                    selectedPlayer.QueueCommands(result.invokingAgentCommands);
+                    selectedPlayer.QueueCommand(result.QueueInteractablesCommand(selectedPlayer));
+                }
+            }
+        );
+        Debug.Log(selectedPlayer.TotalCommandQueueCost());
     }
 
     private void ClickedEnemy(WorldAgent enemyAgent)
     {
         if (enemyAgent.dead) return;
-        
+
         MoveInRangeCommand inRangeCommand = new MoveInRangeCommand(
             enemyAgent.transform.position,
-            selectedPlayer.weaponStats.attackRange, 
+            selectedPlayer.weaponStats.attackRange,
             selectedPlayer
         );
         AttackCommand attackCommand = new AttackCommand(selectedPlayer, enemyAgent, damageManager);
         Command[] commands = new Command[] { inRangeCommand, attackCommand };
-        
+
         RealTimeOrTurnBased(
             () => selectedPlayer.OverwriteQueue(commands),
-            () => selectedPlayer.QueueCommands(commands)
+            () =>
+            {
+                if (!CanQueueCommands(commands)) return;
+                selectedPlayer.QueueCommands(commands);
+            }
         );
+        Debug.Log(selectedPlayer.TotalCommandQueueCost());
+    }
+
+    private bool CanQueueCommand(Command command)
+    {
+        // don't queue null command, obviously
+        if (command == null) return false;
+        if (selectedPlayer.TotalCommandQueueCost() + command.cost > selectedPlayer.localStats.actionPoints)
+        {
+            Debug.Log($"Not enough AP remaining to queue command {command}");
+            return false;
+        }
+        return true;
+    }
+
+    private bool CanQueueCommands(Command[] commands)
+    {
+        // don't queue empty commands
+        if (commands.Length == 0) return false;
+        float queueCost = 0f;
+        foreach (Command command in commands)
+        {
+            queueCost += command.cost;
+            if (selectedPlayer.TotalCommandQueueCost() + queueCost > selectedPlayer.localStats.actionPoints)
+            {
+                Debug.Log($"Not enough AP remaining to queue commands starting with {commands[0]}");
+                return false;
+            }
+        }
+        // check if queueing command will exceed the allowed ap cost for the player based on WorldAgent.localStats
+        return true;
     }
 
     private void RealTimeOrTurnBased(Action realTime, Action turnBased)
@@ -113,14 +185,11 @@ public class AgentManager : Service<AgentManager>
         }
     }
 
+    public List<WorldAgent> GetPlayerAgents() => players;
+
     public List<Vector3> GetPlayerPositions()
     {
         return players.Select(w => w.transform.position).ToList();
-    }
-
-    public List<NavMeshAgent> GetPlayerNavMeshAgents()
-    {
-        return players.Select(w => w.navMeshAgent).ToList();
     }
 
     /// <summary>

@@ -80,7 +80,7 @@ public class DialogueService : Service<DialogueService>
                 letters.Enqueue(letter);
             }
 
-            //-Ma. A bit of a mess tbh
+            //-Ma. This sucks, but it works
 
             skipping = false;
             WrittenSentence = "";
@@ -100,7 +100,7 @@ public class DialogueService : Service<DialogueService>
                 skipping = false;
                 yield break;
             }
-            //unityEvent.Invoke();
+            unityEvent.Invoke();
             WrittenSentence += letters.Dequeue();
             textField.text = WrittenSentence;
             yield return new WaitForSeconds(0.04f);
