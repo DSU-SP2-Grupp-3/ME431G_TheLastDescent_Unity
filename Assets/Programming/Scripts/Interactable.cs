@@ -4,7 +4,7 @@ using UnityEngine;
 public class Interactable : MonoBehaviour
 {
     // todo: fix if two players interact with the same object on the same turn
-    
+
     [SerializeField]
     protected WorldAgent interactableAgent;
     [SerializeField]
@@ -15,19 +15,14 @@ public class Interactable : MonoBehaviour
         QueueInteractablesCommand();
     }
 
-    public void InteractRealTime(WorldAgent agent)
+    public void UnwrapInteractableCommands(WorldAgent playerAgent, out InteractionResult result)
     {
-        Command[] unwrappedCommands = playerCommands.Select(c => c.UnwrapCommand(agent)).ToArray();
-        agent.OverwriteQueue(unwrappedCommands); // agent is the invoking player/enemy/ally etc.
-        agent.QueueCommand(new InvokeActionCommand(agent, () => QueueInteractablesCommand()));
-        
-    }
-
-    public void InteractTurnBased(WorldAgent agent)
-    {
-        Command[] unwrappedCommands = playerCommands.Select(c => c.UnwrapCommand(agent)).ToArray();
-        agent.QueueCommands(unwrappedCommands);
-        agent.QueueCommand(new InvokeActionCommand(agent, () => QueueInteractablesCommand()));
+        Command[] unwrappedPlayerCommands = UnwrapCommands(playerCommands, playerAgent);
+        Command[] unwrappedInteractableCommands = UnwrapCommands(interactableCommands, interactableAgent);
+        result = new();
+        result.interactableAgent = interactableAgent;
+        result.interactableAgentCommands = unwrappedInteractableCommands;
+        result.invokingAgentCommands = unwrappedPlayerCommands;
     }
 
     private void QueueInteractablesCommand()
@@ -40,5 +35,21 @@ public class Interactable : MonoBehaviour
     protected Command[] UnwrapCommands(CommandWrapper[] wrappers, WorldAgent agent)
     {
         return wrappers.Select(c => c.UnwrapCommand(agent)).ToArray();
+    }
+
+    public class InteractionResult
+    {
+        public WorldAgent interactableAgent;
+        public Command[] interactableAgentCommands;
+        public Command[] invokingAgentCommands;
+
+        public InvokeActionCommand QueueInteractablesCommand(WorldAgent playerAgent)
+        {
+            return new InvokeActionCommand(playerAgent, () =>
+            {
+                interactableAgent.QueueCommands(interactableAgentCommands);
+                interactableAgent.ForceStartCommandQueueExecution();
+            });
+        }
     }
 }

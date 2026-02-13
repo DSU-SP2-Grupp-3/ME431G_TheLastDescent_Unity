@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class OrthographicCameraMover : MonoBehaviour
+public class OrthographicCameraMover : Service<OrthographicCameraMover>
 {
     [Tooltip("The target Transform to move the camera from, should be a model and not an actor if possible")]
     public Transform targetGameObject;

@@ -6,11 +6,9 @@ using UnityEngine.AI;
 
 public class AgentManager : Service<AgentManager>
 {
-    [SerializeField]
-    private WorldAgent[] players;
+    private List<WorldAgent> players;
     private List<WorldAgent> allAgents;
-    [SerializeField]
-    private OrthographicCameraMover cameraMover;
+    private Locator<OrthographicCameraMover> cameraMover;
 
     private Locator<InputManager> inputManager;
     private Locator<ModeSwitcher> modeSwitcher;
@@ -24,6 +22,7 @@ public class AgentManager : Service<AgentManager>
         allAgents = new();
         inputManager = new();
         modeSwitcher = new();
+        cameraMover = new();
     }
 
     private void Start()
@@ -39,6 +38,10 @@ public class AgentManager : Service<AgentManager>
     public void RegisterAgent(WorldAgent agent)
     {
         allAgents.Add(agent);
+        if (agent.team == WorldAgent.Team.Player)
+        {
+            players.Add(agent);
+        }
     }
 
     private void SelectPlayer(WorldAgent playerAgent)
@@ -49,7 +52,7 @@ public class AgentManager : Service<AgentManager>
             selectedPlayer = playerAgent;
             // cameraMover.targetGameObject = playerAgent.cameraFocusTransform;
             // todo: camera should move smoothly toward target transform and not follow animations on target -se
-            cameraMover.SetCameraTarget(selectedPlayer.cameraFocusTransform);
+            cameraMover.Get().SetCameraTarget(selectedPlayer.cameraFocusTransform);
         }
     }
 
@@ -66,21 +69,34 @@ public class AgentManager : Service<AgentManager>
 
     private void ClickedEnvironment(GameObject go)
     {
+        Interactable.InteractionResult result;
         InteractionGroup group = go.GetComponentInParent<InteractionGroup>();
         if (group)
         {
-            RealTimeOrTurnBased(
-                () => group.InteractRealTime(selectedPlayer),
-                () => group.InteractTurnBased(selectedPlayer)
-            );
+            group.UnwrapInteractableCommands(selectedPlayer, out result);
         }
         else if (go.TryGetComponent<Interactable>(out Interactable interactable))
         {
-            RealTimeOrTurnBased(
-                () => interactable.InteractRealTime(selectedPlayer),
-                () => interactable.InteractTurnBased(selectedPlayer)
-            );
+            interactable.UnwrapInteractableCommands(selectedPlayer, out result);
         }
+        else
+        {
+            // didn't click on interactable, return
+            return;
+        }
+
+        // queue the right commands based on turn based or real time
+        RealTimeOrTurnBased(
+            () =>
+            {
+                selectedPlayer.OverwriteQueue(result.invokingAgentCommands);
+                selectedPlayer.QueueCommand(result.QueueInteractablesCommand(selectedPlayer));
+            },
+            () =>
+            {
+                selectedPlayer.QueueCommands(result.invokingAgentCommands);
+                selectedPlayer.QueueCommand(result.QueueInteractablesCommand(selectedPlayer));
+            });
     }
 
     private void ClickedEnemy(WorldAgent enemyAgent)
@@ -99,6 +115,24 @@ public class AgentManager : Service<AgentManager>
             () => selectedPlayer.OverwriteQueue(commands),
             () => selectedPlayer.QueueCommands(commands)
         );
+    }
+
+    private bool CanQueueCommand(Command command)
+    {
+        // don't queue null command, obviously
+        if (command == null) return false;
+        // check if queueing command will exceed the allowed ap cost for the player based on WorldAgent.localStats
+        return true;
+        // Debug.Log($"Not enough AP remaining to queue command {command}");
+    }
+
+    private bool CanQueueCommands(Command[] commands)
+    {
+        // don't queue empty commandsw
+        if (commands.Length == 0) return false;
+        // check if queueing command will exceed the allowed ap cost for the player based on WorldAgent.localStats
+        return true;
+        // Debug.Log($"Not enough AP remaining to queue commands starting with {commands[0]}");
     }
 
     private void RealTimeOrTurnBased(Action realTime, Action turnBased)
