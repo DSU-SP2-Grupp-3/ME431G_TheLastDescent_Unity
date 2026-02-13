@@ -5,9 +5,10 @@ using UnityEngine;
 public class AgentStats : ScriptableObject
 {
     public event Action<float> HitPointsChanged;
+    public event Action<float> ActionPointsChanged;
 
     [SerializeField]
-    private float initHitPoints, initActionPoints, initMovement, initMovementCostModifier;
+    public float initHitPoints, initActionPoints, initMovement, initMovementCostModifier;
     private float _hitPoints;
     public float hitPoints
     {
@@ -18,7 +19,17 @@ public class AgentStats : ScriptableObject
             HitPointsChanged?.Invoke(_hitPoints);
         }
     }
-    public float actionPoints { get; set; }
+    private float _actionPoints;
+
+    public float actionPoints
+    {
+        get => _actionPoints;
+        set
+        {
+            _actionPoints = value + _actionPoints > initActionPoints ? initHitPoints : value;
+            ActionPointsChanged?.Invoke(_actionPoints);
+        }
+    }
     public float movement { get; set; }
     public float movementCostModifier { get; set; }
 
