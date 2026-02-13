@@ -18,13 +18,8 @@ public class InteractionGroup : MonoBehaviour
         interactionIndex = Math.Max(index, 0);
     }
 
-    public void InteractRealTime(WorldAgent agent)
+    public void UnwrapInteractableCommands(WorldAgent playerAgent, out Interactable.InteractionResult result)
     {
-        interactables[interactionIndex].InteractRealTime(agent);
-    }
-
-    public void InteractTurnBased(WorldAgent agent)
-    {
-        interactables[interactionIndex].InteractTurnBased(agent);
+        interactables[interactionIndex].UnwrapInteractableCommands(playerAgent, out result);
     }
 }

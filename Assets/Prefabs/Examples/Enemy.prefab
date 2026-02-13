@@ -157,6 +157,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 1387932914355464968}
   behaviourDefinition: {fileID: 11400000, guid: 61bd246fbda19844697726ea75e8cf55, type: 2}
+  parameters:
+    wanderingRadius: 0
+    activationDistance: 0
 --- !u!114 &1387932914355464968
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,8 +175,10 @@ MonoBehaviour:
   team: 2
   animator: {fileID: 0}
   navMeshAgent: {fileID: 2285311374888698852}
+  lineRenderer: {fileID: 0}
   cameraFocusTransform: {fileID: 0}
   stats: {fileID: 11400000, guid: 781734abf7c8bcf4095b28600dd9534d, type: 2}
+  equippedWeapon: {fileID: 0}
 --- !u!195 &2285311374888698852
 NavMeshAgent:
   m_ObjectHideFlags: 0

@@ -4,23 +4,23 @@ using UnityEngine;
 
 public class AttackCommand : Command
 {
-    public override float cost { get; }
+    // todo: this should probably be variable
+    public override float cost => 2f;
 
     private WorldAgent receivingAgent;
     private DamageManager damageManager;
 
     private bool animationEnded;
 
-    public AttackCommand(WorldAgent invokingAgent, WorldAgent receivingAgent, DamageManager damageManager) 
-         : base(invokingAgent)
+    public AttackCommand(WorldAgent invokingAgent, WorldAgent receivingAgent, DamageManager damageManager)
+        : base(invokingAgent)
     {
         this.receivingAgent = receivingAgent;
         this.damageManager = damageManager;
     }
-    
+
     public override IEnumerator Execute()
     {
-        // todo: should face the agent toward the receiver, or be provided an attack direction or something
         invokingAgent.AnimationEventTriggered += CaptureAnimationEvent;
         invokingAgent.animator.SetTrigger("StartAttack");
         yield return new WaitUntil(() => animationEnded);
@@ -46,5 +46,4 @@ public class AttackCommand : Command
         float damage = invokingAgent.weaponStats.GetDamage();
         damageManager.DealDamageEvent(damage, receivingAgent);
     }
-
 }
