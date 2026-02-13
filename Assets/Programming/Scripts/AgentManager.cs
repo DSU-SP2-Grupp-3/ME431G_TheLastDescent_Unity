@@ -9,7 +9,7 @@ public class AgentManager : Service<AgentManager>
     [SerializeField]
     private WorldAgent[] players;
     private List<WorldAgent> allAgents;
-    [SerializeField] 
+    [SerializeField]
     private OrthographicCameraMover cameraMover;
 
     private Locator<InputManager> inputManager;
@@ -35,10 +35,10 @@ public class AgentManager : Service<AgentManager>
         im.ClickedOnEnemy += ClickedEnemy;
         SelectPlayer(players[0]);
     }
-    
-    public void RegisterAgent(WorldAgent agent) 
+
+    public void RegisterAgent(WorldAgent agent)
     {
-        allAgents.Add(agent);    
+        allAgents.Add(agent);
     }
 
     private void SelectPlayer(WorldAgent playerAgent)
@@ -49,6 +49,7 @@ public class AgentManager : Service<AgentManager>
             selectedPlayer = playerAgent;
             // cameraMover.targetGameObject = playerAgent.cameraFocusTransform;
             // todo: camera should move smoothly toward target transform and not follow animations on target -se
+            cameraMover.SetCameraTarget(selectedPlayer.cameraFocusTransform);
         }
     }
 
@@ -85,15 +86,15 @@ public class AgentManager : Service<AgentManager>
     private void ClickedEnemy(WorldAgent enemyAgent)
     {
         if (enemyAgent.dead) return;
-        
+
         MoveInRangeCommand inRangeCommand = new MoveInRangeCommand(
             enemyAgent.transform.position,
-            selectedPlayer.weaponStats.attackRange, 
+            selectedPlayer.weaponStats.attackRange,
             selectedPlayer
         );
         AttackCommand attackCommand = new AttackCommand(selectedPlayer, enemyAgent, damageManager);
         Command[] commands = new Command[] { inRangeCommand, attackCommand };
-        
+
         RealTimeOrTurnBased(
             () => selectedPlayer.OverwriteQueue(commands),
             () => selectedPlayer.QueueCommands(commands)
