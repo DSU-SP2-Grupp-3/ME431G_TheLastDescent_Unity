@@ -80,7 +80,7 @@ public class DialogueService : Service<DialogueService>
                 letters.Enqueue(letter);
             }
 
-            //-Ma. A bit of a mess tbh
+            //-Ma. This sucks, but it works
 
             skipping = false;
             WrittenSentence = "";
