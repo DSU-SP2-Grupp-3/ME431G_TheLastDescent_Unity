@@ -41,7 +41,7 @@ public class AgentManager : Service<AgentManager>
         allAgents.Add(agent);    
     }
 
-    private void SelectPlayer(WorldAgent playerAgent)
+    public void SelectPlayer(WorldAgent playerAgent)
     {
         if (players.Contains(playerAgent))
         {
