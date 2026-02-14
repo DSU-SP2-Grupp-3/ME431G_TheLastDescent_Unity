@@ -184,6 +184,7 @@ public class WorldAgent : MonoBehaviour
             currentlyExecutingCommand = command;
             currentExecutingCommandCoroutine = StartCoroutine(command.Execute());
             yield return currentExecutingCommandCoroutine;
+            //todo: check if command succeeded or not, like if a MoveCommand actually made it to the inteded destination, otherwise cancel the rest of the commandQueue
             currentExecutingCommandCoroutine = null;
             currentlyExecutingCommand = null;
             CommandQueueUpdated?.Invoke(this, commandQueue, null);

@@ -70,9 +70,11 @@ public class MoveCommand : Command, IMoveCommand
 
         //Visualize();
 
+        invokingAgent.animator.ResetTrigger("StopMoving");
         invokingAgent.animator.SetTrigger("StartMoving");
         yield return new WaitUntil(() => invokingAgent.navMeshAgent.remainingDistance <= playEndAnimationDistance);
         invokingAgent.animator.SetTrigger("StopMoving");
+        invokingAgent.animator.ResetTrigger("StartMoving");
     }
 
     public override void VisualizeInQueue(Visualizer visualizer)
@@ -90,11 +92,8 @@ public class MoveCommand : Command, IMoveCommand
 
     public override void Break()
     {
-        // todo: rework this so stop moving is not triggered when being overwritten with another move command
-        // todo: alternatively tweak animation transitions so this doesn't happen, issue might be there idk -se
-        // causes slight visual bug when rapidly sending move commands and sometimes makes it so stopmoving is set 
-        // when the idle animation starts, causing the move animation to be immediately stopped on the next move command -se
         invokingAgent.animator.SetTrigger("StopMoving");
+        invokingAgent.animator.ResetTrigger("StartMoving");
         invokingAgent.navMeshAgent.ResetPath();
     }
 }

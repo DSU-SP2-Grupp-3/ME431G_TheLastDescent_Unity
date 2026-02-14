@@ -55,9 +55,11 @@ public class MoveInRangeCommand : Command, IMoveCommand
             yield break;
         }
 
+        invokingAgent.animator.ResetTrigger("StopMoving");
         invokingAgent.animator.SetTrigger("StartMoving");
         yield return new WaitUntil(WithinDistance);
         invokingAgent.animator.SetTrigger("StopMoving");
+        invokingAgent.animator.ResetTrigger("StartMoving");
         invokingAgent.navMeshAgent.ResetPath();
     }
 
@@ -66,11 +68,18 @@ public class MoveInRangeCommand : Command, IMoveCommand
         visualizer.AppendQueuedPath(agentPath, invokingAgent);
     }
 
+    public override void VisualizeExecution(Visualizer visualizer)
+    {
+        NavMeshPath remainingPath = new();
+        NavMesh.CalculatePath(invokingAgent.navMeshAgent.nextPosition, toPosition, NavMesh.AllAreas, remainingPath);
+        visualizer.DrawExecutingPath(remainingPath, invokingAgent);
+    }
+
     public override void Break()
     {
         invokingAgent.animator.SetTrigger("StopMoving");
-        invokingAgent.navMeshAgent.CalculatePath(invokingAgent.navMeshAgent.transform.position, agentPath);
-        invokingAgent.navMeshAgent.SetPath(agentPath);
+        invokingAgent.animator.ResetTrigger("StartMoving");
+        invokingAgent.navMeshAgent.ResetPath();
     }
 
     private bool WithinDistance()
