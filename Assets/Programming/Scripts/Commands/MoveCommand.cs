@@ -15,9 +15,11 @@ public class MoveCommand : Command, IMoveCommand
             {
                 length += (agentPath.corners[i] - agentPath.corners[i - 1]).magnitude;
             }
-            return length * invokingAgent.localStats.movementCostModifier;
+            return length * costModifier;
         }
     }
+
+    private float costModifier => invokingAgent.localStats.movementCostModifier / invokingAgent.localStats.movement;
 
     private Vector3 toPosition;
     private Vector3 fromPosition;
@@ -80,6 +82,9 @@ public class MoveCommand : Command, IMoveCommand
 
     public override void Break()
     {
+        // todo: rework this so stop moving is not triggered when being overwritten with another move command
+        // causes slight visual bug when rapidly sending move commands and sometimes makes it so stopmoving is set 
+        // when the idle animation starts, causing the move animation to be immediately stopped on the next move command
         invokingAgent.animator.SetTrigger("StopMoving");
         invokingAgent.navMeshAgent.ResetPath();
     }

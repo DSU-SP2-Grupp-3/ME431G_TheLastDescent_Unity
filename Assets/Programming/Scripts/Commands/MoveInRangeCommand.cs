@@ -13,10 +13,12 @@ public class MoveInRangeCommand : Command, IMoveCommand
             {
                 length += (agentPath.corners[i] - agentPath.corners[i - 1]).magnitude;
             }
-            return (length - range) * invokingAgent.localStats.movementCostModifier;
+            return (length - range) * costModifier;
         }
     }
 
+    private float costModifier => invokingAgent.localStats.movementCostModifier / invokingAgent.localStats.movement;
+    
     private Vector3 toPosition;
     private Vector3 fromPosition;
     private float range;

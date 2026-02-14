@@ -172,6 +172,8 @@ public class WorldAgent : MonoBehaviour
 
     public IEnumerator ExecuteCommandQueue()
     {
+        yield return null;
+        
         while (commandQueue.TryDequeue(out Command command))
         {
             currentlyExecutingCommand = command;

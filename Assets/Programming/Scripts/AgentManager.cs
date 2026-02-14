@@ -76,9 +76,7 @@ public class AgentManager : Service<AgentManager>
                 if (!CanQueueCommand(movePlayer)) return;
                 selectedPlayer.QueueCommand(movePlayer);
             }
-        );
-
-        Debug.Log(selectedPlayer.TotalCommandQueueCost());
+        ); 
     }
 
     private void ClickedEnvironment(GameObject go)
@@ -116,7 +114,6 @@ public class AgentManager : Service<AgentManager>
                 }
             }
         );
-        Debug.Log(selectedPlayer.TotalCommandQueueCost());
     }
 
     private void ClickedEnemy(WorldAgent enemyAgent)
@@ -139,16 +136,17 @@ public class AgentManager : Service<AgentManager>
                 selectedPlayer.QueueCommands(commands);
             }
         );
-        Debug.Log(selectedPlayer.TotalCommandQueueCost());
     }
 
     private bool CanQueueCommand(Command command)
     {
         // don't queue null command, obviously
         if (command == null) return false;
-        if (selectedPlayer.TotalCommandQueueCost() + command.cost > selectedPlayer.localStats.actionPoints)
+        float remainingAP = selectedPlayer.localStats.actionPoints - selectedPlayer.TotalCommandQueueCost();
+        if (remainingAP < command.cost)
         {
-            Debug.Log($"Not enough AP remaining to queue command {command}");
+            Debug.Log($"Not enough AP remaining to queue command {command}, " +
+                      $"ap remaining = {remainingAP}, command cost: {command.cost}");
             return false;
         }
         return true;
