@@ -26,6 +26,8 @@ public class Visualizer : MonoBehaviour
 
     private void Update()
     {
+        // todo: tweak here so we can choose what agents to visualize and when
+        
         foreach (Command command in currentlyExecutingCommands.Values)
         {
             command.VisualizeExecution(this);

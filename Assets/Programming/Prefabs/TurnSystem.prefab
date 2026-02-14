@@ -776,6 +776,7 @@ Transform:
   - {fileID: 8374150749769194167}
   - {fileID: 5934055549027528760}
   - {fileID: 9129440660140956831}
+  - {fileID: 4728237700439003615}
   - {fileID: 7816263235659018217}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -929,6 +930,72 @@ MonoBehaviour:
   inTurnBasedText: Exit Turn Based Mode
   inRealTimeText: Enter Turn Based Mode
   inTurnBased: 0
+--- !u!1001 &1014277353729789909
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2489599178037006765}
+    m_Modifications:
+    - target: {fileID: 1080359237473598440, guid: dfe928cc0cde1e24d89daf051c1f129a, type: 3}
+      propertyPath: agentManager
+      value: 
+      objectReference: {fileID: 4091044356747433083}
+    - target: {fileID: 5732375074326928906, guid: dfe928cc0cde1e24d89daf051c1f129a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 31.767962
+      objectReference: {fileID: 0}
+    - target: {fileID: 5732375074326928906, guid: dfe928cc0cde1e24d89daf051c1f129a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -39.295025
+      objectReference: {fileID: 0}
+    - target: {fileID: 5732375074326928906, guid: dfe928cc0cde1e24d89daf051c1f129a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 6.7285366
+      objectReference: {fileID: 0}
+    - target: {fileID: 5732375074326928906, guid: dfe928cc0cde1e24d89daf051c1f129a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5732375074326928906, guid: dfe928cc0cde1e24d89daf051c1f129a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5732375074326928906, guid: dfe928cc0cde1e24d89daf051c1f129a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5732375074326928906, guid: dfe928cc0cde1e24d89daf051c1f129a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5732375074326928906, guid: dfe928cc0cde1e24d89daf051c1f129a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5732375074326928906, guid: dfe928cc0cde1e24d89daf051c1f129a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5732375074326928906, guid: dfe928cc0cde1e24d89daf051c1f129a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6601538010044597853, guid: dfe928cc0cde1e24d89daf051c1f129a, type: 3}
+      propertyPath: m_Name
+      value: Visualizer
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: dfe928cc0cde1e24d89daf051c1f129a, type: 3}
+--- !u!4 &4728237700439003615 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5732375074326928906, guid: dfe928cc0cde1e24d89daf051c1f129a, type: 3}
+  m_PrefabInstance: {fileID: 1014277353729789909}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6966069317737853509
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -994,6 +1061,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 97ed44b748dc0c841b16e6a5fe72b766, type: 3}
+--- !u!114 &4091044356747433083 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6370970628745274942, guid: 97ed44b748dc0c841b16e6a5fe72b766, type: 3}
+  m_PrefabInstance: {fileID: 6966069317737853509}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06d52d3457d04dfe99cec23045d51060, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5840605698435545780 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3576294416519547121, guid: 97ed44b748dc0c841b16e6a5fe72b766, type: 3}

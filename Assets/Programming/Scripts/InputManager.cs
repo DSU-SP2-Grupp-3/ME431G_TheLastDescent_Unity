@@ -32,6 +32,8 @@ public class InputManager : Service<InputManager>
 
     private void Update()
     {
+        // todo: refactor input manager so that we can preview what commands are about to be added to the selected player
+        
         if (Input.GetMouseButtonDown(0))
         {
             // don't perform physics raycast if the mouse is over a ui element
