@@ -75,16 +75,25 @@ public class MoveCommand : Command, IMoveCommand
         invokingAgent.animator.SetTrigger("StopMoving");
     }
 
-    public override void Visualize(Visualizer visualizer)
+    public override void VisualizeInQueue(Visualizer visualizer)
     {
-        // visualizer.DrawPath(agentPath, invokingAgent);
+        // todo: drawn path will intersect slopes, might have to do raycast between each corner to check for intersections with floor
+        visualizer.AppendQueuedPath(agentPath, invokingAgent);
+    }
+
+    public override void VisualizeExecution(Visualizer visualizer)
+    {
+        NavMeshPath remainingPath = new();
+        NavMesh.CalculatePath(invokingAgent.navMeshAgent.nextPosition, toPosition, NavMesh.AllAreas, remainingPath);
+        visualizer.DrawExecutingPath(remainingPath, invokingAgent);
     }
 
     public override void Break()
     {
         // todo: rework this so stop moving is not triggered when being overwritten with another move command
+        // todo: alternatively tweak animation transitions so this doesn't happen, issue might be there idk -se
         // causes slight visual bug when rapidly sending move commands and sometimes makes it so stopmoving is set 
-        // when the idle animation starts, causing the move animation to be immediately stopped on the next move command
+        // when the idle animation starts, causing the move animation to be immediately stopped on the next move command -se
         invokingAgent.animator.SetTrigger("StopMoving");
         invokingAgent.navMeshAgent.ResetPath();
     }

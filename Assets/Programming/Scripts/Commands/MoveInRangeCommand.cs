@@ -61,9 +61,9 @@ public class MoveInRangeCommand : Command, IMoveCommand
         invokingAgent.navMeshAgent.ResetPath();
     }
 
-    public override void Visualize(Visualizer visualizer)
+    public override void VisualizeInQueue(Visualizer visualizer)
     {
-        Visualizer.DrawPath(agentPath, invokingAgent);
+        visualizer.AppendQueuedPath(agentPath, invokingAgent);
     }
 
     public override void Break()

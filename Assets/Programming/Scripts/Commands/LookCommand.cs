@@ -35,7 +35,7 @@ public class LookAtCommand : Command
     public override void Break()
     { }
 
-    public override void Visualize(Visualizer visualizer) { }
+    public override void VisualizeInQueue(Visualizer visualizer) { }
     public Quaternion LookAt()
     {
         Vector3 direction = receivingAgent.transform.position - invokingAgent.transform.position;

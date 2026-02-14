@@ -44,9 +44,9 @@ public class AgentManager : Service<AgentManager>
         if (agent.team == WorldAgent.Team.Player)
         {
             players.Add(agent);
-            if (players.Count == 1)
+            if (!selectedPlayer && agent.defaultSelected)
             {
-                SelectPlayer(players[0]);
+                SelectPlayer(agent);
             }
         }
     }

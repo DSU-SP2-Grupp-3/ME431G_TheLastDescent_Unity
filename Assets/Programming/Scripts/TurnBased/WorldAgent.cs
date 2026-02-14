@@ -11,6 +11,7 @@ public class WorldAgent : MonoBehaviour
 
     public event Action<string> AnimationEventTriggered;
     public event Action<WorldAgent> ForcedEnterTurnBased;
+    public event Action<WorldAgent, Queue<Command>, Command> CommandQueueUpdated;
 
     public enum Team
     {
@@ -21,12 +22,14 @@ public class WorldAgent : MonoBehaviour
         Interactable
     }
 
+    [Tooltip("True if this is the agent (player) should be the default selection when loading the scene")]
+    public bool defaultSelected;
+
     public Team team;
     [Header("References")]
     public Animator animator;
     public NavMeshAgent navMeshAgent;
     [Tooltip("Only required if the object will generate a path")]
-    public LineRenderer lineRenderer;
     public Transform cameraFocusTransform;
 
     [SerializeField]
@@ -132,6 +135,7 @@ public class WorldAgent : MonoBehaviour
     {
         if (dead) return;
         commandQueue.Enqueue(command);
+        CommandQueueUpdated?.Invoke(this, commandQueue, null);
     }
 
     public void QueueCommands(Command[] commands)
@@ -141,6 +145,7 @@ public class WorldAgent : MonoBehaviour
         {
             commandQueue.Enqueue(command);
         }
+        CommandQueueUpdated?.Invoke(this, commandQueue, null);
     }
 
     public void OverwriteQueue(Command command)
@@ -168,19 +173,20 @@ public class WorldAgent : MonoBehaviour
         currentlyExecutingCommand = null;
         StopAllCoroutines();
         commandQueue.Clear();
+        CommandQueueUpdated?.Invoke(this, commandQueue, null);
     }
 
     public IEnumerator ExecuteCommandQueue()
     {
-        yield return null;
-        
         while (commandQueue.TryDequeue(out Command command))
         {
+            CommandQueueUpdated?.Invoke(this, commandQueue, command);
             currentlyExecutingCommand = command;
             currentExecutingCommandCoroutine = StartCoroutine(command.Execute());
             yield return currentExecutingCommandCoroutine;
             currentExecutingCommandCoroutine = null;
             currentlyExecutingCommand = null;
+            CommandQueueUpdated?.Invoke(this, commandQueue, null);
         }
     }
 
@@ -236,21 +242,6 @@ public class WorldAgent : MonoBehaviour
         if (dead)
         {
             Die();
-        }
-    }
-
-    private void Update()
-    {
-        if (navMeshAgent && lineRenderer)
-        {
-            if (navMeshAgent.isStopped)
-            {
-                lineRenderer.positionCount = 0;
-            }
-            else
-            {
-                Visualizer.DrawPath(navMeshAgent.path, this);
-            }
         }
     }
 
