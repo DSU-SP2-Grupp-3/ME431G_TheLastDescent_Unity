@@ -932,6 +932,7 @@ MonoBehaviour:
   cameraFocusTransform: {fileID: 495731673}
   stats: {fileID: 11400000, guid: 781734abf7c8bcf4095b28600dd9534d, type: 2}
   equippedWeapon: {fileID: 0}
+  actorID: 1
 --- !u!95 &306374937
 Animator:
   serializedVersion: 7
@@ -954,6 +955,51 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &308273498
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 308273500}
+  - component: {fileID: 308273499}
+  m_Layer: 0
+  m_Name: CinematicKit
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &308273499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 308273498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e56238bb15d7d1446a0f0f997d948cb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Actors: []
+--- !u!4 &308273500
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 308273498}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.507426, y: -20.940186, z: 18.305387}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &320179695
 GameObject:
   m_ObjectHideFlags: 0
@@ -1423,11 +1469,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06d52d3457d04dfe99cec23045d51060, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  players:
-  - {fileID: 306374936}
-  - {fileID: 933085537}
-  - {fileID: 1609634796}
-  cameraMover: {fileID: 53403564}
   damageManager: {fileID: 11400000, guid: 8bf77c0c527a44d4297df7af4e954cc4, type: 2}
 --- !u!1 &540073923
 GameObject:
@@ -2339,6 +2380,7 @@ MonoBehaviour:
   cameraFocusTransform: {fileID: 798990937}
   stats: {fileID: 11400000, guid: a2cd790a8156f144f9c816b44d47befa, type: 2}
   equippedWeapon: {fileID: 0}
+  actorID: 2
 --- !u!120 &933085538
 LineRenderer:
   serializedVersion: 2
@@ -3115,6 +3157,7 @@ MonoBehaviour:
   cameraFocusTransform: {fileID: 0}
   stats: {fileID: 0}
   equippedWeapon: {fileID: 0}
+  actorID: 0
 --- !u!1 &1401669113
 GameObject:
   m_ObjectHideFlags: 0
@@ -3786,6 +3829,7 @@ MonoBehaviour:
   cameraFocusTransform: {fileID: 959964289}
   stats: {fileID: 11400000, guid: d6721126d80926842a2ee2ad999f40a8, type: 2}
   equippedWeapon: {fileID: 0}
+  actorID: 3
 --- !u!120 &1609634797
 LineRenderer:
   serializedVersion: 2
@@ -4315,6 +4359,7 @@ MonoBehaviour:
   cameraFocusTransform: {fileID: 0}
   stats: {fileID: 0}
   equippedWeapon: {fileID: 0}
+  actorID: 0
 --- !u!114 &1647604158
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5324,6 +5369,8 @@ GameObject:
   - component: {fileID: 1999993831}
   - component: {fileID: 1999993830}
   - component: {fileID: 1999993829}
+  - component: {fileID: 1999993836}
+  - component: {fileID: 1999993835}
   m_Layer: 8
   m_Name: DialogueCommand
   m_TagString: Untagged
@@ -5347,6 +5394,8 @@ MonoBehaviour:
   playerCommands:
   - {fileID: 1999993832}
   interactableCommands:
+  - {fileID: 1999993836}
+  - {fileID: 1999993835}
   - {fileID: 1999993831}
   - {fileID: 1999993830}
   - {fileID: 1999993829}
@@ -5485,6 +5534,34 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1647604161}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1999993835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1999993827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2011c75ddc6e03e4d86dc1eddc098ae6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ActorsMove:
+    ID: 3
+    relativePosition: {x: -2, y: 0, z: 0}
+--- !u!114 &1999993836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1999993827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22b3bfbc95f14c54d965a86ba03dd3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ActorID: 010000000200000003000000
 --- !u!1 &2031062742
 GameObject:
   m_ObjectHideFlags: 0
@@ -5643,3 +5720,4 @@ SceneRoots:
   - {fileID: 1705864631}
   - {fileID: 1058115822}
   - {fileID: 1760128353}
+  - {fileID: 308273500}
