@@ -5,7 +5,7 @@ using UnityEngine;
 public class AttackCommand : Command
 {
     // todo: this should probably be variable
-    public override float cost => 2f;
+    public override float cost => 1f;
 
     private WorldAgent receivingAgent;
     private DamageManager damageManager;
@@ -33,7 +33,7 @@ public class AttackCommand : Command
         invokingAgent.AnimationEventTriggered -= CaptureAnimationEvent;
     }
 
-    public override void Visualize(Visualizer visualizer) { }
+    public override void VisualizeInQueue(Visualizer visualizer) { }
 
     private void CaptureAnimationEvent(string trigger)
     {

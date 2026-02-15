@@ -20,13 +20,12 @@ public class AgentStats : ScriptableObject
         }
     }
     private float _actionPoints;
-
     public float actionPoints
     {
         get => _actionPoints;
         set
         {
-            _actionPoints = value + _actionPoints > initActionPoints ? initHitPoints : value;
+            _actionPoints = value;
             ActionPointsChanged?.Invoke(_actionPoints);
         }
     }
@@ -36,10 +35,17 @@ public class AgentStats : ScriptableObject
     public AgentStats Clone()
     {
         AgentStats clone = ScriptableObject.CreateInstance<AgentStats>();
+        
+        clone.initHitPoints = initHitPoints;
+        clone.initActionPoints = initActionPoints;
+        clone.initMovement = initMovement;
+        clone.initMovementCostModifier = initMovementCostModifier;
+        
         clone.hitPoints = initHitPoints;
         clone.actionPoints = initActionPoints;
         clone.movement = initMovement;
         clone.movementCostModifier = initMovementCostModifier;
+        
         return clone;
     }
 

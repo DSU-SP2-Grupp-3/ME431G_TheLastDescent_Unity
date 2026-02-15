@@ -15,9 +15,11 @@ public class MoveCommand : Command, IMoveCommand
             {
                 length += (agentPath.corners[i] - agentPath.corners[i - 1]).magnitude;
             }
-            return length * invokingAgent.localStats.movementCostModifier;
+            return length * costModifier;
         }
     }
+
+    private float costModifier => invokingAgent.localStats.movementCostModifier / invokingAgent.localStats.movement;
 
     private Vector3 toPosition;
     private Vector3 fromPosition;
@@ -68,19 +70,30 @@ public class MoveCommand : Command, IMoveCommand
 
         //Visualize();
 
+        invokingAgent.animator.ResetTrigger("StopMoving");
         invokingAgent.animator.SetTrigger("StartMoving");
         yield return new WaitUntil(() => invokingAgent.navMeshAgent.remainingDistance <= playEndAnimationDistance);
         invokingAgent.animator.SetTrigger("StopMoving");
+        invokingAgent.animator.ResetTrigger("StartMoving");
     }
 
-    public override void Visualize(Visualizer visualizer)
+    public override void VisualizeInQueue(Visualizer visualizer)
     {
-        // visualizer.DrawPath(agentPath, invokingAgent);
+        // todo: drawn path will intersect slopes, might have to do raycast between each corner to check for intersections with floor
+        visualizer.AppendQueuedPath(agentPath, invokingAgent);
+    }
+
+    public override void VisualizeExecution(Visualizer visualizer)
+    {
+        NavMeshPath remainingPath = new();
+        NavMesh.CalculatePath(invokingAgent.navMeshAgent.nextPosition, toPosition, NavMesh.AllAreas, remainingPath);
+        visualizer.DrawExecutingPath(remainingPath, invokingAgent);
     }
 
     public override void Break()
     {
         invokingAgent.animator.SetTrigger("StopMoving");
+        invokingAgent.animator.ResetTrigger("StartMoving");
         invokingAgent.navMeshAgent.ResetPath();
     }
 }
