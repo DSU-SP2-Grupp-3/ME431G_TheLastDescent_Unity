@@ -46,7 +46,7 @@ public class WorldAgent : MonoBehaviour
             }
         }
     }
-
+    public int actorID;
     /// True if this agent should enter into the turn order when turn based mode is activated
     public bool active { get; private set; }
     /// Dead agents are for most purposes non existant, do not partake in turn order and do not execute commands

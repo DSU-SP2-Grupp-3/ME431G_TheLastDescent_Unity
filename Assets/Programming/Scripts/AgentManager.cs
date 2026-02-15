@@ -186,6 +186,7 @@ public class AgentManager : Service<AgentManager>
     }
 
     public List<WorldAgent> GetPlayerAgents() => players;
+    public List<WorldAgent> GetAllAgents() => allAgents;
 
     public List<Vector3> GetPlayerPositions()
     {
