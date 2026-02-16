@@ -16,7 +16,10 @@ public class AgentManager : Service<AgentManager>
     private Locator<ModeSwitcher> modeSwitcher;
 
     private WorldAgent selectedPlayer;
+    private WorldAgent defaultPlayer;
     public DamageManager damageManager;
+
+    private bool allPlayersSelected;
 
     private void Awake()
     {
@@ -35,6 +38,7 @@ public class AgentManager : Service<AgentManager>
         im.MovePlayerInput += MoveSelectedPlayer;
         im.ClickedEnvironment += ClickedEnvironment;
         im.ClickedOnEnemy += ClickedEnemy;
+        modeSwitcher.Get().OnEnterTurnBased += (_) => allPlayersSelected = false;
     }
 
     public void RegisterAgent(WorldAgent agent)
@@ -47,12 +51,14 @@ public class AgentManager : Service<AgentManager>
             if (!selectedPlayer && agent.defaultSelected)
             {
                 SelectPlayer(agent);
+                defaultPlayer = agent;
             }
         }
     }
 
     public void SelectPlayer(WorldAgent playerAgent)
     {
+        allPlayersSelected = false;
         if (players.Contains(playerAgent) && !playerAgent.dead)
         {
             // Debug.Log($"Select {playerAgent.name}");
@@ -63,20 +69,52 @@ public class AgentManager : Service<AgentManager>
         }
     }
 
+    public void SelectAllPlayers()
+    {
+        if (modeSwitcher.Get().mode == RoundClock.ProgressMode.RealTime)
+        {
+            SelectPlayer(defaultPlayer);
+            allPlayersSelected = true;
+        }
+    }
+
     private void MoveSelectedPlayer(Vector3 position)
     {
-        MoveCommand movePlayer = new MoveCommand(position, selectedPlayer);
-
-        if (!movePlayer.possible) return;
-
-        RealTimeOrTurnBased(
-            () => selectedPlayer.OverwriteQueue(movePlayer),
-            () =>
+        if (allPlayersSelected)
+        {
+            if (modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased)
             {
-                if (!CanQueueCommand(movePlayer)) return;
-                selectedPlayer.QueueCommand(movePlayer);
+                SelectPlayer(defaultPlayer);
+                return;
             }
-        ); 
+
+            MoveCommand movePlayer = new MoveCommand(position, defaultPlayer);
+
+            defaultPlayer.OverwriteQueue(movePlayer);
+
+            foreach (WorldAgent player in players)
+            {
+                if (player == defaultPlayer) continue;
+                MoveInRangeCommand moveToDefaultPLayer = new MoveInRangeCommand(
+                    position, 4f, player
+                );
+                player.OverwriteQueue(moveToDefaultPLayer);
+            }
+        }
+        else
+        {
+            MoveCommand movePlayer = new MoveCommand(position, selectedPlayer);
+
+            if (!movePlayer.possible) return;
+            RealTimeOrTurnBased(
+                () => selectedPlayer.OverwriteQueue(movePlayer),
+                () =>
+                {
+                    if (!CanQueueCommand(movePlayer)) return;
+                    selectedPlayer.QueueCommand(movePlayer);
+                }
+            );
+        }
     }
 
     private void ClickedEnvironment(GameObject go)
