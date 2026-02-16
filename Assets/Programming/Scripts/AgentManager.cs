@@ -85,6 +85,7 @@ public class AgentManager : Service<AgentManager>
             if (modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased)
             {
                 SelectPlayer(defaultPlayer);
+                MoveSelectedPlayer(position);
                 return;
             }
 
