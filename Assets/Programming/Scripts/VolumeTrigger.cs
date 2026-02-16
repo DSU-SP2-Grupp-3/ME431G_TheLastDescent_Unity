@@ -1,0 +1,25 @@
+using UnityEngine;
+using UnityEngine.Events;
+
+public class VolumeTrigger : MonoBehaviour
+{
+    public UnityEvent TriggerEnter;
+    public UnityEvent TriggerExit;
+    public UnityEvent TriggerStay;
+
+    public void OnTriggerEnter(Collider _)
+    {
+        TriggerEnter?.Invoke();
+    }
+
+    public void OnTriggerExit(Collider _)
+    {
+        TriggerExit?.Invoke();
+    }
+
+    public void OnTriggerStay(Collider _)
+    {
+        TriggerStay?.Invoke();
+    }
+
+}
