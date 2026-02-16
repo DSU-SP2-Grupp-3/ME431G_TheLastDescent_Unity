@@ -27,6 +27,6 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
     private void LateUpdate()
     {
         Vector3 targetPosition = targetGameObject.position + offset;
-        transform.position = Vector3.Lerp(transform.position, targetPosition, smoothing);
+        transform.position = Vector3.Lerp(transform.position, targetPosition, smoothing * Time.deltaTime * 100f);
     }
 }
