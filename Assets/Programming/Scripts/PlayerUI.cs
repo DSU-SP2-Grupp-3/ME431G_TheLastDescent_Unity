@@ -35,7 +35,6 @@ public class PlayerUI : MonoBehaviour
 
     public void ClickedOnPlayer()
     {
-        player.localStats.hitPoints -= 1;
         agentManager.SelectPlayer(player);
     }
 
@@ -52,7 +51,6 @@ public class PlayerUI : MonoBehaviour
             hitPointsText.text = $"HP: {player.localStats.hitPoints}/{maxHP}";
             button.interactable = true;
         }
-        Debug.Log(player.localStats.hitPoints);
     }
 
     private void ActionPointsChanged(float changed)
