@@ -154,7 +154,6 @@ public class WorldAgent : MonoBehaviour
         QueueCommand(command);
         StartCoroutine(ExecuteCommandQueue());
     }
-
     public void OverwriteQueue(Command[] commands)
     {
         InterruptCommandQueue();

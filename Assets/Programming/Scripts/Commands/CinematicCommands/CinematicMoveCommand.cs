@@ -16,9 +16,13 @@ public class CinematicMoveCommand : Command
         cinematicKitLocator = new();
         foreach(CinematicMoveInfo agentinfo in cinematicMoveInfos)
         {
-            Debug.Log("Agent tried");
+
+        
+
             WorldAgent worldAgent = cinematicKitLocator.Get().GetActor(agentinfo.ID);
-            new MoveCommand(worldAgent.transform.position, invokingAgent.transform.position - agentinfo.relativePosition, worldAgent);
+            worldAgent.OverwriteQueue(new MoveCommand(invokingAgent.transform.position - agentinfo.relativePosition, worldAgent));
+            Debug.Log(worldAgent);
+            
         }
         yield return null;
     }
