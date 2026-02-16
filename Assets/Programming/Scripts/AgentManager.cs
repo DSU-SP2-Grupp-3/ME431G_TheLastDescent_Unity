@@ -16,6 +16,7 @@ public class AgentManager : Service<AgentManager>
     private Locator<ModeSwitcher> modeSwitcher;
 
     private WorldAgent selectedPlayer;
+    private WorldAgent defaultPlayer;
     public DamageManager damageManager;
 
     private bool allPlayersSelected;
@@ -50,6 +51,7 @@ public class AgentManager : Service<AgentManager>
             if (!selectedPlayer && agent.defaultSelected)
             {
                 SelectPlayer(agent);
+                defaultPlayer = agent;
             }
         }
     }
@@ -71,6 +73,7 @@ public class AgentManager : Service<AgentManager>
     {
         if (modeSwitcher.Get().mode == RoundClock.ProgressMode.RealTime)
         {
+            SelectPlayer(defaultPlayer);
             allPlayersSelected = true;
         }
     }
@@ -79,7 +82,6 @@ public class AgentManager : Service<AgentManager>
     {
         if (allPlayersSelected)
         {
-            WorldAgent defaultPlayer = players.Where(p => p.defaultSelected).First();
             if (modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased)
             {
                 SelectPlayer(defaultPlayer);
@@ -88,13 +90,15 @@ public class AgentManager : Service<AgentManager>
 
             MoveCommand movePlayer = new MoveCommand(position, defaultPlayer);
 
+            defaultPlayer.OverwriteQueue(movePlayer);
+
             foreach (WorldAgent player in players)
             {
                 if (player == defaultPlayer) continue;
-                MoveInRangeCommand moveToMainPLayer = new MoveInRangeCommand(
-                    defaultPlayer.transform.position, 2f, player
+                MoveInRangeCommand moveToDefaultPLayer = new MoveInRangeCommand(
+                    position, 4f, player
                 );
-                player.OverwriteQueue(moveToMainPLayer);
+                player.OverwriteQueue(moveToDefaultPLayer);
             }
         }
         else
