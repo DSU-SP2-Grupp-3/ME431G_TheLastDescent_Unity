@@ -925,10 +925,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b18b60669053492ab0421e52b7e090f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultSelected: 0
   team: 0
   animator: {fileID: 306374937}
   navMeshAgent: {fileID: 306374934}
-  lineRenderer: {fileID: 0}
   cameraFocusTransform: {fileID: 495731673}
   stats: {fileID: 11400000, guid: 781734abf7c8bcf4095b28600dd9534d, type: 2}
   equippedWeapon: {fileID: 0}
@@ -2373,10 +2373,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b18b60669053492ab0421e52b7e090f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultSelected: 0
   team: 0
   animator: {fileID: 933085539}
   navMeshAgent: {fileID: 933085540}
-  lineRenderer: {fileID: 0}
   cameraFocusTransform: {fileID: 798990937}
   stats: {fileID: 11400000, guid: a2cd790a8156f144f9c816b44d47befa, type: 2}
   equippedWeapon: {fileID: 0}
@@ -3150,10 +3150,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b18b60669053492ab0421e52b7e090f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultSelected: 0
   team: 4
   animator: {fileID: 0}
   navMeshAgent: {fileID: 0}
-  lineRenderer: {fileID: 0}
   cameraFocusTransform: {fileID: 0}
   stats: {fileID: 0}
   equippedWeapon: {fileID: 0}
@@ -3822,10 +3822,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b18b60669053492ab0421e52b7e090f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultSelected: 0
   team: 0
   animator: {fileID: 1609634798}
   navMeshAgent: {fileID: 1609634799}
-  lineRenderer: {fileID: 0}
   cameraFocusTransform: {fileID: 959964289}
   stats: {fileID: 11400000, guid: d6721126d80926842a2ee2ad999f40a8, type: 2}
   equippedWeapon: {fileID: 0}
@@ -4352,10 +4352,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b18b60669053492ab0421e52b7e090f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultSelected: 0
   team: 4
   animator: {fileID: 0}
   navMeshAgent: {fileID: 0}
-  lineRenderer: {fileID: 0}
   cameraFocusTransform: {fileID: 0}
   stats: {fileID: 0}
   equippedWeapon: {fileID: 0}
@@ -5394,9 +5394,9 @@ MonoBehaviour:
   playerCommands:
   - {fileID: 1999993832}
   interactableCommands:
+  - {fileID: 1999993831}
   - {fileID: 1999993836}
   - {fileID: 1999993835}
-  - {fileID: 1999993831}
   - {fileID: 1999993830}
   - {fileID: 1999993829}
 --- !u!114 &1999993829
@@ -5547,8 +5547,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ActorsMove:
-    ID: 3
-    relativePosition: {x: -2, y: 0, z: 0}
+  - ID: 3
+    relativePosition: {x: 2, y: 0, z: 2}
+  - ID: 2
+    relativePosition: {x: 2, y: 0, z: -2}
+  - ID: 1
+    relativePosition: {x: 1, y: 0, z: 0}
 --- !u!114 &1999993836
 MonoBehaviour:
   m_ObjectHideFlags: 0
