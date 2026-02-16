@@ -18,6 +18,8 @@ public class AgentManager : Service<AgentManager>
     private WorldAgent selectedPlayer;
     public DamageManager damageManager;
 
+    private bool allPlayersSelected;
+
     private void Awake()
     {
         Register();
@@ -35,6 +37,7 @@ public class AgentManager : Service<AgentManager>
         im.MovePlayerInput += MoveSelectedPlayer;
         im.ClickedEnvironment += ClickedEnvironment;
         im.ClickedOnEnemy += ClickedEnemy;
+        modeSwitcher.Get().OnEnterTurnBased += (_) => allPlayersSelected = false;
     }
 
     public void RegisterAgent(WorldAgent agent)
@@ -53,6 +56,7 @@ public class AgentManager : Service<AgentManager>
 
     public void SelectPlayer(WorldAgent playerAgent)
     {
+        allPlayersSelected = false;
         if (players.Contains(playerAgent) && !playerAgent.dead)
         {
             // Debug.Log($"Select {playerAgent.name}");
@@ -63,20 +67,50 @@ public class AgentManager : Service<AgentManager>
         }
     }
 
+    public void SelectAllPlayers()
+    {
+        if (modeSwitcher.Get().mode == RoundClock.ProgressMode.RealTime)
+        {
+            allPlayersSelected = true;
+        }
+    }
+
     private void MoveSelectedPlayer(Vector3 position)
     {
-        MoveCommand movePlayer = new MoveCommand(position, selectedPlayer);
-
-        if (!movePlayer.possible) return;
-
-        RealTimeOrTurnBased(
-            () => selectedPlayer.OverwriteQueue(movePlayer),
-            () =>
+        if (allPlayersSelected)
+        {
+            WorldAgent defaultPlayer = players.Where(p => p.defaultSelected).First();
+            if (modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased)
             {
-                if (!CanQueueCommand(movePlayer)) return;
-                selectedPlayer.QueueCommand(movePlayer);
+                SelectPlayer(defaultPlayer);
+                return;
             }
-        ); 
+
+            MoveCommand movePlayer = new MoveCommand(position, defaultPlayer);
+
+            foreach (WorldAgent player in players)
+            {
+                if (player == defaultPlayer) continue;
+                MoveInRangeCommand moveToMainPLayer = new MoveInRangeCommand(
+                    defaultPlayer.transform.position, 2f, player
+                );
+                player.OverwriteQueue(moveToMainPLayer);
+            }
+        }
+        else
+        {
+            MoveCommand movePlayer = new MoveCommand(position, selectedPlayer);
+
+            if (!movePlayer.possible) return;
+            RealTimeOrTurnBased(
+                () => selectedPlayer.OverwriteQueue(movePlayer),
+                () =>
+                {
+                    if (!CanQueueCommand(movePlayer)) return;
+                    selectedPlayer.QueueCommand(movePlayer);
+                }
+            );
+        }
     }
 
     private void ClickedEnvironment(GameObject go)
