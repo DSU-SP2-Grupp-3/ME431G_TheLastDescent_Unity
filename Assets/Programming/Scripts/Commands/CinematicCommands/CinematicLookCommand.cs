@@ -4,11 +4,11 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 
-public class CinematicMoveCommand : Command
+public class CinematicLookCommand : Command
 {
     private List<CinematicMoveInfo> cinematicMoveInfos;
     private Locator<CinematicKitService> cinematicKitLocator;
-    public CinematicMoveCommand(List<CinematicMoveInfo> cinematicMoveInfos, WorldAgent invokingAgent) : base(invokingAgent)
+    public CinematicLookCommand(List<CinematicMoveInfo> cinematicMoveInfos, WorldAgent invokingAgent) : base(invokingAgent)
     {
         this.cinematicMoveInfos = cinematicMoveInfos;
     }

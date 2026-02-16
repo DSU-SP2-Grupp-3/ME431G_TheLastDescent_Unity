@@ -5371,6 +5371,7 @@ GameObject:
   - component: {fileID: 1999993829}
   - component: {fileID: 1999993836}
   - component: {fileID: 1999993835}
+  - component: {fileID: 1999993837}
   m_Layer: 8
   m_Name: DialogueCommand
   m_TagString: Untagged
@@ -5398,6 +5399,7 @@ MonoBehaviour:
   - {fileID: 1999993836}
   - {fileID: 1999993835}
   - {fileID: 1999993830}
+  - {fileID: 1999993837}
   - {fileID: 1999993829}
 --- !u!114 &1999993829
 MonoBehaviour:
@@ -5566,6 +5568,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ActorID: 010000000200000003000000
+--- !u!114 &1999993837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1999993827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0e5f0a7f60f8814eadb53482078f8f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2031062742
 GameObject:
   m_ObjectHideFlags: 0
