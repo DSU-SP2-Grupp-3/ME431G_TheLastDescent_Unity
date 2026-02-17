@@ -16,6 +16,7 @@ public class MainMenuBehavior : MonoBehaviour
     }
     public void Continue()
     {
+        Debug.Log(SceneName);
         SceneManager.LoadScene(SceneName);
     }
     public void NewGame()
