@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7076631293186839885}
   - component: {fileID: 3872888211663564274}
   - component: {fileID: 8933616715074525473}
+  - component: {fileID: 7810997253855956733}
   m_Layer: 3
   m_Name: TestPlayer
   m_TagString: Untagged
@@ -100,6 +101,33 @@ MonoBehaviour:
   stats: {fileID: 11400000, guid: 781734abf7c8bcf4095b28600dd9534d, type: 2}
   equippedWeapon: {fileID: 11400000, guid: a975a668248ddab4fb8254746403b0c6, type: 2}
   actorID: 0
+--- !u!54 &7810997253855956733
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6454046059173051637}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &6991775118486018161
 GameObject:
   m_ObjectHideFlags: 0
