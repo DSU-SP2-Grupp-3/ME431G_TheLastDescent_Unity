@@ -1,0 +1,226 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1619811166875592439
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6795189444634064501}
+  - component: {fileID: 2560854178641552602}
+  m_Layer: 0
+  m_Name: Footsteps
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6795189444634064501
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1619811166875592439}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 269561191056103330}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2560854178641552602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1619811166875592439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e21fb589011d4cb4be808ec0dc61058c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventName: Footstep
+  fmodEvent:
+    Guid:
+      Data1: -855631902
+      Data2: 1289942946
+      Data3: 63400353
+      Data4: 776534897
+    Path: event:/SFX/Characters/Footsteps
+--- !u!1 &3427061958597539996
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 269561191056103330}
+  - component: {fileID: 5408515296962631908}
+  - component: {fileID: 825175552633248569}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &269561191056103330
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3427061958597539996}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6795189444634064501}
+  - {fileID: 5273248554404929232}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5408515296962631908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3427061958597539996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0368fcbeaa9b6264ea34a317a48c9b7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  muRef: []
+  ambRef:
+  - Guid:
+      Data1: 1055603850
+      Data2: 1134913124
+      Data3: 596809609
+      Data4: 1131230499
+    Path: event:/AMB/(IS)Grotta
+  - Guid:
+      Data1: 1859792559
+      Data2: 1214076010
+      Data3: 791802518
+      Data4: 1259433516
+    Path: "event:/AMB/T\xE5gtunnel"
+  characterRef:
+  - Guid:
+      Data1: -1518432126
+      Data2: 1257756836
+      Data3: -817116017
+      Data4: -1454042402
+    Path: event:/SFX/Characters/Attack
+  - Guid:
+      Data1: -855631902
+      Data2: 1289942946
+      Data3: 63400353
+      Data4: 776534897
+    Path: event:/SFX/Characters/Footsteps
+  enemyRef:
+  - Guid:
+      Data1: 1068660185
+      Data2: 1131599521
+      Data3: 96018846
+      Data4: 2000477048
+    Path: event:/SFX/Enemies/Skulldrone/Attack
+  - Guid:
+      Data1: -201008282
+      Data2: 1307972342
+      Data3: -1191238260
+      Data4: -1231033615
+    Path: event:/SFX/Enemies/Skulldrone/Move
+  uiRef:
+  - Guid:
+      Data1: 1379233120
+      Data2: 1083064565
+      Data3: -85266246
+      Data4: -2077267829
+    Path: event:/SFX/UI/Dialogue Typewrite
+  - Guid:
+      Data1: -1376593353
+      Data2: 1107366552
+      Data3: 555092387
+      Data4: -1093304329
+    Path: event:/SFX/UI/Menu Click
+  interactRef: []
+  debug: 0
+  PreloadUECSFiles:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &825175552633248569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3427061958597539996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8766d451d27a4e8d9a01a03f5fb01cd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventPlayers:
+  - {fileID: 2560854178641552602}
+  - {fileID: 0}
+--- !u!1 &6932520309772524885
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5273248554404929232}
+  - component: {fileID: 6577876912422598842}
+  m_Layer: 0
+  m_Name: PlayerAttack
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5273248554404929232
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6932520309772524885}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 269561191056103330}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6577876912422598842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6932520309772524885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e21fb589011d4cb4be808ec0dc61058c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventName: PlayerAttack
+  fmodEvent:
+    Guid:
+      Data1: -1518432126
+      Data2: 1257756836
+      Data3: -817116017
+      Data4: -1454042402
+    Path: event:/SFX/Characters/Attack
