@@ -11,6 +11,8 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
     private Locator<RoundClock> roundClock;
 
     private Locator<TurnManager> turnManager;
+    
+    private Locator<OrthographicCameraMover> cameraMover;
 
     public RoundClock.ProgressMode mode => roundClock.Get().currentMode;
 
@@ -21,6 +23,7 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
         Register(); 
         roundClock = new();
         turnManager = new();
+        cameraMover = new ();
     }
 
     public bool TryEnterTurnBased(bool automatic = false)
@@ -36,6 +39,7 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
         OnEnterTurnBased?.Invoke(turnManager.Get());
         roundClock.Get().EnterTurnBased();
         turnManager.Get().Activate();
+        cameraMover.Get().isTurnBased = true;
     }
 
     public bool TryEnterRealTime(bool forced = false)
@@ -60,5 +64,6 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
         OnEnterRealTime?.Invoke(turnManager.Get());
         roundClock.Get().EnterRealTime();
         turnManager.Get().Deactivate();
+        cameraMover.Get().isTurnBased = false;
     }
 }

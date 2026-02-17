@@ -14,6 +14,9 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
     [SerializeField, Range(0f, 1f)]
     private float smoothing;
 
+    public bool isTurnBased;
+    public GameObject rangeIndicator;
+    
     private void Awake()
     {
         Register();
@@ -26,6 +29,14 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
 
     private void LateUpdate()
     {
+        if (isTurnBased)
+        {
+            rangeIndicator.transform.position = targetGameObject.transform.position;
+        }
+        else
+        {
+            rangeIndicator.transform.position = new Vector3(0,-100,0);
+        }
         Vector3 targetPosition = targetGameObject.position + offset;
         transform.position = Vector3.Lerp(transform.position, targetPosition, smoothing * Time.deltaTime * 100f);
     }
