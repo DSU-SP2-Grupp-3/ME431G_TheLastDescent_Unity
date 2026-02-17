@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 public class AgentManager : Service<AgentManager>
 {
     public event Action<WorldAgent> AgentRegistered;
+    public UnityEvent NotEnoughAP;
 
     private List<WorldAgent> players;
     private List<WorldAgent> allAgents;
@@ -186,6 +188,7 @@ public class AgentManager : Service<AgentManager>
         {
             Debug.Log($"Not enough AP remaining to queue command {command}, " +
                       $"ap remaining = {remainingAP}, command cost: {command.cost}");
+            NotEnoughAP?.Invoke();
             return false;
         }
         return true;
