@@ -14,12 +14,13 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
     [SerializeField, Range(0f, 1f)]
     private float smoothing;
 
-    public bool isTurnBased;
     public GameObject rangeIndicator;
-    
+    private Locator<ModeSwitcher> modeSwitcher;
+
     private void Awake()
     {
         Register();
+        modeSwitcher = new();
     }
 
     public void SetCameraTarget(Transform target)
@@ -29,13 +30,13 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
 
     private void LateUpdate()
     {
-        if (isTurnBased)
+        if (modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased)
         {
             rangeIndicator.transform.position = targetGameObject.transform.position;
         }
         else
         {
-            rangeIndicator.transform.position = new Vector3(0,-100,0);
+            rangeIndicator.transform.position = new Vector3(0, -100, 0);
         }
         Vector3 targetPosition = targetGameObject.position + offset;
         transform.position = Vector3.Lerp(transform.position, targetPosition, smoothing * Time.deltaTime * 100f);

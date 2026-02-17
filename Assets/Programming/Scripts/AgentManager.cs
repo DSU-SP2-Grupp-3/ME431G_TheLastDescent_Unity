@@ -205,6 +205,7 @@ public class AgentManager : Service<AgentManager>
             if (selectedPlayer.TotalCommandQueueCost() + queueCost > selectedPlayer.localStats.actionPoints)
             {
                 Debug.Log($"Not enough AP remaining to queue commands starting with {commands[0]}");
+                NotEnoughAP?.Invoke();
                 return false;
             }
         }
