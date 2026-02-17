@@ -12,9 +12,12 @@ public class AttackCommand : Command
 
     private bool animationEnded;
 
+    private EventCollection eventCollection;
+
     public AttackCommand(WorldAgent invokingAgent, WorldAgent receivingAgent, DamageManager damageManager)
         : base(invokingAgent)
     {
+        eventCollection = new Locator<EventCollection>().Get();
         this.receivingAgent = receivingAgent;
         this.damageManager = damageManager;
     }
@@ -37,7 +40,11 @@ public class AttackCommand : Command
 
     private void CaptureAnimationEvent(string trigger)
     {
-        if (trigger == "attack") PerformAttack();
+        if (trigger == "attack")
+        {
+            eventCollection.PlayEvent("PlayerAttack");
+            PerformAttack();
+        }
         if (trigger == "end") animationEnded = true;
     }
 
