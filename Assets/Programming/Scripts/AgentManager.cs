@@ -166,7 +166,7 @@ public class AgentManager : Service<AgentManager>
             selectedPlayer.weaponStats.attackRange,
             selectedPlayer
         );
-        AttackCommand attackCommand = new AttackCommand(selectedPlayer, enemyAgent, damageManager);
+        AttackCommand attackCommand = new AttackCommand(selectedPlayer, enemyAgent, damageManager, "PlayerAttack");
         Command[] commands = new Command[] { inRangeCommand, attackCommand };
 
         RealTimeOrTurnBased(
