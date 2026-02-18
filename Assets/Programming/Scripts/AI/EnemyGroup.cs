@@ -34,4 +34,13 @@ public class EnemyGroup : MonoBehaviour
             }
         }
     }
+
+    public void ActivateGroup()
+    {
+        foreach (WorldAgent enemy in enemies)
+        {
+            enemy.ForcedEnterTurnBased -= OnEnemyForceEnterTurnBased;
+            enemy.Activate();
+        }
+    }
 }
