@@ -13,13 +13,18 @@ public class AttackCommand : Command
     private bool animationEnded;
 
     private EventCollection eventCollection;
+    private string attackEventName;
 
-    public AttackCommand(WorldAgent invokingAgent, WorldAgent receivingAgent, DamageManager damageManager)
+    public AttackCommand(WorldAgent invokingAgent,
+                         WorldAgent receivingAgent,
+                         DamageManager damageManager,
+                         string attackEventName)
         : base(invokingAgent)
     {
         eventCollection = new Locator<EventCollection>().Get();
         this.receivingAgent = receivingAgent;
         this.damageManager = damageManager;
+        this.attackEventName = attackEventName;
     }
 
     public override IEnumerator Execute()
@@ -42,7 +47,7 @@ public class AttackCommand : Command
     {
         if (trigger == "attack")
         {
-            eventCollection.PlayEvent("PlayerAttack");
+            eventCollection.PlayEvent(attackEventName);
             PerformAttack();
         }
         if (trigger == "end") animationEnded = true;

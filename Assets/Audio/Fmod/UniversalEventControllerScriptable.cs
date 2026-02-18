@@ -60,6 +60,7 @@ public class UniversalEventControllerScriptable : ScriptableObject
     {
         Test1,
         Test2,
+        DialogueTypewrite
     }
 
     public enum InterEventSelect
@@ -567,8 +568,7 @@ public class UniversalEventControllerScriptable : ScriptableObject
             SfxInstance.getPlaybackState(out PLAYBACK_STATE state);
             SfxInstance.getDescription(out EventDescription desc);
             desc.getPath(out string path);
-            if (state == PLAYBACK_STATE.STOPPED || state == PLAYBACK_STATE.STOPPING)
-            {
+
                 if (debugMode && dbSET) { Debug.Log("[" + name + "] " + "Playing: " + path); }
                 SfxInstance.start();
                 if (toggleRelease)
@@ -576,7 +576,7 @@ public class UniversalEventControllerScriptable : ScriptableObject
                     if (debugMode && dbSET) { Debug.Log("[" + name + "] " + "Release toggled ON for: " + path); }
                     SfxInstance.release();
                 }
-            }
+            
             else
             {
                 if (debugMode && dbSET) { Debug.Log("[" + name + "] " + path + " is already playing!"); }
