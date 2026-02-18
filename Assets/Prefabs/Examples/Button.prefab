@@ -151,7 +151,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 08870764c7061834b9a29b7cc9fb4001, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -267,11 +267,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b18b60669053492ab0421e52b7e090f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultSelected: 0
   team: 4
   animator: {fileID: 7227810049995749423}
   navMeshAgent: {fileID: 0}
   cameraFocusTransform: {fileID: 0}
   stats: {fileID: 0}
+  equippedWeapon: {fileID: 0}
+  actorID: 0
 --- !u!114 &3603874594621902929
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,5 +1,57 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1121555165870476414
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2993623962474186250}
+  - component: {fileID: 92143964732110104}
+  m_Layer: 0
+  m_Name: Isgrotta
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2993623962474186250
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1121555165870476414}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 269561191056103330}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &92143964732110104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1121555165870476414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e21fb589011d4cb4be808ec0dc61058c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventName: Isgrotta
+  fmodEvent:
+    Guid:
+      Data1: 1859792559
+      Data2: 1214076010
+      Data3: 791802518
+      Data4: 1259433516
+    Path: "event:/AMB/T\xE5gtunnel"
 --- !u!1 &1619811166875592439
 GameObject:
   m_ObjectHideFlags: 0
@@ -85,6 +137,8 @@ Transform:
   m_Children:
   - {fileID: 6795189444634064501}
   - {fileID: 5273248554404929232}
+  - {fileID: 4723473415850748587}
+  - {fileID: 2993623962474186250}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5408515296962631908
@@ -172,6 +226,60 @@ MonoBehaviour:
   eventPlayers:
   - {fileID: 2560854178641552602}
   - {fileID: 6577876912422598842}
+  - {fileID: 4082918499472838517}
+  - {fileID: 92143964732110104}
+--- !u!1 &6397966115963319795
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4723473415850748587}
+  - component: {fileID: 4082918499472838517}
+  m_Layer: 0
+  m_Name: EnemyAttack
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4723473415850748587
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6397966115963319795}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 269561191056103330}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4082918499472838517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6397966115963319795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e21fb589011d4cb4be808ec0dc61058c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventName: EnemyAttack
+  fmodEvent:
+    Guid:
+      Data1: 1068660185
+      Data2: 1131599521
+      Data3: 96018846
+      Data4: 2000477048
+    Path: event:/SFX/Enemies/Skulldrone/Attack
 --- !u!1 &6932520309772524885
 GameObject:
   m_ObjectHideFlags: 0

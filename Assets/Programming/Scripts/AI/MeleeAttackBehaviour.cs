@@ -61,7 +61,7 @@ public class MeleeAttackBehaviour : BehaviourDefinition
             LookAtCommand lookAtCommand = new LookAtCommand(aiAgent, closestTarget);
             commands.AddCommand(lookAtCommand);
             
-            AttackCommand attackPlayerCommand = new AttackCommand(aiAgent, closestTarget, agentManager.damageManager);
+            AttackCommand attackPlayerCommand = new AttackCommand(aiAgent, closestTarget, agentManager.damageManager, "EnemyAttack");
             commands.AddCommand(attackPlayerCommand);
         }
         else
