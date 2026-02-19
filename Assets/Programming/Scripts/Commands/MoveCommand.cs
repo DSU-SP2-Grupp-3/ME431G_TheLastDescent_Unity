@@ -31,6 +31,7 @@ public class MoveCommand : Command, IMoveCommand
 
     private const float playEndAnimationDistance = 0.5f;
     private const float ignoreMovementDistance = 0.1f;
+    private const float interruptTime = 5f;
 
     public Vector3 ToPosition() => toPosition;
 
@@ -77,10 +78,16 @@ public class MoveCommand : Command, IMoveCommand
         invokingAgent.animator.ResetTrigger("StopMoving");
         invokingAgent.animator.SetTrigger("StartMoving");
         invokingAgent.AnimationEventTriggered += CaptureStepEvent;
-        yield return new WaitUntil(() => invokingAgent.navMeshAgent.remainingDistance <= playEndAnimationDistance);
+        float interrupt = Time.time + interruptTime;
+        yield return new WaitUntil(() =>
+        {
+            return invokingAgent.navMeshAgent.remainingDistance <= playEndAnimationDistance ||
+                   Time.time > interrupt;
+        });
         invokingAgent.AnimationEventTriggered -= CaptureStepEvent;
         invokingAgent.animator.SetTrigger("StopMoving");
         invokingAgent.animator.ResetTrigger("StartMoving");
+        invokingAgent.navMeshAgent.ResetPath();
     }
 
     private void CaptureStepEvent(string trigger)
