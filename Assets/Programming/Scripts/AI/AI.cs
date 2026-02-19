@@ -24,16 +24,7 @@ public class AI : MonoBehaviour
         roundClock = new();
         playerNavMeshes = new();
         agentManager = new();
-        agentManager.Get().AgentRegistered += UpdatePlayerNavMeshes;
         roundClock.Get().RoundProgressed += RoundUpdate;
-    }
-
-    private void UpdatePlayerNavMeshes(WorldAgent registeredAgent)
-    {
-        if (registeredAgent.team == WorldAgent.Team.Player)
-        {
-            playerNavMeshes.Add(registeredAgent.navMeshAgent);
-        }
     }
 
     private void RoundUpdate(int round)
@@ -57,6 +48,7 @@ public class AI : MonoBehaviour
 
     private bool CheckIfShouldBeActive()
     {
+        IEnumerable<NavMeshAgent> playerNavMeshes = agentManager.Get().GetPlayerAgents().Select(p => p.navMeshAgent);
         foreach (NavMeshAgent playerNavMesh in playerNavMeshes)
         {
             bool unobstructed = !agent.navMeshAgent.Raycast(playerNavMesh.transform.position, out NavMeshHit hit);
