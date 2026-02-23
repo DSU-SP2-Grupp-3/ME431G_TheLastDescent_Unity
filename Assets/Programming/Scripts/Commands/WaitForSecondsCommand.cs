@@ -9,7 +9,7 @@ public class WaitForSecondsCommand : Command
         this.seconds = seconds;
 
     }
-    public override IEnumerator Execute()
+    protected override IEnumerator Execute()
     {
         yield return new WaitForSeconds(seconds);
     }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
@@ -63,7 +64,7 @@ public class MoveCommand : Command, IMoveCommand
         possible = path.status == NavMeshPathStatus.PathComplete;
     }
 
-    public override IEnumerator Execute()
+    protected override IEnumerator Execute()
     {
         // do not do anything if the path is not valid -se
         if (!possible) yield break;
@@ -79,15 +80,27 @@ public class MoveCommand : Command, IMoveCommand
         invokingAgent.animator.SetTrigger("StartMoving");
         invokingAgent.AnimationEventTriggered += CaptureStepEvent;
         float interrupt = Time.time + interruptTime;
-        yield return new WaitUntil(() =>
-        {
-            return invokingAgent.navMeshAgent.remainingDistance <= playEndAnimationDistance ||
-                   Time.time > interrupt;
-        });
+        
+        yield return new WaitUntil(WaitUntilArrivedOrInterrupted(interrupt));
+        
         invokingAgent.AnimationEventTriggered -= CaptureStepEvent;
         invokingAgent.animator.SetTrigger("StopMoving");
         invokingAgent.animator.ResetTrigger("StartMoving");
         invokingAgent.navMeshAgent.ResetPath();
+    }
+
+    private Func<bool> WaitUntilArrivedOrInterrupted(float interrupt)
+    {
+        return () =>
+        {
+            if (invokingAgent.navMeshAgent.remainingDistance <= playEndAnimationDistance) return true;
+            else if (Time.time > interrupt)
+            {
+                status = Status.Failed;
+                return true;
+            }
+            return false;
+        };
     }
 
     private void CaptureStepEvent(string trigger)

@@ -11,7 +11,7 @@ public class DialogueCommand : Command
         this.dialogueScriptable = dialogueScriptable;
 
     }
-    public override IEnumerator Execute()
+    protected override IEnumerator Execute()
     {
         dialogueServiceLocator = new();
         if (dialogueServiceLocator.TryGet(out dialogueService))

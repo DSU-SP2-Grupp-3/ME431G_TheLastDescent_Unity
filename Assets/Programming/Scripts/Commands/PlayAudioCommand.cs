@@ -10,7 +10,7 @@ public class PlayAudioCommand : Command
         this.unityEvent = unityEvent;
 
     }
-    public override IEnumerator Execute()
+    protected override IEnumerator Execute()
     {
         unityEvent.Invoke();
         yield return null;

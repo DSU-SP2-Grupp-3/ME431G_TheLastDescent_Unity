@@ -14,7 +14,7 @@ public class LookAtCommand : Command
         this.receivingAgent = receivingAgent;
     }
 
-    public override IEnumerator Execute()
+    protected override IEnumerator Execute()
     {
         float duration = 0.5f;
         float t = 0;

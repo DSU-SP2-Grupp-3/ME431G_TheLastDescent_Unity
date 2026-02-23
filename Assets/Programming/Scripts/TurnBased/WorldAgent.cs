@@ -66,6 +66,7 @@ public class WorldAgent : MonoBehaviour
     private Command currentlyExecutingCommand;
     private Coroutine currentExecutingCommandCoroutine;
     public bool queueEmpty => commandQueue.Count == 0;
+    private bool breakCommandQueue;
 
     private void Awake()
     {
@@ -181,12 +182,20 @@ public class WorldAgent : MonoBehaviour
         {
             CommandQueueUpdated?.Invoke(this, commandQueue, command);
             currentlyExecutingCommand = command;
-            currentExecutingCommandCoroutine = StartCoroutine(command.Execute());
+            currentExecutingCommandCoroutine = StartCoroutine(command.ExecuteCommand());
             yield return currentExecutingCommandCoroutine;
-            //todo: check if command succeeded or not, like if a MoveCommand actually made it to the inteded destination, otherwise cancel the rest of the commandQueue
+
+            breakCommandQueue = currentlyExecutingCommand.status == Command.Status.Failed;
+
             currentExecutingCommandCoroutine = null;
             currentlyExecutingCommand = null;
             CommandQueueUpdated?.Invoke(this, commandQueue, null);
+            if (breakCommandQueue) break;
+        }
+        if (breakCommandQueue)
+        {
+            breakCommandQueue = false;
+            InterruptCommandQueue();
         }
     }
 

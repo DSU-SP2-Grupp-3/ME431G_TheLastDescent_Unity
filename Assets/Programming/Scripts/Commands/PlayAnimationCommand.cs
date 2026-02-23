@@ -18,7 +18,7 @@ public class PlayAnimationCommand : Command
         this.hasEndAnimation = hasEndAnimation;
     }
 
-    public override IEnumerator Execute()
+    protected override IEnumerator Execute()
     {
         animator.SetTrigger(triggerInfo.StartTrigger());
         if (!hasEndAnimation)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
@@ -43,7 +44,7 @@ public class MoveInRangeCommand : Command, IMoveCommand
         possible = agentPath.status != NavMeshPathStatus.PathInvalid;
     }
 
-    public override IEnumerator Execute()
+    protected override IEnumerator Execute()
     {
         // do not do anything if the path is not valid -se
         // if (!possible) yield break;
@@ -59,15 +60,26 @@ public class MoveInRangeCommand : Command, IMoveCommand
         invokingAgent.animator.ResetTrigger("StopMoving");
         invokingAgent.animator.SetTrigger("StartMoving");
         float interrupt = Time.time + interruptTime;
-        yield return new WaitUntil(() =>
-        {
-            return WithinDistance() || Time.time > interrupt;
-        });
+        yield return new WaitUntil(WaitUntilArrivedOrInterrupted(interrupt));
         invokingAgent.animator.SetTrigger("StopMoving");
         invokingAgent.animator.ResetTrigger("StartMoving");
         invokingAgent.navMeshAgent.ResetPath();
     }
 
+    private Func<bool> WaitUntilArrivedOrInterrupted(float interrupt)
+    {
+        return () =>
+        {
+            if (WithinDistance()) return true;
+            else if (Time.time > interrupt)
+            {
+                status = Status.Failed;
+                return true;
+            }
+            return false;
+        };
+    }
+    
     public override void VisualizeInQueue(Visualizer visualizer)
     {
         visualizer.AppendQueuedPath(agentPath, invokingAgent);

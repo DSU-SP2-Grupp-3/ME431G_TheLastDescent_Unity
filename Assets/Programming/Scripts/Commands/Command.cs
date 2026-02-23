@@ -9,9 +9,23 @@ using UnityEngine;
 /// </summary>
 public abstract class Command
 {
+    public enum Status
+    {
+        Pending, // command has not been executed yet, but has been constructed
+        Executing, // command is currently being executed
+        Successful, // command has stopped executing and completed successfully
+        Failed, // command has stopped executing and did not complete successfully
+    }
+    public Status status { get; set; }
     protected WorldAgent invokingAgent;
     public abstract float cost { get; }
-    public abstract IEnumerator Execute();
+    public IEnumerator ExecuteCommand()
+    {
+        status = Status.Executing;
+        yield return Execute();
+        if (status != Status.Failed) status = Status.Successful;
+    }
+    protected abstract IEnumerator Execute();
     public abstract void Break();
     public virtual void VisualizeInQueue(Visualizer visualizer) { }
     public virtual void VisualizeExecution(Visualizer visualizer) { }
@@ -19,6 +33,7 @@ public abstract class Command
     public Command(WorldAgent invokingAgent)
     {
         this.invokingAgent = invokingAgent;
+        status = Status.Pending;
     }
 
     protected IEnumerator WaitForEndOfAnimation(Animator animator)

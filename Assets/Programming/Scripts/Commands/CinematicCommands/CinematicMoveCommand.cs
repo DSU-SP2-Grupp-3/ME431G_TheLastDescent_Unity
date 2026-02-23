@@ -11,7 +11,7 @@ public class CinematicMoveCommand : Command
     {
         this.cinematicMoveInfos = cinematicMoveInfos;
     }
-    public override IEnumerator Execute()
+    protected override IEnumerator Execute()
     {
         cinematicKitLocator = new();
         foreach(CinematicMoveInfo agentinfo in cinematicMoveInfos)
