@@ -179,6 +179,14 @@ public class AgentManager : Service<AgentManager>
         );
     }
 
+    public void UndoLatestCommand()
+    {
+        if (modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased)
+        {
+            selectedPlayer.UndoLastestCommand();
+        }
+    }
+    
     private bool CanQueueCommand(Command command)
     {
         // don't queue null command, obviously

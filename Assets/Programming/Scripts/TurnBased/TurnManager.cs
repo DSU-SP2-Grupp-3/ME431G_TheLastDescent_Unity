@@ -36,12 +36,11 @@ public class TurnManager : Service<TurnManager>
         modeSwitcher = new();
     }
 
-    private void Start()
+    public void Ready()
     {
-        Locator<ReadyButton> readyButton = new();
-        readyButton.Get().ReadyButtonPressed += () => playerReady = true;
+        playerReady = true;
     }
-
+    
     public void Activate()
     {
         cycle = StartCoroutine(TurnCycle());

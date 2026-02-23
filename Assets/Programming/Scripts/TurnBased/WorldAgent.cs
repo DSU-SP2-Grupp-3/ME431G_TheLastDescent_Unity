@@ -65,6 +65,8 @@ public class WorldAgent : MonoBehaviour
     private Queue<Command> commandQueue;
     private Command currentlyExecutingCommand;
     private Coroutine currentExecutingCommandCoroutine;
+    private Stack<int> commandPacketSizes;
+    
     public bool queueEmpty => commandQueue.Count == 0;
     private bool breakCommandQueue;
 
@@ -73,6 +75,7 @@ public class WorldAgent : MonoBehaviour
         initialPosition = transform.position;
 
         commandQueue = new();
+        commandPacketSizes = new();
 
         agentManager = new();
         modeSwitcher = new();
@@ -134,14 +137,13 @@ public class WorldAgent : MonoBehaviour
 
     public void QueueCommand(Command command)
     {
-        if (dead) return;
-        commandQueue.Enqueue(command);
-        CommandQueueUpdated?.Invoke(this, commandQueue, null);
+        QueueCommands(new Command[] { command });
     }
 
     public void QueueCommands(Command[] commands)
     {
         if (dead) return;
+        commandPacketSizes.Push(commands.Length);
         foreach (Command command in commands)
         {
             commandQueue.Enqueue(command);
@@ -173,11 +175,28 @@ public class WorldAgent : MonoBehaviour
         currentlyExecutingCommand = null;
         StopAllCoroutines();
         commandQueue.Clear();
+        commandPacketSizes.Clear();
         CommandQueueUpdated?.Invoke(this, commandQueue, null);
+    }
+
+    public void UndoLastestCommand()
+    {
+        if (commandPacketSizes.TryPop(out int size))
+        {
+            Queue<Command> shortenedQueue = new();
+            Command[] commandArray = commandQueue.ToArray();
+            for (int i = 0; i < commandArray.Length - size; i++)
+            {
+                shortenedQueue.Enqueue(commandArray[i]);
+            }
+            commandQueue = shortenedQueue;
+            CommandQueueUpdated?.Invoke(this, commandQueue, null);
+        }
     }
 
     public IEnumerator ExecuteCommandQueue()
     {
+        commandPacketSizes.Clear();
         while (commandQueue.TryDequeue(out Command command))
         {
             CommandQueueUpdated?.Invoke(this, commandQueue, command);
