@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class SelectionIndicator : Service<SelectionIndicator>
 {
-    
-
     [Tooltip("The target Transform to move the camera from, should be a model and not an actor if possible")]
     public Transform targetGameObject;
     public Vector3 offset;
@@ -28,13 +26,5 @@ public class SelectionIndicator : Service<SelectionIndicator>
             gameObject.transform.position = new Vector3(0, -100, 0);
         }
         Vector3 targetPosition = targetGameObject.position;
-    }
-
-    private void Update()
-    {
-        /*needs to account for zoom/distance to object
-         which means vector math i bet :(*/
-        transform.position = new Vector3(targetGameObject.position.x, targetGameObject.position.y,
-            targetGameObject.position.z);
     }
 }

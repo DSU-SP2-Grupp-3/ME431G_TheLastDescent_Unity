@@ -13,7 +13,7 @@ public class AgentManager : Service<AgentManager>
     private List<WorldAgent> players;
     private List<WorldAgent> allAgents;
     private Locator<OrthographicCameraMover> cameraMover;
-    private Locator<SelectionIndicator> Indicator;
+    private Locator<SelectionIndicator> indicator;
 
     private Locator<InputManager> inputManager;
     private Locator<ModeSwitcher> modeSwitcher;
@@ -32,6 +32,7 @@ public class AgentManager : Service<AgentManager>
         inputManager = new();
         modeSwitcher = new();
         cameraMover = new();
+        indicator = new();
     }
 
     private void Start()
@@ -69,7 +70,7 @@ public class AgentManager : Service<AgentManager>
             // cameraMover.targetGameObject = playerAgent.cameraFocusTransform;
             // todo: camera should move smoothly toward target transform and not follow animations on target -se
             cameraMover.Get().SetCameraTarget(selectedPlayer.cameraFocusTransform);
-            Indicator.Get().SetIndicatorTarget(selectedPlayer.transform);
+            indicator.Get().SetIndicatorTarget(selectedPlayer.transform);
         }
     }
 
@@ -168,8 +169,9 @@ public class AgentManager : Service<AgentManager>
             selectedPlayer.weaponStats.attackRange,
             selectedPlayer
         );
+        LookAtCommand lookAtCommand = new LookAtCommand(selectedPlayer, enemyAgent);
         AttackCommand attackCommand = new AttackCommand(selectedPlayer, enemyAgent, damageManager, "PlayerAttack");
-        Command[] commands = new Command[] { inRangeCommand, attackCommand };
+        Command[] commands = new Command[] { inRangeCommand, lookAtCommand, attackCommand};
 
         RealTimeOrTurnBased(
             () => selectedPlayer.OverwriteQueue(commands),
