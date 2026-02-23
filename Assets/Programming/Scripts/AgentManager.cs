@@ -13,6 +13,7 @@ public class AgentManager : Service<AgentManager>
     private List<WorldAgent> players;
     private List<WorldAgent> allAgents;
     private Locator<OrthographicCameraMover> cameraMover;
+    private Locator<SelectionIndicator> Indicator;
 
     private Locator<InputManager> inputManager;
     private Locator<ModeSwitcher> modeSwitcher;
@@ -68,6 +69,7 @@ public class AgentManager : Service<AgentManager>
             // cameraMover.targetGameObject = playerAgent.cameraFocusTransform;
             // todo: camera should move smoothly toward target transform and not follow animations on target -se
             cameraMover.Get().SetCameraTarget(selectedPlayer.cameraFocusTransform);
+            Indicator.Get().SetIndicatorTarget(selectedPlayer.transform);
         }
     }
 
