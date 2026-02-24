@@ -109,10 +109,10 @@ public class DialogueService : Service<DialogueService>
     }
     public IEnumerator OnMouseClick()
     {
-        yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(0.01f);
         while (true)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(1))
             {
                 skipping = true;
                 yield break;

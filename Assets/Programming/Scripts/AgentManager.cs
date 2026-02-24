@@ -14,6 +14,7 @@ public class AgentManager : Service<AgentManager>
     private List<WorldAgent> players;
     private List<WorldAgent> allAgents;
     private Locator<OrthographicCameraMover> cameraMover;
+    private Locator<SelectionIndicator> indicator;
 
     private Locator<InputManager> inputManager;
     private Locator<ModeSwitcher> modeSwitcher;
@@ -36,6 +37,7 @@ public class AgentManager : Service<AgentManager>
         modeSwitcher = new();
         turnManager = new();
         cameraMover = new();
+        indicator = new();
     }
 
     private void Start()
@@ -112,6 +114,7 @@ public class AgentManager : Service<AgentManager>
         {
             selectedPlayer = playerAgent;
             cameraMover.Get().SetCameraTarget(selectedPlayer.cameraFocusTransform);
+            indicator.Get().SetIndicatorTarget(selectedPlayer.transform);
         }
     }
 
@@ -155,6 +158,4 @@ public class AgentManager : Service<AgentManager>
         }
         return matchingAgents;
     }
-
-    
 }
