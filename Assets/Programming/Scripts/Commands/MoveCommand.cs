@@ -24,11 +24,14 @@ public class MoveCommand : Command, IMoveCommand
     private Vector3 toPosition;
     private Vector3 fromPosition;
 
+    private EventCollection eventCollection;
+
     public readonly NavMeshPath agentPath;
     public readonly bool possible;
 
     private const float playEndAnimationDistance = 0.5f;
     private const float ignoreMovementDistance = 0.1f;
+    private const float interruptTime = 5f;
 
     public Vector3 ToPosition() => toPosition;
 
@@ -43,6 +46,8 @@ public class MoveCommand : Command, IMoveCommand
 
     public MoveCommand(Vector3 toPosition, WorldAgent invokingAgent) : base(invokingAgent)
     {
+        eventCollection = new Locator<EventCollection>().Get();
+
         this.fromPosition = invokingAgent.GetLastMoveCommandToPosition();
         this.toPosition = toPosition;
         agentPath = new();
@@ -72,9 +77,25 @@ public class MoveCommand : Command, IMoveCommand
 
         invokingAgent.animator.ResetTrigger("StopMoving");
         invokingAgent.animator.SetTrigger("StartMoving");
-        yield return new WaitUntil(() => invokingAgent.navMeshAgent.remainingDistance <= playEndAnimationDistance);
+        invokingAgent.AnimationEventTriggered += CaptureStepEvent;
+        float interrupt = Time.time + interruptTime;
+        yield return new WaitUntil(() =>
+        {
+            return invokingAgent.navMeshAgent.remainingDistance <= playEndAnimationDistance ||
+                   Time.time > interrupt;
+        });
+        invokingAgent.AnimationEventTriggered -= CaptureStepEvent;
         invokingAgent.animator.SetTrigger("StopMoving");
         invokingAgent.animator.ResetTrigger("StartMoving");
+        invokingAgent.navMeshAgent.ResetPath();
+    }
+
+    private void CaptureStepEvent(string trigger)
+    {
+        if (trigger == "step")
+        {
+            eventCollection.PlayEvent("Footstep");
+        }
     }
 
     public override void VisualizeInQueue(Visualizer visualizer)

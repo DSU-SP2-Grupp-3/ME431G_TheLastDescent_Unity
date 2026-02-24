@@ -1,12 +1,15 @@
 ﻿using System;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(RoundClock))]
 public sealed class ModeSwitcher : Service<ModeSwitcher>
 {
     public event Action<TurnManager> OnEnterTurnBased;
+    public UnityEvent OnTurnBasedEntered;
     public event Action<TurnManager> OnEnterRealTime;
+    public UnityEvent OnRealTimeEntered;
 
     private Locator<RoundClock> roundClock;
 
@@ -34,6 +37,7 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
     {
         Debug.Log("Enter turn based");
         OnEnterTurnBased?.Invoke(turnManager.Get());
+        OnTurnBasedEntered?.Invoke();
         roundClock.Get().EnterTurnBased();
         turnManager.Get().Activate();
     }
@@ -58,6 +62,7 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
     {
         Debug.Log("Enter real time");
         OnEnterRealTime?.Invoke(turnManager.Get());
+        OnRealTimeEntered?.Invoke();
         roundClock.Get().EnterRealTime();
         turnManager.Get().Deactivate();
     }

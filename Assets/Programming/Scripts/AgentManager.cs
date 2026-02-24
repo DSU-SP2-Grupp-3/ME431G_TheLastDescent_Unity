@@ -3,20 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 public class AgentManager : Service<AgentManager>
 {
     public event Action<WorldAgent> AgentRegistered;
+    public UnityEvent NotEnoughAP;
 
     private List<WorldAgent> players;
     private List<WorldAgent> allAgents;
     private Locator<OrthographicCameraMover> cameraMover;
+    private Locator<SelectionIndicator> indicator;
 
     private Locator<InputManager> inputManager;
     private Locator<ModeSwitcher> modeSwitcher;
 
     private WorldAgent selectedPlayer;
+    private WorldAgent defaultPlayer;
     public DamageManager damageManager;
+
+    private bool allPlayersSelected;
 
     private void Awake()
     {
@@ -26,6 +32,7 @@ public class AgentManager : Service<AgentManager>
         inputManager = new();
         modeSwitcher = new();
         cameraMover = new();
+        indicator = new();
     }
 
     private void Start()
@@ -35,6 +42,7 @@ public class AgentManager : Service<AgentManager>
         im.MovePlayerInput += MoveSelectedPlayer;
         im.ClickedEnvironment += ClickedEnvironment;
         im.ClickedOnEnemy += ClickedEnemy;
+        modeSwitcher.Get().OnEnterTurnBased += (_) => allPlayersSelected = false;
     }
 
     public void RegisterAgent(WorldAgent agent)
@@ -47,12 +55,14 @@ public class AgentManager : Service<AgentManager>
             if (!selectedPlayer && agent.defaultSelected)
             {
                 SelectPlayer(agent);
+                defaultPlayer = agent;
             }
         }
     }
 
     public void SelectPlayer(WorldAgent playerAgent)
     {
+        allPlayersSelected = false;
         if (players.Contains(playerAgent) && !playerAgent.dead)
         {
             // Debug.Log($"Select {playerAgent.name}");
@@ -60,23 +70,57 @@ public class AgentManager : Service<AgentManager>
             // cameraMover.targetGameObject = playerAgent.cameraFocusTransform;
             // todo: camera should move smoothly toward target transform and not follow animations on target -se
             cameraMover.Get().SetCameraTarget(selectedPlayer.cameraFocusTransform);
+            indicator.Get().SetIndicatorTarget(selectedPlayer.transform);
+        }
+    }
+
+    public void SelectAllPlayers()
+    {
+        if (modeSwitcher.Get().mode == RoundClock.ProgressMode.RealTime)
+        {
+            SelectPlayer(defaultPlayer);
+            allPlayersSelected = true;
         }
     }
 
     private void MoveSelectedPlayer(Vector3 position)
     {
-        MoveCommand movePlayer = new MoveCommand(position, selectedPlayer);
-
-        if (!movePlayer.possible) return;
-
-        RealTimeOrTurnBased(
-            () => selectedPlayer.OverwriteQueue(movePlayer),
-            () =>
+        if (allPlayersSelected)
+        {
+            if (modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased)
             {
-                if (!CanQueueCommand(movePlayer)) return;
-                selectedPlayer.QueueCommand(movePlayer);
+                SelectPlayer(defaultPlayer);
+                MoveSelectedPlayer(position);
+                return;
             }
-        ); 
+
+            MoveCommand movePlayer = new MoveCommand(position, defaultPlayer);
+
+            defaultPlayer.OverwriteQueue(movePlayer);
+
+            foreach (WorldAgent player in players)
+            {
+                if (player == defaultPlayer) continue;
+                MoveInRangeCommand moveToDefaultPLayer = new MoveInRangeCommand(
+                    position, 4f, player
+                );
+                player.OverwriteQueue(moveToDefaultPLayer);
+            }
+        }
+        else
+        {
+            MoveCommand movePlayer = new MoveCommand(position, selectedPlayer);
+
+            if (!movePlayer.possible) return;
+            RealTimeOrTurnBased(
+                () => selectedPlayer.OverwriteQueue(movePlayer),
+                () =>
+                {
+                    if (!CanQueueCommand(movePlayer)) return;
+                    selectedPlayer.QueueCommand(movePlayer);
+                }
+            );
+        }
     }
 
     private void ClickedEnvironment(GameObject go)
@@ -125,8 +169,9 @@ public class AgentManager : Service<AgentManager>
             selectedPlayer.weaponStats.attackRange,
             selectedPlayer
         );
-        AttackCommand attackCommand = new AttackCommand(selectedPlayer, enemyAgent, damageManager);
-        Command[] commands = new Command[] { inRangeCommand, attackCommand };
+        LookAtCommand lookAtCommand = new LookAtCommand(selectedPlayer, enemyAgent);
+        AttackCommand attackCommand = new AttackCommand(selectedPlayer, enemyAgent, damageManager, "PlayerAttack");
+        Command[] commands = new Command[] { inRangeCommand, lookAtCommand, attackCommand};
 
         RealTimeOrTurnBased(
             () => selectedPlayer.OverwriteQueue(commands),
@@ -147,6 +192,7 @@ public class AgentManager : Service<AgentManager>
         {
             Debug.Log($"Not enough AP remaining to queue command {command}, " +
                       $"ap remaining = {remainingAP}, command cost: {command.cost}");
+            NotEnoughAP?.Invoke();
             return false;
         }
         return true;
@@ -163,6 +209,7 @@ public class AgentManager : Service<AgentManager>
             if (selectedPlayer.TotalCommandQueueCost() + queueCost > selectedPlayer.localStats.actionPoints)
             {
                 Debug.Log($"Not enough AP remaining to queue commands starting with {commands[0]}");
+                NotEnoughAP?.Invoke();
                 return false;
             }
         }

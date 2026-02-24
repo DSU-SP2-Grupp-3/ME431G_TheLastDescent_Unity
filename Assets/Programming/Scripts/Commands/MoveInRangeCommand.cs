@@ -28,6 +28,7 @@ public class MoveInRangeCommand : Command, IMoveCommand
 
     private const float playEndAnimationDistance = 0.5f;
     private const float ignoreMovementDistance = 0.1f;
+    private const float interruptTime = 5f;
 
     public Vector3 ToPosition() => toPosition;
 
@@ -57,7 +58,11 @@ public class MoveInRangeCommand : Command, IMoveCommand
 
         invokingAgent.animator.ResetTrigger("StopMoving");
         invokingAgent.animator.SetTrigger("StartMoving");
-        yield return new WaitUntil(WithinDistance);
+        float interrupt = Time.time + interruptTime;
+        yield return new WaitUntil(() =>
+        {
+            return WithinDistance() || Time.time > interrupt;
+        });
         invokingAgent.animator.SetTrigger("StopMoving");
         invokingAgent.animator.ResetTrigger("StartMoving");
         invokingAgent.navMeshAgent.ResetPath();

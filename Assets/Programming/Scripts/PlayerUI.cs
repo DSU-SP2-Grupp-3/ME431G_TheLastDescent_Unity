@@ -42,20 +42,20 @@ public class PlayerUI : MonoBehaviour
     {
         if (player.localStats.hitPoints <= 0)
         {
-            hitPointsText.text = $"HP: 0/{maxHP}";
+            hitPointsText.text = $"HP: 0/{(int)maxHP}";
 
             button.interactable = false;
         }
         else
         {
-            hitPointsText.text = $"HP: {player.localStats.hitPoints}/{maxHP}";
+            hitPointsText.text = $"HP: {(int)player.localStats.hitPoints}/{(int)maxHP}";
             button.interactable = true;
         }
     }
 
     private void ActionPointsChanged(float changed)
     {
-        actionPointsText.text = $"AP: {player.localStats.actionPoints}/{maxAP}";
+        actionPointsText.text = $"AP: {(int)player.localStats.actionPoints}/{(int)maxAP}";
     }
 
     
