@@ -23,7 +23,7 @@ public class TurnManager : Service<TurnManager>
     private Locator<AgentManager> agentManager;
     private Locator<ModeSwitcher> modeSwitcher;
 
-    private bool executingTurn;
+    public bool executingTurn { get; private set; }
 
     private void Awake()
     {

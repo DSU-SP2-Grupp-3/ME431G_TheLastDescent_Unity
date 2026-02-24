@@ -16,12 +16,16 @@ public class Visualizer : MonoBehaviour
     [SerializeField]
     private AgentManager agentManager;
 
+    private HashSet<WorldAgent> highlightedAgents;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
         agentManager.AgentRegistered += OnAgentRegistered;
+        agentManager.PreviewUpdated += OnPreviewUpdated;
         agentVisualizeTools = new();
         currentlyExecutingCommands = new();
+        highlightedAgents = new();
     }
 
     private void Update()
@@ -63,6 +67,31 @@ public class Visualizer : MonoBehaviour
             currentlyExecutingCommands.Remove(agent);
             agentVisualizeTools[agent].StoppedExecuting();
         }
+    }
+
+    private void OnPreviewUpdated(CommandManager.CommandPackage commandPackage)
+    {
+        if (commandPackage.empty) return;
+        HighlightAgents(commandPackage.highlights);
+        if (commandPackage.clickOnAgentOnly) return;
+        foreach (Command command in commandPackage.commands)
+        {
+            command.VisualizePreview(this);
+        }
+    }
+
+    private void HighlightAgents(HashSet<WorldAgent> toHighlight)
+    {
+        foreach (WorldAgent highlightedAgent in highlightedAgents)
+        {
+            highlightedAgent.Dehighlight();
+        }
+        highlightedAgents.Clear();
+        foreach (WorldAgent agent in toHighlight)
+        {
+            agent.Highlight();
+        }
+        highlightedAgents.UnionWith(toHighlight);
     }
     
     public void AppendQueuedPath(NavMeshPath inputPath, WorldAgent agent)

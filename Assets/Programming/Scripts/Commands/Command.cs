@@ -29,6 +29,7 @@ public abstract class Command
     public abstract void Break();
     public virtual void VisualizeInQueue(Visualizer visualizer) { }
     public virtual void VisualizeExecution(Visualizer visualizer) { }
+    public virtual void VisualizePreview(Visualizer visualizer) { }
 
     public Command(WorldAgent invokingAgent)
     {

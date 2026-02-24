@@ -124,6 +124,11 @@ public class MoveCommand : Command, IMoveCommand
         visualizer.DrawExecutingPath(remainingPath, invokingAgent);
     }
 
+    public override void VisualizePreview(Visualizer visualizer)
+    {
+        
+    }
+
     public override void Break()
     {
         invokingAgent.animator.SetTrigger("StopMoving");

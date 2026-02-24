@@ -249,9 +249,16 @@ public class WorldAgent : MonoBehaviour
         navMeshAgent.enabled = false;
     }
 
-    // visualise command queue /se
-    // can afford new command /se
+    public void Highlight()
+    {
+        // highlight world agent
+    }
 
+    public void Dehighlight()
+    {
+        // stop highlighting world agent
+    }
+    
     private void OnDisable()
     {
         //unsubscribe TakeDamage to the DamageManager of the PlayerManager
