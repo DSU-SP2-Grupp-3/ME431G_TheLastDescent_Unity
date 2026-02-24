@@ -24,7 +24,7 @@ public class MoveCommand : Command, IMoveCommand
     private Vector3 toPosition;
     private Vector3 fromPosition;
 
-    private EventCollection eventCollection;
+    private AudioManager eventCollection;
 
     public readonly NavMeshPath agentPath;
     public readonly bool possible;
@@ -46,7 +46,7 @@ public class MoveCommand : Command, IMoveCommand
 
     public MoveCommand(Vector3 toPosition, WorldAgent invokingAgent) : base(invokingAgent)
     {
-        eventCollection = new Locator<EventCollection>().Get();
+        eventCollection = new Locator<AudioManager>().Get();
 
         this.fromPosition = invokingAgent.GetLastMoveCommandToPosition();
         this.toPosition = toPosition;
@@ -94,7 +94,7 @@ public class MoveCommand : Command, IMoveCommand
     {
         if (trigger == "step")
         {
-            eventCollection.PlayEvent("Footstep");
+            eventCollection.PlayAudioEvent("Footstep");
         }
     }
 
