@@ -10,13 +10,15 @@ public class CommandManager
         return new CommandPackage();
     }
 
-    public static CommandPackage GetMoveCommand(WorldAgent agent, Vector3 position)
+    public static CommandPackage GetMovePackage(WorldAgent agent, Vector3 position)
     {
         MoveCommand moveCommand = new MoveCommand(agent.GetLastMoveCommandToPosition(), position, agent);
-        return new CommandPackage(agent, moveCommand).SetType("move");
+        CommandPackage package = new CommandPackage(agent, moveCommand);
+        package.SetType("move");
+        return package;
     }
 
-    public static CommandPackage GetInteractionCommands(WorldAgent agent, GameObject go)
+    public static CommandPackage GetInteractionPackage(WorldAgent agent, GameObject go)
     {
         Interactable.InteractionResult result;
         InteractionGroup group = go.GetComponentInParent<InteractionGroup>();
@@ -33,19 +35,23 @@ public class CommandManager
             // didn't hover over interactable
             return EmptyPackage();
         }
-
-        CommandPackage interactionPackage = new CommandPackage(agent, result.invokingAgentCommands);
-        interactionPackage.AppendCommand(result.QueueInteractablesCommand(agent));
         
-        return interactionPackage.SetType("interaction");
+        CommandPackage interactionPackage = new CommandPackage(agent, result.invokingAgentCommands);
+        
+        interactionPackage.AddCommand(result.QueueInteractablesCommand(agent));
+        interactionPackage.SetType("interaction");
+        
+        return interactionPackage;
     }
 
-    public static CommandPackage SelectPlayerPackage(WorldAgent agent)
+    public static CommandPackage GetSelectPlayerPackage(WorldAgent agent)
     {
-        return new CommandPackage(agent).SetType("select");
+        CommandPackage package = new CommandPackage(agent);
+        package.SetType("select");
+        return package;
     }
 
-    public static CommandPackage AttackEnemyPackage(WorldAgent attacker, WorldAgent receiver, DamageManager damageManager)
+    public static CommandPackage GetAttackEnemyPackage(WorldAgent attacker, WorldAgent receiver, DamageManager damageManager)
     {
         if (receiver.dead) return EmptyPackage();
 
@@ -57,8 +63,10 @@ public class CommandManager
         AttackCommand attackCommand = new AttackCommand(attacker, receiver, damageManager, "PlayerAttack");
         Command[] commands = new Command[] { inRangeCommand, attackCommand };
         CommandPackage package = new CommandPackage(attacker, commands);
+        package.SetAdditionalHighlights(receiver);
+        package.SetType("attack");
         
-        return package.SetAdditionalHighlights(receiver).SetType("attack");
+        return package;
     }
 
     public class CommandPackage
@@ -66,7 +74,7 @@ public class CommandManager
         public string type { get; private set; }
         public readonly WorldAgent agent;
         public readonly HashSet<WorldAgent> highlights;
-        public readonly Command[] commands;
+        public readonly List<Command> commands;
         public readonly bool empty;
         public readonly bool clickOnAgentOnly;
 
@@ -82,43 +90,37 @@ public class CommandManager
         {
             this.agent = agent;
             this.commands = null;
-            highlights = new HashSet<WorldAgent>();
-            highlights.Add(agent);
+            highlights = new HashSet<WorldAgent>() { agent };
             clickOnAgentOnly = true;
         }
         
         public CommandPackage(WorldAgent agent, Command[] commands)
         {
             this.agent = agent;
-            this.commands = commands;
-            highlights = new HashSet<WorldAgent>();
-            highlights.Add(agent);
+            this.commands = commands.ToList();
+            highlights = new HashSet<WorldAgent>() { agent };
         }
 
         public CommandPackage(WorldAgent agent, Command command)
         {
             this.agent = agent;
-            this.commands = new Command[] { command };
-            highlights = new HashSet<WorldAgent>();
-            highlights.Add(agent);
+            commands = new List<Command>() { command };
+            highlights = new HashSet<WorldAgent>() { agent };
         }
 
-        public CommandPackage AppendCommand(Command command)
+        public void AddCommand(Command command)
         {
-            commands.Append(command);
-            return this;
+            commands.Add(command);
         }
 
-        public CommandPackage SetAdditionalHighlights(WorldAgent agent)
+        public void SetAdditionalHighlights(WorldAgent agent)
         {
             highlights.Add(agent);
-            return this;
         }
 
-        public CommandPackage SetType(string type)
+        public void SetType(string type)
         {
             this.type = type;
-            return this;
         }
         
         public bool QueueCommands(RoundClock.ProgressMode mode)
@@ -127,10 +129,10 @@ public class CommandManager
             {
                 case RoundClock.ProgressMode.TurnBased:
                     if (!CanQueueCommands()) return false;
-                    else agent.QueueCommands(commands);
+                    else agent.QueueCommands(commands.ToArray());
                     break;
                 case RoundClock.ProgressMode.RealTime:
-                    agent.OverwriteQueue(commands);
+                    agent.OverwriteQueue(commands.ToArray());
                     break;
             }
             return true;
@@ -139,7 +141,7 @@ public class CommandManager
         public bool CanQueueCommands()
         {
             // don't queue empty commands
-            if (commands.Length == 0) return false;
+            if (commands.Count == 0) return false;
             float queueCost = 0f;
             foreach (Command command in commands)
             {

@@ -36,7 +36,7 @@ public class InputManager : Service<InputManager>
         Deregister();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         // don't perform physics raycast if the mouse is over a ui element
         if (IsPointerOverUIElement())
@@ -48,7 +48,10 @@ public class InputManager : Service<InputManager>
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         bool didHit = Physics.Raycast(ray, out RaycastHit hit, clickableLayers);
         OnHover?.Invoke(hit, didHit);
-        
+    }
+
+    private void Update()
+    {
         if (Input.GetMouseButtonDown(0)) OnClick?.Invoke();
     }
     

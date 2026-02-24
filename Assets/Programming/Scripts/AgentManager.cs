@@ -60,10 +60,10 @@ public class AgentManager : Service<AgentManager>
         GameObject go = hit.collider.gameObject;
         currentCommandPackage = (LayerMask.LayerToName(go.layer)) switch
         {
-            "Interactable" => CommandManager.GetInteractionCommands(selectedPlayer, go),
-            "Player" => CommandManager.SelectPlayerPackage(go.GetComponentInParent<WorldAgent>()),
-            "Ground" => CommandManager.GetMoveCommand(selectedPlayer, hit.point),
-            "Enemy" => CommandManager.AttackEnemyPackage(selectedPlayer, go.GetComponent<WorldAgent>(), damageManager),
+            "Interactable" => CommandManager.GetInteractionPackage(selectedPlayer, go),
+            "Player" => CommandManager.GetSelectPlayerPackage(go.GetComponentInParent<WorldAgent>()),
+            "Ground" => CommandManager.GetMovePackage(selectedPlayer, hit.point),
+            "Enemy" => CommandManager.GetAttackEnemyPackage(selectedPlayer, go.GetComponentInParent<WorldAgent>(), damageManager),
             _ => CommandManager.EmptyPackage()
         };
         PreviewUpdated?.Invoke(currentCommandPackage);
