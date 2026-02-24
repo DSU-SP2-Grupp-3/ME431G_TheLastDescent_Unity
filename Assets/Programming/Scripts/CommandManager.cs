@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class CommandManager
+public static class CommandManager
 {
     public static CommandPackage EmptyPackage()
     {
@@ -13,6 +13,7 @@ public class CommandManager
     public static CommandPackage GetMovePackage(WorldAgent agent, Vector3 position)
     {
         MoveCommand moveCommand = new MoveCommand(agent.GetLastMoveCommandToPosition(), position, agent);
+        if (!moveCommand.possible || moveCommand.noMovement) return EmptyPackage(); 
         CommandPackage package = new CommandPackage(agent, moveCommand);
         package.SetType("move");
         return package;
@@ -36,8 +37,10 @@ public class CommandManager
             return EmptyPackage();
         }
         
+        if (!AllMoveCommandsPossible(result.invokingAgentCommands)) return EmptyPackage();
+        
+        TrimUnnecessaryMoveCommands(ref result.invokingAgentCommands);
         CommandPackage interactionPackage = new CommandPackage(agent, result.invokingAgentCommands);
-
         LookCommand lookCommand = new LookCommand(agent, result.interactableAgent);
         
         interactionPackage.AddCommand(lookCommand);
@@ -63,10 +66,12 @@ public class CommandManager
             attacker.weaponStats.attackRange,
             attacker
         );
+        if (!inRangeCommand.possible) return EmptyPackage();
         AttackCommand attackCommand = new AttackCommand(attacker, receiver, damageManager, "PlayerAttack");
         LookCommand lookCommand = new LookCommand(attacker, receiver);
         
         Command[] commands = new Command[] { inRangeCommand, lookCommand, attackCommand };
+        TrimUnnecessaryMoveCommands(ref commands);
         CommandPackage package = new CommandPackage(attacker, commands);
         
         package.SetAdditionalHighlights(receiver);
@@ -75,6 +80,31 @@ public class CommandManager
         return package;
     }
 
+    public static bool AllMoveCommandsPossible(Command[] commands)
+    {
+        return !commands
+               .Where(c => c is IMoveCommand)
+               .Select(c => (c as IMoveCommand).possible)
+               .Where(possible => !possible)
+               .Any();
+
+    }
+
+    public static void TrimUnnecessaryMoveCommands(ref Command[] commands)
+    {
+        Command[] trimmed = commands
+            .Where(c => 
+            {
+                if (c is IMoveCommand moveCommand)
+                {
+                    return !moveCommand.noMovement;
+                }
+                else return true;
+            })
+            .ToArray();
+        commands = trimmed;
+    }
+    
     public class CommandPackage
     {
         public string type { get; private set; }

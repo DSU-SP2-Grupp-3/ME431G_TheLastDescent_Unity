@@ -26,7 +26,8 @@ public class MoveCommand : Command, IMoveCommand
     private Vector3 fromPosition;
 
     public readonly NavMeshPath agentPath;
-    public readonly bool possible;
+    public bool possible { get; private set; }
+    public bool noMovement { get; private set; }
 
     private const float playEndAnimationDistance = 0.5f;
     private const float ignoreMovementDistance = 0.1f;
@@ -38,6 +39,8 @@ public class MoveCommand : Command, IMoveCommand
     {
         this.toPosition = toPosition;
         this.fromPosition = fromPosition;
+        noMovement = Vector3.Distance(toPosition, fromPosition) <= ignoreMovementDistance;
+        if (noMovement) return;
         agentPath = new();
         NavMesh.CalculatePath(fromPosition, toPosition, NavMesh.AllAreas, agentPath);
         possible = agentPath.status == NavMeshPathStatus.PathComplete;
@@ -62,16 +65,8 @@ public class MoveCommand : Command, IMoveCommand
 
     protected override IEnumerator Execute()
     {
-        // do not do anything if the path is not valid -se
-        if (!possible) yield break;
-
-        // todo: move animation only plays once for some reason
-
         invokingAgent.navMeshAgent.SetPath(agentPath);
-        if (invokingAgent.navMeshAgent.remainingDistance < ignoreMovementDistance) yield break;
-
-        //Visualize();
-
+        
         invokingAgent.animator.ResetTrigger("StopMoving");
         invokingAgent.animator.SetTrigger("StartMoving");
         invokingAgent.AnimationEventTriggered += CaptureStepEvent;
