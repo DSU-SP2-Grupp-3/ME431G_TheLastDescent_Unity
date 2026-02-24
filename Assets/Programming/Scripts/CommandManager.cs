@@ -13,7 +13,7 @@ public class CommandManager
     public static CommandPackage GetMoveCommand(WorldAgent agent, Vector3 position)
     {
         MoveCommand moveCommand = new MoveCommand(agent.GetLastMoveCommandToPosition(), position, agent);
-        return new CommandPackage(agent, moveCommand);
+        return new CommandPackage(agent, moveCommand).SetType("move");
     }
 
     public static CommandPackage GetInteractionCommands(WorldAgent agent, GameObject go)
@@ -36,13 +36,13 @@ public class CommandManager
 
         CommandPackage interactionPackage = new CommandPackage(agent, result.invokingAgentCommands);
         interactionPackage.AppendCommand(result.QueueInteractablesCommand(agent));
-
-        return interactionPackage;
+        
+        return interactionPackage.SetType("interaction");
     }
 
     public static CommandPackage SelectPlayerPackage(WorldAgent agent)
     {
-        return new CommandPackage(agent);
+        return new CommandPackage(agent).SetType("select");
     }
 
     public static CommandPackage AttackEnemyPackage(WorldAgent attacker, WorldAgent receiver, DamageManager damageManager)
@@ -57,13 +57,13 @@ public class CommandManager
         AttackCommand attackCommand = new AttackCommand(attacker, receiver, damageManager, "PlayerAttack");
         Command[] commands = new Command[] { inRangeCommand, attackCommand };
         CommandPackage package = new CommandPackage(attacker, commands);
-        package.SetAdditionalHighlights(receiver);
         
-        return package;
+        return package.SetAdditionalHighlights(receiver).SetType("attack");
     }
 
     public class CommandPackage
     {
+        public string type { get; private set; }
         public readonly WorldAgent agent;
         public readonly HashSet<WorldAgent> highlights;
         public readonly Command[] commands;
@@ -103,14 +103,22 @@ public class CommandManager
             highlights.Add(agent);
         }
 
-        public void AppendCommand(Command command)
+        public CommandPackage AppendCommand(Command command)
         {
             commands.Append(command);
+            return this;
         }
 
-        public void SetAdditionalHighlights(WorldAgent agent)
+        public CommandPackage SetAdditionalHighlights(WorldAgent agent)
         {
             highlights.Add(agent);
+            return this;
+        }
+
+        public CommandPackage SetType(string type)
+        {
+            this.type = type;
+            return this;
         }
         
         public bool QueueCommands(RoundClock.ProgressMode mode)
@@ -128,7 +136,7 @@ public class CommandManager
             return true;
         }
 
-        private bool CanQueueCommands()
+        public bool CanQueueCommands()
         {
             // don't queue empty commands
             if (commands.Length == 0) return false;

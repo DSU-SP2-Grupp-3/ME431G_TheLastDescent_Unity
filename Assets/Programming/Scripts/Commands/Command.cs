@@ -18,6 +18,7 @@ public abstract class Command
     }
     public Status status { get; set; }
     protected WorldAgent invokingAgent;
+    protected EventCollection eventCollection;
     public abstract float cost { get; }
     public IEnumerator ExecuteCommand()
     {
@@ -33,6 +34,7 @@ public abstract class Command
 
     public Command(WorldAgent invokingAgent)
     {
+        eventCollection = new Locator<EventCollection>().Get();
         this.invokingAgent = invokingAgent;
         status = Status.Pending;
     }

@@ -60,7 +60,7 @@ public class AgentManager : Service<AgentManager>
         {
             "Interactable" => CommandManager.GetInteractionCommands(selectedPlayer, go),
             "Player" => CommandManager.SelectPlayerPackage(go.GetComponentInParent<WorldAgent>()),
-            "Ground" => CommandManager.GetMoveCommand(selectedPlayer, go.transform.position),
+            "Ground" => CommandManager.GetMoveCommand(selectedPlayer, hit.point),
             "Enemy" => CommandManager.AttackEnemyPackage(selectedPlayer, go.GetComponent<WorldAgent>(), damageManager),
             _ => CommandManager.EmptyPackage()
         };
@@ -75,6 +75,18 @@ public class AgentManager : Service<AgentManager>
         else
         {
             if (!currentCommandPackage.QueueCommands(modeSwitcher.Get().mode)) NotEnoughAP?.Invoke();
+            
+            // move other characters if select all is active
+            if (allPlayersSelected && currentCommandPackage.type == "move")
+            {
+                IMoveCommand moveCommand = currentCommandPackage.commands[0] as IMoveCommand;
+                foreach (WorldAgent agent in players)
+                {
+                    if (agent == selectedPlayer) continue;
+                    MoveInRangeCommand moveInRangeCommand = new MoveInRangeCommand(moveCommand.ToPosition(), 3f, agent);
+                    agent.OverwriteQueue(moveInRangeCommand);
+                }
+            }
         }
     }
     

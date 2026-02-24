@@ -25,8 +25,6 @@ public class MoveCommand : Command, IMoveCommand
     private Vector3 toPosition;
     private Vector3 fromPosition;
 
-    private EventCollection eventCollection;
-
     public readonly NavMeshPath agentPath;
     public readonly bool possible;
 
@@ -47,8 +45,6 @@ public class MoveCommand : Command, IMoveCommand
 
     public MoveCommand(Vector3 toPosition, WorldAgent invokingAgent) : base(invokingAgent)
     {
-        eventCollection = new Locator<EventCollection>().Get();
-
         this.fromPosition = invokingAgent.GetLastMoveCommandToPosition();
         this.toPosition = toPosition;
         agentPath = new();
@@ -126,7 +122,9 @@ public class MoveCommand : Command, IMoveCommand
 
     public override void VisualizePreview(Visualizer visualizer)
     {
-        
+        NavMeshPath remainingPath = new();
+        NavMesh.CalculatePath(fromPosition, toPosition, NavMesh.AllAreas, remainingPath);
+        visualizer.DrawPreviewPath(remainingPath);
     }
 
     public override void Break()

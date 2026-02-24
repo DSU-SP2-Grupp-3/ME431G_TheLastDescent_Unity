@@ -9,12 +9,15 @@ public class Visualizer : MonoBehaviour
 {
     [SerializeField]
     private LineRenderer lineRendererPrefab;
+    private LineRenderer previewLineRenderer;
 
     private Dictionary<WorldAgent, VisualizeTools> agentVisualizeTools;
     private Dictionary<WorldAgent, Command> currentlyExecutingCommands;
 
     [SerializeField]
     private AgentManager agentManager;
+    private Locator<ModeSwitcher> modeSwitcher;
+    private Locator<TurnManager> turnManager;
 
     private HashSet<WorldAgent> highlightedAgents;
 
@@ -26,6 +29,9 @@ public class Visualizer : MonoBehaviour
         agentVisualizeTools = new();
         currentlyExecutingCommands = new();
         highlightedAgents = new();
+        previewLineRenderer = Instantiate(lineRendererPrefab, transform);
+        modeSwitcher = new();
+        turnManager = new();
     }
 
     private void Update()
@@ -71,9 +77,12 @@ public class Visualizer : MonoBehaviour
 
     private void OnPreviewUpdated(CommandManager.CommandPackage commandPackage)
     {
+        if (modeSwitcher.Get().mode == RoundClock.ProgressMode.RealTime || turnManager.Get().executingTurn) return;
+        previewLineRenderer.positionCount = 0;
         if (commandPackage.empty) return;
         HighlightAgents(commandPackage.highlights);
         if (commandPackage.clickOnAgentOnly) return;
+        if (!commandPackage.CanQueueCommands()) return;
         foreach (Command command in commandPackage.commands)
         {
             command.VisualizePreview(this);
@@ -117,6 +126,12 @@ public class Visualizer : MonoBehaviour
         }
     }
 
+    public void DrawPreviewPath(NavMeshPath previewPath)
+    {
+        previewLineRenderer.positionCount = previewPath.corners.Length;
+        previewLineRenderer.SetPositions(previewPath.corners);
+    }
+    
     public void DrawExecutingPath(NavMeshPath executingPath, WorldAgent agent)
     {
         // ideally the drawn path only constists of one line renderer but it was too hard to make work right now -se
