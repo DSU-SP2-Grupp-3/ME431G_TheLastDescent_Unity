@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LookAtCommand : Command
+public class LookCommand : Command
 {
     public override float cost { get; }
 
     private WorldAgent receivingAgent;
 
-    public LookAtCommand(WorldAgent invokingAgent, WorldAgent receivingAgent)
+    public LookCommand(WorldAgent invokingAgent, WorldAgent receivingAgent)
          : base(invokingAgent)
     {
         this.receivingAgent = receivingAgent;

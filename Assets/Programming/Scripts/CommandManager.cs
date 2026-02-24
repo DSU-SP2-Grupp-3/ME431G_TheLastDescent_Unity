@@ -37,7 +37,10 @@ public class CommandManager
         }
         
         CommandPackage interactionPackage = new CommandPackage(agent, result.invokingAgentCommands);
+
+        LookCommand lookCommand = new LookCommand(agent, result.interactableAgent);
         
+        interactionPackage.AddCommand(lookCommand);
         interactionPackage.AddCommand(result.QueueInteractablesCommand(agent));
         interactionPackage.SetType("interaction");
         
@@ -61,8 +64,11 @@ public class CommandManager
             attacker
         );
         AttackCommand attackCommand = new AttackCommand(attacker, receiver, damageManager, "PlayerAttack");
-        Command[] commands = new Command[] { inRangeCommand, attackCommand };
+        LookCommand lookCommand = new LookCommand(attacker, receiver);
+        
+        Command[] commands = new Command[] { inRangeCommand, lookCommand, attackCommand };
         CommandPackage package = new CommandPackage(attacker, commands);
+        
         package.SetAdditionalHighlights(receiver);
         package.SetType("attack");
         
