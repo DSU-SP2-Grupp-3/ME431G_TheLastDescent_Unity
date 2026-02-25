@@ -31,7 +31,7 @@ public class MoveCommand : Command, IMoveCommand
 
     private const float playEndAnimationDistance = 0.5f;
     private const float ignoreMovementDistance = 0.1f;
-    private const float interruptTime = 5f;
+    private const float interruptTime = 20f;
 
     public Vector3 ToPosition() => toPosition;
 

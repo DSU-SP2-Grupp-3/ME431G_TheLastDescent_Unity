@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.AI;
@@ -10,6 +11,9 @@ public class Visualizer : MonoBehaviour
     [SerializeField]
     private LineRenderer lineRendererPrefab;
     private LineRenderer previewLineRenderer;
+
+    [SerializeField]
+    private TMP_Text packageAPDisplay;
 
     private Dictionary<WorldAgent, VisualizeTools> agentVisualizeTools;
     private Dictionary<WorldAgent, Command> currentlyExecutingCommands;
@@ -30,6 +34,7 @@ public class Visualizer : MonoBehaviour
         currentlyExecutingCommands = new();
         highlightedAgents = new();
         previewLineRenderer = Instantiate(lineRendererPrefab, transform);
+        packageAPDisplay.gameObject.SetActive(false);
         modeSwitcher = new();
         turnManager = new();
     }

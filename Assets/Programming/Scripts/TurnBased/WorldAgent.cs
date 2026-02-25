@@ -149,7 +149,7 @@ public class WorldAgent : MonoBehaviour
         foreach (Command command in commands)
         {
             commandQueue.Enqueue(command);
-            localStats.actionPoints -= command.cost;
+            if (localStats) localStats.actionPoints -= command.cost;
         }
         CommandQueueUpdated?.Invoke(this, commandQueue, null);
     }
@@ -200,7 +200,7 @@ public class WorldAgent : MonoBehaviour
             for (int i = 0; i < commandArray.Length - size; i++)
             {
                 shortenedQueue.Enqueue(commandArray[i]);
-                localStats.actionPoints -= commandArray[i].cost;
+                if (localStats) localStats.actionPoints -= commandArray[i].cost;
             }
             commandQueue = shortenedQueue;
             CommandQueueUpdated?.Invoke(this, commandQueue, null);
@@ -209,7 +209,7 @@ public class WorldAgent : MonoBehaviour
 
     public IEnumerator ExecuteCommandQueue()
     {
-        localStats.actionPoints = localStats.initActionPoints;
+        if (localStats) localStats.actionPoints = localStats.initActionPoints;
         commandPacketSizes.Clear();
         while (commandQueue.TryDequeue(out Command command))
         {

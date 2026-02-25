@@ -31,7 +31,7 @@ public class MoveInRangeCommand : Command, IMoveCommand
 
     private const float playEndAnimationDistance = 0.5f;
     private const float ignoreMovementDistance = 0.1f;
-    private const float interruptTime = 5f;
+    private const float interruptTime = 20f;
     private const int trimSampleResoltion = 5;
     private const int findCompletePathIterations = 10;
 
@@ -115,7 +115,7 @@ public class MoveInRangeCommand : Command, IMoveCommand
     {
         if (path.corners.Length < 2) return;
         // starting from the target, check which point first exists min distance
-        for (int i = path.corners.Length - 1; i >= 0; i--)
+        for (int i = path.corners.Length - 2; i >= 0; i--)
         {
             float distance = Vector3.Distance(path.corners[i], target);
             if (distance > minDistance)
