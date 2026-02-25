@@ -40,7 +40,6 @@ public class MoveCommand : Command, IMoveCommand
         this.toPosition = toPosition;
         this.fromPosition = fromPosition;
         noMovement = Vector3.Distance(toPosition, fromPosition) <= ignoreMovementDistance;
-        if (noMovement) return;
         agentPath = new();
         NavMesh.CalculatePath(fromPosition, toPosition, NavMesh.AllAreas, agentPath);
         possible = agentPath.status == NavMeshPathStatus.PathComplete;
@@ -50,6 +49,7 @@ public class MoveCommand : Command, IMoveCommand
     {
         this.fromPosition = invokingAgent.GetLastMoveCommandToPosition();
         this.toPosition = toPosition;
+        noMovement = Vector3.Distance(toPosition, fromPosition) <= ignoreMovementDistance;
         agentPath = new();
         NavMesh.CalculatePath(fromPosition, toPosition, NavMesh.AllAreas, agentPath);
         possible = agentPath.status == NavMeshPathStatus.PathComplete;
@@ -59,6 +59,7 @@ public class MoveCommand : Command, IMoveCommand
     {
         this.fromPosition = path.corners[0];
         this.toPosition = path.corners.Last();
+        noMovement = Vector3.Distance(toPosition, fromPosition) <= ignoreMovementDistance;
         agentPath = path;
         possible = path.status == NavMeshPathStatus.PathComplete;
     }
@@ -66,14 +67,14 @@ public class MoveCommand : Command, IMoveCommand
     protected override IEnumerator Execute()
     {
         invokingAgent.navMeshAgent.SetPath(agentPath);
-        
+
         invokingAgent.animator.ResetTrigger("StopMoving");
         invokingAgent.animator.SetTrigger("StartMoving");
         invokingAgent.AnimationEventTriggered += CaptureStepEvent;
         float interrupt = Time.time + interruptTime;
-        
+
         yield return new WaitUntil(WaitUntilArrivedOrInterrupted(interrupt));
-        
+
         invokingAgent.AnimationEventTriggered -= CaptureStepEvent;
         invokingAgent.animator.SetTrigger("StopMoving");
         invokingAgent.animator.ResetTrigger("StartMoving");

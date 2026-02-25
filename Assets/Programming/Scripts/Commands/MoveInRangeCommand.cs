@@ -20,7 +20,7 @@ public class MoveInRangeCommand : Command, IMoveCommand
     }
 
     private float costModifier => invokingAgent.localStats.movementCostModifier / invokingAgent.localStats.movement;
-    
+
     private Vector3 toPosition;
     private Vector3 fromPosition;
     private float range;
@@ -42,7 +42,6 @@ public class MoveInRangeCommand : Command, IMoveCommand
     {
         fromPosition = invokingAgent.GetLastMoveCommandToPosition();
         noMovement = Vector3.Distance(fromPosition, toPosition) <= range;
-        if (noMovement) return;
         this.range = range;
         agentPath = new();
         NavMesh.CalculatePath(fromPosition, toPosition, NavMesh.AllAreas, agentPath);
@@ -65,8 +64,12 @@ public class MoveInRangeCommand : Command, IMoveCommand
 
     protected override IEnumerator Execute()
     {
+        if (agentPath == null)
+        {
+            status = Status.Failed;
+            yield break;
+        }
         invokingAgent.navMeshAgent.SetPath(agentPath);
-        
 
         invokingAgent.animator.ResetTrigger("StopMoving");
         invokingAgent.animator.SetTrigger("StartMoving");
@@ -90,7 +93,7 @@ public class MoveInRangeCommand : Command, IMoveCommand
             return false;
         };
     }
-    
+
     public override void VisualizeInQueue(Visualizer visualizer)
     {
         visualizer.AppendQueuedPath(agentPath, invokingAgent);
@@ -152,7 +155,7 @@ public class MoveInRangeCommand : Command, IMoveCommand
         }
         return false;
     }
-    
+
     public override void Break()
     {
         invokingAgent.animator.SetTrigger("StopMoving");

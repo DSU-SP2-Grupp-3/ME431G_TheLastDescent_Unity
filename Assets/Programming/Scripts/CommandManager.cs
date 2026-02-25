@@ -13,7 +13,7 @@ public static class CommandManager
     public static CommandPackage GetMovePackage(WorldAgent agent, Vector3 position)
     {
         MoveCommand moveCommand = new MoveCommand(agent.GetLastMoveCommandToPosition(), position, agent);
-        if (!moveCommand.possible || moveCommand.noMovement) return EmptyPackage(); 
+        if (!moveCommand.possible || moveCommand.noMovement) return EmptyPackage();
         CommandPackage package = new CommandPackage(agent, moveCommand);
         package.SetType("move");
         return package;
@@ -36,17 +36,17 @@ public static class CommandManager
             // didn't hover over interactable
             return EmptyPackage();
         }
-        
+
         if (!AllMoveCommandsPossible(result.invokingAgentCommands)) return EmptyPackage();
-        
+
         TrimUnnecessaryMoveCommands(ref result.invokingAgentCommands);
         CommandPackage interactionPackage = new CommandPackage(agent, result.invokingAgentCommands);
         LookCommand lookCommand = new LookCommand(agent, result.interactableAgent);
-        
+
         interactionPackage.AddCommand(lookCommand);
         interactionPackage.AddCommand(result.QueueInteractablesCommand(agent));
         interactionPackage.SetType("interaction");
-        
+
         return interactionPackage;
     }
 
@@ -57,7 +57,9 @@ public static class CommandManager
         return package;
     }
 
-    public static CommandPackage GetAttackEnemyPackage(WorldAgent attacker, WorldAgent receiver, DamageManager damageManager)
+    public static CommandPackage GetAttackEnemyPackage(WorldAgent attacker,
+                                                       WorldAgent receiver,
+                                                       DamageManager damageManager)
     {
         if (receiver.dead) return EmptyPackage();
 
@@ -69,45 +71,47 @@ public static class CommandManager
         if (!inRangeCommand.possible) return EmptyPackage();
         AttackCommand attackCommand = new AttackCommand(attacker, receiver, damageManager, "PlayerAttack");
         LookCommand lookCommand = new LookCommand(attacker, receiver);
-        
+
         Command[] commands = new Command[] { inRangeCommand, lookCommand, attackCommand };
+        Debug.Log($"no movement: {inRangeCommand.noMovement}");
         TrimUnnecessaryMoveCommands(ref commands);
         CommandPackage package = new CommandPackage(attacker, commands);
-        
+
         package.SetAdditionalHighlights(receiver);
         package.SetType("attack");
-        
+        package.SetCursorTexture("Cursors/Crosshair");
+
         return package;
     }
 
     public static bool AllMoveCommandsPossible(Command[] commands)
     {
         return !commands
-               .Where(c => c is IMoveCommand)
-               .Select(c => (c as IMoveCommand).possible)
-               .Where(possible => !possible)
-               .Any();
-
+                .Where(c => c is IMoveCommand)
+                .Select(c => (c as IMoveCommand).possible)
+                .Where(possible => !possible)
+                .Any();
     }
 
     public static void TrimUnnecessaryMoveCommands(ref Command[] commands)
     {
         Command[] trimmed = commands
-            .Where(c => 
-            {
-                if (c is IMoveCommand moveCommand)
-                {
-                    return !moveCommand.noMovement;
-                }
-                else return true;
-            })
-            .ToArray();
+                            .Where(c =>
+                            {
+                                if (c is IMoveCommand moveCommand)
+                                {
+                                    return !moveCommand.noMovement;
+                                }
+                                else return true;
+                            })
+                            .ToArray();
         commands = trimmed;
     }
-    
+
     public class CommandPackage
     {
         public string type { get; private set; }
+        public CursorInfo cursorInfo { get; private set; }
         public readonly WorldAgent agent;
         public readonly HashSet<WorldAgent> highlights;
         public readonly List<Command> commands;
@@ -129,7 +133,7 @@ public static class CommandManager
             highlights = new HashSet<WorldAgent>() { agent };
             clickOnAgentOnly = true;
         }
-        
+
         public CommandPackage(WorldAgent agent, Command[] commands)
         {
             this.agent = agent;
@@ -158,7 +162,12 @@ public static class CommandManager
         {
             this.type = type;
         }
-        
+
+        public void SetCursorTexture(string resourcePath)
+        {
+            cursorInfo = Resources.Load<CursorInfo>(resourcePath);
+        }
+
         public bool QueueCommands(RoundClock.ProgressMode mode)
         {
             switch (mode)
@@ -182,9 +191,19 @@ public static class CommandManager
             foreach (Command command in commands)
             {
                 queueCost += command.cost;
-                if (agent.TotalCommandQueueCost() + queueCost > agent.localStats.actionPoints) return false;
+                if (agent.TotalCommandQueueCost() + queueCost > agent.localStats.initActionPoints) return false;
             }
             return true;
+        }
+
+        public float TotalPackageCommandCost()
+        {
+            float total = 0f;
+            foreach (Command command in commands)
+            {
+                total += command.cost;
+            }
+            return total;
         }
     }
 }

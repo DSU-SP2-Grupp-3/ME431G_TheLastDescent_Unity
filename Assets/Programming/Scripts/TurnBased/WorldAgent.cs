@@ -68,7 +68,7 @@ public class WorldAgent : MonoBehaviour
     private Command currentlyExecutingCommand;
     private Coroutine currentExecutingCommandCoroutine;
     private Stack<int> commandPacketSizes;
-    
+
     public bool queueEmpty => commandQueue.Count == 0;
     private bool breakCommandQueue;
 
@@ -149,6 +149,7 @@ public class WorldAgent : MonoBehaviour
         foreach (Command command in commands)
         {
             commandQueue.Enqueue(command);
+            localStats.actionPoints -= command.cost;
         }
         CommandQueueUpdated?.Invoke(this, commandQueue, null);
     }
@@ -166,7 +167,7 @@ public class WorldAgent : MonoBehaviour
         QueueCommands(commands);
         StartCoroutine(ExecuteCommandQueue());
     }
-    
+
     public IEnumerator OverwriteQueueIEnumerator(Command command)
     {
         InterruptCommandQueue();
@@ -195,9 +196,11 @@ public class WorldAgent : MonoBehaviour
         {
             Queue<Command> shortenedQueue = new();
             Command[] commandArray = commandQueue.ToArray();
+            localStats.actionPoints = localStats.initActionPoints;
             for (int i = 0; i < commandArray.Length - size; i++)
             {
                 shortenedQueue.Enqueue(commandArray[i]);
+                localStats.actionPoints -= commandArray[i].cost;
             }
             commandQueue = shortenedQueue;
             CommandQueueUpdated?.Invoke(this, commandQueue, null);
@@ -206,6 +209,7 @@ public class WorldAgent : MonoBehaviour
 
     public IEnumerator ExecuteCommandQueue()
     {
+        localStats.actionPoints = localStats.initActionPoints;
         commandPacketSizes.Clear();
         while (commandQueue.TryDequeue(out Command command))
         {
@@ -268,7 +272,7 @@ public class WorldAgent : MonoBehaviour
     {
         // stop highlighting world agent
     }
-    
+
     private void OnDisable()
     {
         //unsubscribe TakeDamage to the DamageManager of the PlayerManager

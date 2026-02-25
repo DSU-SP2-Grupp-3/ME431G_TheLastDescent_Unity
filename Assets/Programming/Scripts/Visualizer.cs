@@ -37,7 +37,7 @@ public class Visualizer : MonoBehaviour
     private void Update()
     {
         // todo: tweak here so we can choose what agents to visualize and when
-        
+
         foreach (Command command in currentlyExecutingCommands.Values)
         {
             command.VisualizeExecution(this);
@@ -77,10 +77,14 @@ public class Visualizer : MonoBehaviour
 
     private void OnPreviewUpdated(CommandManager.CommandPackage commandPackage)
     {
+        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
         if (modeSwitcher.Get().mode == RoundClock.ProgressMode.RealTime || turnManager.Get().executingTurn) return;
         previewLineRenderer.positionCount = 0;
+
         if (commandPackage.empty) return;
         HighlightAgents(commandPackage.highlights);
+        CursorInfo cInfo = commandPackage.cursorInfo;
+        if (cInfo) Cursor.SetCursor(cInfo.texture, cInfo.hotSpot, cInfo.cursorMode);
         if (commandPackage.clickOnAgentOnly) return;
         if (!commandPackage.CanQueueCommands()) return;
         foreach (Command command in commandPackage.commands)
@@ -102,7 +106,7 @@ public class Visualizer : MonoBehaviour
         }
         highlightedAgents.UnionWith(toHighlight);
     }
-    
+
     public void AppendQueuedPath(NavMeshPath inputPath, WorldAgent agent)
     {
         LineRenderer agentLineRenderer = agentVisualizeTools[agent].queueLineRenderer;
@@ -131,12 +135,12 @@ public class Visualizer : MonoBehaviour
         previewLineRenderer.positionCount = previewPath.corners.Length;
         previewLineRenderer.SetPositions(previewPath.corners);
     }
-    
+
     public void DrawExecutingPath(NavMeshPath executingPath, WorldAgent agent)
     {
         // ideally the drawn path only constists of one line renderer but it was too hard to make work right now -se
         // todo: connect the line rendering later
-        
+
         LineRenderer executionLineRenderer = agentVisualizeTools[agent].executionLineRenderer;
         executionLineRenderer.positionCount = executingPath.corners.Length;
         executionLineRenderer.SetPositions(executingPath.corners);
@@ -163,7 +167,5 @@ public class Visualizer : MonoBehaviour
             executionLineRenderer.positionCount = 0;
             queueLineRenderer.positionCount = 0;
         }
-        
     }
-
 }
