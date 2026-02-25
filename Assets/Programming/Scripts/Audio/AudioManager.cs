@@ -16,69 +16,97 @@ public class AudioManager : Service<AudioManager>
     //-Ma. It should also be noted that music should be handled diffrently from basic audio files.
     //-Ma. the massive audio files prohibit us from
     [SerializeField]
-    private List<EventScriptable> audioPlayers;
+    private List<EventScriptable> audioBanks = new();
+    private Dictionary<GUID, EventPlayer> playingAudio;
+    private readonly Queue<EventPlayer> removalQueue = new();
     private void Awake()
     {
+        playingAudio = new();
+
         Register();
-        LoadBanks();
-    }
-    private void LoadBanks()
-    {
-        foreach(EventScriptable es in audioPlayers)
-        {
-            es.CreateInstance();
-        }
     }
     public void PlayAudioEvent(string name)
     {
-        EventInstance player = audioPlayers.FirstOrDefault(p => p.name == name).eventInstance;
-        player.start();
+        if (TryGet(name, out EventScriptable eventScriptable))
+        {
+            PlayAudioEvent(eventScriptable);
+            return;
+        }
+        throw new Exception($"Null Refrence error. name: {name} does not exist in the audiobank");
     }
     //Plays a monobehavior player.
-    public void PlayAudioEvent(EventPlayer eventPlayer)
+    public void PlayAudioEvent(EventMono eventPlayer)
     {
-        if(eventPlayer == null) throw new Exception("Null Refrence error. Audio event does not exist");
-        eventPlayer.eventInstance.start();
+        if (eventPlayer == null) throw new Exception("Null Refrence error. Audio event does not exist");
 
-    }
-    public void PlayAudioEvent(EventScriptable eventPlayer)
-    {
-        if(eventPlayer == null) throw new Exception("Null Refrence error. Audio event does not exist");
-        eventPlayer.eventInstance.start();
 
     }
     //Plays from banks with the provided eventRefrence. 
     // If none exists, Instansiates a runtime instance and puts it in the refrence list..
-    public void PlayAudioEvent(EventReference eventReference)
+    public void PlayAudioEvent(EventScriptable eventScriptable)
     {
-        EventScriptable player = audioPlayers.FirstOrDefault(p => p.fmodEvent.Guid == eventReference.Guid);
-        if(player != null)
+        playingAudio.TryGetValue(eventScriptable.eventReference.Guid, out EventPlayer player);
+        if (player != null)
         {
-            player.eventInstance.start();
+            player.PlayEvent();
             return;
         }
-        player = ScriptableObject.CreateInstance<EventScriptable>();
-        player.eventInstance = RuntimeManager.CreateInstance(eventReference);
-        player.eventInstance.start();
+        CreatePlayer(eventScriptable.eventReference, out EventPlayer eventPlayer);
+        eventPlayer.PlayEvent();
     }
+
+    public void StopAudioEvent(EventScriptable eventScriptable)
+    {
+
+    }
+    //-Ma. We do NOT use FMOD's callbacks. They cause crashes, at random, because they are not on the main thread.
+    //
+    private void Update()
+    {
+        var finished = new List<EventReference>();
+        foreach (var kvp in playingAudio)
+        {
+            var state = kvp.Value.eventInstance.getPlaybackState(out PLAYBACK_STATE playbackState);
+            if (playbackState == PLAYBACK_STATE.STOPPED)
+            {
+                kvp.Value.eventInstance.release();
+                finished.Add(kvp.Value.eventReference);
+            }
+        }
+        foreach(EventReference eventReference in finished)
+        {
+            RemovePlayer(eventReference, out _);
+        }
+
+    }
+
+    public void RemovePlayer(EventReference eventReference, out EventPlayer eventPlayer)
+    {
+        if (!playingAudio.TryGetValue(eventReference.Guid, out eventPlayer)) { eventPlayer = null; return; }
+        playingAudio.Remove(eventReference.Guid);
+
+    }
+    public void CreatePlayer(EventReference eventReference, out EventPlayer eventPlayer)
+    {
+        eventPlayer = new EventPlayer(eventReference);
+        playingAudio.Add(eventReference.Guid, eventPlayer);
+    }
+
+
+
     public EventReference Get(string eventName)
     {
-        return audioPlayers.FirstOrDefault(p => p.eventName == eventName).fmodEvent;
+        return audioBanks.FirstOrDefault(p => p.eventName == eventName).eventReference;
     }
+
+    //-Ma. Useless
     public EventReference Get(EventReference eventReference)
     {
-        return audioPlayers.FirstOrDefault(p => p.fmodEvent.Guid == eventReference.Guid).fmodEvent;
+        return audioBanks.FirstOrDefault(p => p.eventReference.Guid == eventReference.Guid).eventReference;
     }
-    public bool TryGet(string eventName, out EventReference result)
+    public bool TryGet(string eventName, out EventScriptable result)
     {
-        EventScriptable player = audioPlayers.FirstOrDefault(p => p.eventName == eventName);
-        bool p = player != null;
-        if (!p)
-        {
-            result = player.fmodEvent;
-            return p;
-        }
-        result = player.fmodEvent;
-        return player != null;
+        result = audioBanks.FirstOrDefault(p => p.eventName == eventName);
+        return result != null;
     }
 }
