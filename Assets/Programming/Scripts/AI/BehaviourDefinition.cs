@@ -77,7 +77,7 @@ public abstract class BehaviourDefinition : ScriptableObject
     /// <returns>True if the path was trimmed, otherwise false</returns>
     protected bool TrimPathToMoveRange(WorldAgent agent, ref NavMeshPath inputPath, float moveDistance)
     {
-        if (agent.navMeshAgent.remainingDistance <= moveDistance)
+        if (agent.navMeshAgent.remainingDistance <= moveDistance || inputPath.corners.Length == 0)
         {
             return false;
         }
