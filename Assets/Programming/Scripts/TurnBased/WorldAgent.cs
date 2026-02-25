@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
@@ -49,6 +50,7 @@ public class WorldAgent : MonoBehaviour
             }
         }
     }
+
     public int actorID;
     /// True if this agent should enter into the turn order when turn based mode is activated
     public bool active { get; private set; }
@@ -154,11 +156,19 @@ public class WorldAgent : MonoBehaviour
         QueueCommand(command);
         StartCoroutine(ExecuteCommandQueue());
     }
+
     public void OverwriteQueue(Command[] commands)
     {
         InterruptCommandQueue();
         QueueCommands(commands);
         StartCoroutine(ExecuteCommandQueue());
+    }
+    
+    public IEnumerator OverwriteQueueIEnumerator(Command command)
+    {
+        InterruptCommandQueue();
+        QueueCommand(command);
+        yield return StartCoroutine(ExecuteCommandQueue());
     }
 
     public void ForceStartCommandQueueExecution()
