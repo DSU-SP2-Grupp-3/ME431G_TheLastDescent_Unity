@@ -23,11 +23,13 @@ public class AudioManager : Service<AudioManager>
     {
         if (TryGet(name, out EventScriptable eventScriptable))
         {
-            PlayAudioEvent(eventScriptable);
+            PlayAudio(eventScriptable.eventReference);
             return;
         }
         throw new Exception($"Null Reference error. name: {name} does not exist in the audiobank");
     }
+
+
     //Plays aduio from a monobehavior player.
     public void PlayAudioEvent(EventMono eventMono)
     {
@@ -35,13 +37,17 @@ public class AudioManager : Service<AudioManager>
         PlayAudio(eventMono.eventReference);
 
     }
+
+
     //Plays aduio from a Scriptable Object
     public void PlayAudioEvent(EventScriptable eventScriptable)
     {
         if (eventScriptable == null) throw new Exception("Null Reference error. Audio event does not exist");
         PlayAudio(eventScriptable.eventReference);
     }
-    public void PlayAudio(EventReference eventReference)
+
+
+    private void PlayAudio(EventReference eventReference)
     {
         playingAudio.TryGetValue(eventReference.Guid, out EventPlayer player);
         if (player != null)
@@ -53,12 +59,16 @@ public class AudioManager : Service<AudioManager>
         eventPlayer.PlayEvent();
     }
 
+
     public void StopAudioEvent(EventScriptable eventScriptable)
     {
 
     }
+
+
     //-Ma. We do NOT use FMOD's callbacks. They cause crashes, at random, because they are not on the main thread.
-    //
+
+
     private void Update()
     {
         var finished = new List<EventReference>();
@@ -97,7 +107,6 @@ public class AudioManager : Service<AudioManager>
         return audioBanks.FirstOrDefault(p => p.eventName == eventName).eventReference;
     }
 
-    //-Ma. Useless
     public bool TryGet(string eventName, out EventScriptable result)
     {
         result = audioBanks.FirstOrDefault(p => p.eventName == eventName);
