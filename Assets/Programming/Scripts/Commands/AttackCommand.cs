@@ -12,7 +12,6 @@ public class AttackCommand : Command
 
     private bool animationEnded;
 
-    private EventCollection eventCollection;
     private string attackEventName;
 
     public AttackCommand(WorldAgent invokingAgent,
@@ -21,13 +20,12 @@ public class AttackCommand : Command
                          string attackEventName)
         : base(invokingAgent)
     {
-        eventCollection = new Locator<EventCollection>().Get();
         this.receivingAgent = receivingAgent;
         this.damageManager = damageManager;
         this.attackEventName = attackEventName;
     }
 
-    public override IEnumerator Execute()
+    protected override IEnumerator Execute()
     {
         invokingAgent.AnimationEventTriggered += CaptureAnimationEvent;
         invokingAgent.animator.SetTrigger("StartAttack");

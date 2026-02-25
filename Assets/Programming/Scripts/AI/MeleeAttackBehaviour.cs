@@ -58,8 +58,8 @@ public class MeleeAttackBehaviour : BehaviourDefinition
             // if the path does not need to be trimmed then we attack the player as well
 
             
-            LookAtCommand lookAtCommand = new LookAtCommand(aiAgent, closestTarget);
-            commands.AddCommand(lookAtCommand);
+            LookCommand lookCommand = new LookCommand(aiAgent, closestTarget);
+            commands.AddCommand(lookCommand);
             
             AttackCommand attackPlayerCommand = new AttackCommand(aiAgent, closestTarget, agentManager.damageManager, "EnemyAttack");
             commands.AddCommand(attackPlayerCommand);

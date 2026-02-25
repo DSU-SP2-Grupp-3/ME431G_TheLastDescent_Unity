@@ -7,7 +7,7 @@ public class CinematicEndCommand : Command
     {
 
     }
-    public override IEnumerator Execute()
+    protected override IEnumerator Execute()
     {
         new Locator<CinematicKitService>().Get().ClearCinematicScene();
         yield return null;

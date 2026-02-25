@@ -12,7 +12,7 @@ public class CinematicLookAtCommand : Command
     {
         this.cinematicLookAtInfos = cinematicLookAtInfos;
     }
-    public override IEnumerator Execute()
+    protected override IEnumerator Execute()
     {
         List<IEnumerator> enumerator = new();
         cinematicKitLocator = new();
@@ -21,7 +21,7 @@ public class CinematicLookAtCommand : Command
         {
             WorldAgent StartAgent = cinematicKitLocator.Get().GetActor(agentinfo.IDStart);
             WorldAgent EndAgent = cinematicKitLocator.Get().GetActor(agentinfo.IDStart);
-            enumerator.Add(StartAgent.OverwriteQueueIEnumerator(new LookAtCommand(StartAgent, EndAgent)));
+            enumerator.Add(StartAgent.OverwriteQueueIEnumerator(new LookCommand(StartAgent, EndAgent)));
         }
         yield return turnManagerLocator.Get().WaitForAll(enumerator);
     }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
@@ -24,14 +25,13 @@ public class MoveCommand : Command, IMoveCommand
     private Vector3 toPosition;
     private Vector3 fromPosition;
 
-    private EventCollection eventCollection;
-
     public readonly NavMeshPath agentPath;
-    public readonly bool possible;
+    public bool possible { get; private set; }
+    public bool noMovement { get; private set; }
 
     private const float playEndAnimationDistance = 0.5f;
     private const float ignoreMovementDistance = 0.1f;
-    private const float interruptTime = 5f;
+    private const float interruptTime = 20f;
 
     public Vector3 ToPosition() => toPosition;
 
@@ -39,6 +39,7 @@ public class MoveCommand : Command, IMoveCommand
     {
         this.toPosition = toPosition;
         this.fromPosition = fromPosition;
+        noMovement = Vector3.Distance(toPosition, fromPosition) <= ignoreMovementDistance;
         agentPath = new();
         NavMesh.CalculatePath(fromPosition, toPosition, NavMesh.AllAreas, agentPath);
         possible = agentPath.status == NavMeshPathStatus.PathComplete;
@@ -46,10 +47,9 @@ public class MoveCommand : Command, IMoveCommand
 
     public MoveCommand(Vector3 toPosition, WorldAgent invokingAgent) : base(invokingAgent)
     {
-        eventCollection = new Locator<EventCollection>().Get();
-
         this.fromPosition = invokingAgent.GetLastMoveCommandToPosition();
         this.toPosition = toPosition;
+        noMovement = Vector3.Distance(toPosition, fromPosition) <= ignoreMovementDistance;
         agentPath = new();
         NavMesh.CalculatePath(fromPosition, toPosition, NavMesh.AllAreas, agentPath);
         possible = agentPath.status == NavMeshPathStatus.PathComplete;
@@ -59,35 +59,40 @@ public class MoveCommand : Command, IMoveCommand
     {
         this.fromPosition = path.corners[0];
         this.toPosition = path.corners.Last();
+        noMovement = Vector3.Distance(toPosition, fromPosition) <= ignoreMovementDistance;
         agentPath = path;
         possible = path.status == NavMeshPathStatus.PathComplete;
     }
 
-    public override IEnumerator Execute()
+    protected override IEnumerator Execute()
     {
-        // do not do anything if the path is not valid -se
-        if (!possible) yield break;
-
-        // todo: move animation only plays once for some reason
-
         invokingAgent.navMeshAgent.SetPath(agentPath);
-        if (invokingAgent.navMeshAgent.remainingDistance < ignoreMovementDistance) yield break;
-
-        //Visualize();
 
         invokingAgent.animator.ResetTrigger("StopMoving");
         invokingAgent.animator.SetTrigger("StartMoving");
         invokingAgent.AnimationEventTriggered += CaptureStepEvent;
         float interrupt = Time.time + interruptTime;
-        yield return new WaitUntil(() =>
-        {
-            return invokingAgent.navMeshAgent.remainingDistance <= playEndAnimationDistance ||
-                   Time.time > interrupt;
-        });
+
+        yield return new WaitUntil(WaitUntilArrivedOrInterrupted(interrupt));
+
         invokingAgent.AnimationEventTriggered -= CaptureStepEvent;
         invokingAgent.animator.SetTrigger("StopMoving");
         invokingAgent.animator.ResetTrigger("StartMoving");
         invokingAgent.navMeshAgent.ResetPath();
+    }
+
+    private Func<bool> WaitUntilArrivedOrInterrupted(float interrupt)
+    {
+        return () =>
+        {
+            if (invokingAgent.navMeshAgent.remainingDistance <= playEndAnimationDistance) return true;
+            else if (Time.time > interrupt)
+            {
+                status = Status.Failed;
+                return true;
+            }
+            return false;
+        };
     }
 
     private void CaptureStepEvent(string trigger)
@@ -109,6 +114,13 @@ public class MoveCommand : Command, IMoveCommand
         NavMeshPath remainingPath = new();
         NavMesh.CalculatePath(invokingAgent.navMeshAgent.nextPosition, toPosition, NavMesh.AllAreas, remainingPath);
         visualizer.DrawExecutingPath(remainingPath, invokingAgent);
+    }
+
+    public override void VisualizePreview(Visualizer visualizer)
+    {
+        NavMeshPath remainingPath = new();
+        NavMesh.CalculatePath(fromPosition, toPosition, NavMesh.AllAreas, remainingPath);
+        visualizer.DrawPreviewPath(remainingPath);
     }
 
     public override void Break()

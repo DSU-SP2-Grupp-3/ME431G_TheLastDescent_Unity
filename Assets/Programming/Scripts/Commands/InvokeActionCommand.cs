@@ -12,8 +12,8 @@ public class InvokeActionCommand : Command
     {
         this.action = action;
     }
-    
-    public override IEnumerator Execute()
+
+    protected override IEnumerator Execute()
     {
         yield return null;
         action.Invoke();

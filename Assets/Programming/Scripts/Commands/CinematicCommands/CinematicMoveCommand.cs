@@ -12,7 +12,7 @@ public class CinematicMoveCommand : Command
     {
         this.cinematicMoveInfos = cinematicMoveInfos;
     }
-    public override IEnumerator Execute()
+    protected override IEnumerator Execute()
     {
         List<IEnumerator> enumerator = new();
         cinematicKitLocator = new();

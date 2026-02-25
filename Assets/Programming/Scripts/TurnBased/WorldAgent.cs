@@ -67,13 +67,17 @@ public class WorldAgent : MonoBehaviour
     private Queue<Command> commandQueue;
     private Command currentlyExecutingCommand;
     private Coroutine currentExecutingCommandCoroutine;
+    private Stack<int> commandPacketSizes;
+
     public bool queueEmpty => commandQueue.Count == 0;
+    private bool breakCommandQueue;
 
     private void Awake()
     {
         initialPosition = transform.position;
 
         commandQueue = new();
+        commandPacketSizes = new();
 
         agentManager = new();
         modeSwitcher = new();
@@ -135,17 +139,17 @@ public class WorldAgent : MonoBehaviour
 
     public void QueueCommand(Command command)
     {
-        if (dead) return;
-        commandQueue.Enqueue(command);
-        CommandQueueUpdated?.Invoke(this, commandQueue, null);
+        QueueCommands(new Command[] { command });
     }
 
     public void QueueCommands(Command[] commands)
     {
         if (dead) return;
+        commandPacketSizes.Push(commands.Length);
         foreach (Command command in commands)
         {
             commandQueue.Enqueue(command);
+            if (localStats) localStats.actionPoints -= command.cost;
         }
         CommandQueueUpdated?.Invoke(this, commandQueue, null);
     }
@@ -163,7 +167,7 @@ public class WorldAgent : MonoBehaviour
         QueueCommands(commands);
         StartCoroutine(ExecuteCommandQueue());
     }
-    
+
     public IEnumerator OverwriteQueueIEnumerator(Command command)
     {
         InterruptCommandQueue();
@@ -182,21 +186,49 @@ public class WorldAgent : MonoBehaviour
         currentlyExecutingCommand = null;
         StopAllCoroutines();
         commandQueue.Clear();
+        commandPacketSizes.Clear();
         CommandQueueUpdated?.Invoke(this, commandQueue, null);
+    }
+
+    public void UndoLastestCommand()
+    {
+        if (commandPacketSizes.TryPop(out int size))
+        {
+            Queue<Command> shortenedQueue = new();
+            Command[] commandArray = commandQueue.ToArray();
+            localStats.actionPoints = localStats.initActionPoints;
+            for (int i = 0; i < commandArray.Length - size; i++)
+            {
+                shortenedQueue.Enqueue(commandArray[i]);
+                if (localStats) localStats.actionPoints -= commandArray[i].cost;
+            }
+            commandQueue = shortenedQueue;
+            CommandQueueUpdated?.Invoke(this, commandQueue, null);
+        }
     }
 
     public IEnumerator ExecuteCommandQueue()
     {
+        if (localStats) localStats.actionPoints = localStats.initActionPoints;
+        commandPacketSizes.Clear();
         while (commandQueue.TryDequeue(out Command command))
         {
             CommandQueueUpdated?.Invoke(this, commandQueue, command);
             currentlyExecutingCommand = command;
-            currentExecutingCommandCoroutine = StartCoroutine(command.Execute());
+            currentExecutingCommandCoroutine = StartCoroutine(command.ExecuteCommand());
             yield return currentExecutingCommandCoroutine;
-            //todo: check if command succeeded or not, like if a MoveCommand actually made it to the inteded destination, otherwise cancel the rest of the commandQueue
+
+            breakCommandQueue = currentlyExecutingCommand.status == Command.Status.Failed;
+
             currentExecutingCommandCoroutine = null;
             currentlyExecutingCommand = null;
             CommandQueueUpdated?.Invoke(this, commandQueue, null);
+            if (breakCommandQueue) break;
+        }
+        if (breakCommandQueue)
+        {
+            breakCommandQueue = false;
+            InterruptCommandQueue();
         }
     }
 
@@ -231,8 +263,15 @@ public class WorldAgent : MonoBehaviour
         navMeshAgent.enabled = false;
     }
 
-    // visualise command queue /se
-    // can afford new command /se
+    public void Highlight()
+    {
+        // highlight world agent
+    }
+
+    public void Dehighlight()
+    {
+        // stop highlighting world agent
+    }
 
     private void OnDisable()
     {
