@@ -83,15 +83,21 @@ public class Visualizer : MonoBehaviour
     private void OnPreviewUpdated(CommandManager.CommandPackage commandPackage)
     {
         Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+        bool canQueue = commandPackage.CanQueueCommands();
+        if (canQueue || modeSwitcher.Get().mode == RoundClock.ProgressMode.RealTime)
+        {
+            CursorInfo cInfo = commandPackage.cursorInfo;
+            if (cInfo) Cursor.SetCursor(cInfo.texture, cInfo.hotSpot, cInfo.cursorMode);
+        }
+
         if (modeSwitcher.Get().mode == RoundClock.ProgressMode.RealTime || turnManager.Get().executingTurn) return;
         previewLineRenderer.positionCount = 0;
 
         if (commandPackage.empty) return;
         HighlightAgents(commandPackage.highlights);
-        CursorInfo cInfo = commandPackage.cursorInfo;
-        if (cInfo) Cursor.SetCursor(cInfo.texture, cInfo.hotSpot, cInfo.cursorMode);
+
         if (commandPackage.clickOnAgentOnly) return;
-        if (!commandPackage.CanQueueCommands()) return;
+        if (!canQueue) return;
         foreach (Command command in commandPackage.commands)
         {
             command.VisualizePreview(this);
