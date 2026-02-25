@@ -14,7 +14,7 @@ public class AgentManager : Service<AgentManager>
     private List<WorldAgent> players;
     private List<WorldAgent> allAgents;
     private Locator<OrthographicCameraMover> cameraMover;
-    private Locator<SelectionIndicator> indicator;
+    private Locator<SelectionIndicator> indicatorLocator;
 
     private Locator<InputManager> inputManager;
     private Locator<ModeSwitcher> modeSwitcher;
@@ -37,7 +37,7 @@ public class AgentManager : Service<AgentManager>
         modeSwitcher = new();
         turnManager = new();
         cameraMover = new();
-        indicator = new();
+        indicatorLocator = new();
     }
 
     private void Start()
@@ -47,7 +47,7 @@ public class AgentManager : Service<AgentManager>
         im.OnClick += ProcessClick;
         modeSwitcher.Get().OnEnterTurnBased += (_) => allPlayersSelected = false;
     }
-    
+
     private void PreviewCommand(RaycastHit hit, bool didHit)
     {
         if (!didHit || turnManager.Get().executingTurn)
@@ -63,11 +63,11 @@ public class AgentManager : Service<AgentManager>
             "Interactable" => CommandManager.GetInteractionPackage(selectedPlayer, go),
             "Player" => CommandManager.GetSelectPlayerPackage(go.GetComponentInParent<WorldAgent>()),
             "Ground" => CommandManager.GetMovePackage(selectedPlayer, hit.point),
-            "Enemy" => CommandManager.GetAttackEnemyPackage(selectedPlayer, go.GetComponentInParent<WorldAgent>(), damageManager),
+            "Enemy" => CommandManager.GetAttackEnemyPackage(selectedPlayer, go.GetComponentInParent<WorldAgent>(),
+                damageManager),
             _ => CommandManager.EmptyPackage()
         };
         PreviewUpdated?.Invoke(currentCommandPackage);
-
     }
 
     private void ProcessClick()
@@ -77,7 +77,7 @@ public class AgentManager : Service<AgentManager>
         else
         {
             if (!currentCommandPackage.QueueCommands(modeSwitcher.Get().mode)) NotEnoughAP?.Invoke();
-            
+
             // move other characters if select all is active
             if (allPlayersSelected && currentCommandPackage.type == "move")
             {
@@ -91,7 +91,7 @@ public class AgentManager : Service<AgentManager>
             }
         }
     }
-    
+
     public void RegisterAgent(WorldAgent agent)
     {
         allAgents.Add(agent);
@@ -114,7 +114,14 @@ public class AgentManager : Service<AgentManager>
         {
             selectedPlayer = playerAgent;
             cameraMover.Get().SetCameraTarget(selectedPlayer.cameraFocusTransform);
-            indicator.Get().SetIndicatorTarget(selectedPlayer.transform);
+            if (indicatorLocator.TryGet(out SelectionIndicator indicator))
+            {
+                indicator.SetIndicatorTarget(selectedPlayer.transform);
+            }
+            else
+            {
+                Debug.LogWarning("Indicator prefab does not exist in scene");
+            }
         }
     }
 
@@ -134,7 +141,6 @@ public class AgentManager : Service<AgentManager>
             selectedPlayer.UndoLastestCommand();
         }
     }
-    
 
     public List<WorldAgent> GetPlayerAgents() => players;
     public List<WorldAgent> GetAllAgents() => allAgents;
