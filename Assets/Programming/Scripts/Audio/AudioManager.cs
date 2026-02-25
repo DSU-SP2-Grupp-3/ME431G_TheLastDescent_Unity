@@ -9,12 +9,6 @@ using UnityEngine;
 
 public class AudioManager : Service<AudioManager>
 {
-    //-Ma. Simple enough start to the audio system,
-    //Offers some variations of accessing how audio is played.
-    //What is missing is a proper refrencing system for paramters, and other FMOD Utilites, although this will be added shortly.
-
-    //-Ma. It should also be noted that music should be handled diffrently from basic audio files.
-    //-Ma. the massive audio files prohibit us from
     [SerializeField]
     private List<EventScriptable> audioBanks = new();
     private Dictionary<GUID, EventPlayer> playingAudio;
@@ -32,26 +26,30 @@ public class AudioManager : Service<AudioManager>
             PlayAudioEvent(eventScriptable);
             return;
         }
-        throw new Exception($"Null Refrence error. name: {name} does not exist in the audiobank");
+        throw new Exception($"Null Reference error. name: {name} does not exist in the audiobank");
     }
-    //Plays a monobehavior player.
-    public void PlayAudioEvent(EventMono eventPlayer)
+    //Plays aduio from a monobehavior player.
+    public void PlayAudioEvent(EventMono eventMono)
     {
-        if (eventPlayer == null) throw new Exception("Null Refrence error. Audio event does not exist");
-
+        if (eventMono == null) throw new Exception("Null Reference error. Audio event does not exist");
+        PlayAudio(eventMono.eventReference);
 
     }
-    //Plays from banks with the provided eventRefrence. 
-    // If none exists, Instansiates a runtime instance and puts it in the refrence list..
+    //Plays aduio from a Scriptable Object
     public void PlayAudioEvent(EventScriptable eventScriptable)
     {
-        playingAudio.TryGetValue(eventScriptable.eventReference.Guid, out EventPlayer player);
+        if (eventScriptable == null) throw new Exception("Null Reference error. Audio event does not exist");
+        PlayAudio(eventScriptable.eventReference);
+    }
+    public void PlayAudio(EventReference eventReference)
+    {
+        playingAudio.TryGetValue(eventReference.Guid, out EventPlayer player);
         if (player != null)
         {
             player.PlayEvent();
             return;
         }
-        CreatePlayer(eventScriptable.eventReference, out EventPlayer eventPlayer);
+        CreatePlayer(eventReference, out EventPlayer eventPlayer);
         eventPlayer.PlayEvent();
     }
 
@@ -100,10 +98,6 @@ public class AudioManager : Service<AudioManager>
     }
 
     //-Ma. Useless
-    public EventReference Get(EventReference eventReference)
-    {
-        return audioBanks.FirstOrDefault(p => p.eventReference.Guid == eventReference.Guid).eventReference;
-    }
     public bool TryGet(string eventName, out EventScriptable result)
     {
         result = audioBanks.FirstOrDefault(p => p.eventName == eventName);

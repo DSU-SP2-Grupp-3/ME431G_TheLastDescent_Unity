@@ -7,5 +7,5 @@ public class EventMono : MonoBehaviour
     public string eventName;
 
     [SerializeField]
-    public EventReference fmodEvent;
+    public EventReference eventReference;
 }
