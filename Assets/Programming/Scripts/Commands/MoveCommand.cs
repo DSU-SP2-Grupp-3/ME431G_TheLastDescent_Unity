@@ -25,8 +25,6 @@ public class MoveCommand : Command, IMoveCommand
     private Vector3 toPosition;
     private Vector3 fromPosition;
 
-    private AudioManager eventCollection;
-
     public readonly NavMeshPath agentPath;
     public bool possible { get; private set; }
     public bool noMovement { get; private set; }
@@ -49,8 +47,6 @@ public class MoveCommand : Command, IMoveCommand
 
     public MoveCommand(Vector3 toPosition, WorldAgent invokingAgent) : base(invokingAgent)
     {
-        eventCollection = new Locator<AudioManager>().Get();
-
         this.fromPosition = invokingAgent.GetLastMoveCommandToPosition();
         this.toPosition = toPosition;
         noMovement = Vector3.Distance(toPosition, fromPosition) <= ignoreMovementDistance;
@@ -103,7 +99,7 @@ public class MoveCommand : Command, IMoveCommand
     {
         if (trigger == "step")
         {
-            eventCollection.PlayAudioEvent("Footstep");
+            audioManager.PlayAudioEvent("Footstep");
         }
     }
 
@@ -132,5 +128,6 @@ public class MoveCommand : Command, IMoveCommand
         invokingAgent.animator.SetTrigger("StopMoving");
         invokingAgent.animator.ResetTrigger("StartMoving");
         invokingAgent.navMeshAgent.ResetPath();
+        invokingAgent.AnimationEventTriggered -= CaptureStepEvent;
     }
 }

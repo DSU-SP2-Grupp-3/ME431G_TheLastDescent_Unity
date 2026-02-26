@@ -12,7 +12,6 @@ public class AttackCommand : Command
 
     private bool animationEnded;
 
-    private AudioManager eventCollection;
     private string attackEventName;
 
     public AttackCommand(WorldAgent invokingAgent,
@@ -21,7 +20,6 @@ public class AttackCommand : Command
                          string attackEventName)
         : base(invokingAgent)
     {
-        eventCollection = new Locator<AudioManager>().Get();
         this.receivingAgent = receivingAgent;
         this.damageManager = damageManager;
         this.attackEventName = attackEventName;
@@ -47,7 +45,7 @@ public class AttackCommand : Command
     {
         if (trigger == "attack")
         {
-            eventCollection.PlayAudioEvent(attackEventName);
+            audioManager.PlayAudioEvent(attackEventName);
             PerformAttack();
         }
         if (trigger == "end") animationEnded = true;
