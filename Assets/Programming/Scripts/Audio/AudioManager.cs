@@ -15,7 +15,7 @@ public class AudioManager : Service<AudioManager>
     [SerializeField]
     private List<EventScriptable> audioBanks = new();
     private Dictionary<GUID, EventPlayer> PersistentPlayers;
-    private List<EventPlayer> OneShotPlayers;
+    private List<EventPlayer> OneShotPlayers = new();
     private readonly Queue<EventPlayer> removalQueue = new();
     private void Awake()
     {
@@ -23,6 +23,8 @@ public class AudioManager : Service<AudioManager>
 
         Register();
     }
+
+
     #region PlayEvents
     /// <summary>
     /// Plays audio from the bank reference.
@@ -33,7 +35,7 @@ public class AudioManager : Service<AudioManager>
     {
         if (TryGet(name, out EventScriptable eventScriptable))
         {
-            PlayAudio(eventScriptable.eventReference);
+            PlayAudio(eventScriptable);
             return;
         }
         throw new Exception($"Null Reference error. name: {name} does not exist in the audiobank");
@@ -61,26 +63,34 @@ public class AudioManager : Service<AudioManager>
     public void PlayAudioEvent(EventScriptable eventScriptable)
     {
         if (eventScriptable == null) throw new Exception("Null Reference error. Audio event does not exist");
-        PlayAudio(eventScriptable.eventReference);
+        PlayAudio(eventScriptable);
     }
 
-    private void PlayAudio(EventReference eventReference)
+
+    private void PlayAudio(EventScriptable eventScriptable)
     {
-        PersistentPlayers.TryGetValue(eventReference.Guid, out EventPlayer player);
+        PersistentPlayers.TryGetValue(eventScriptable.eventReference.Guid, out EventPlayer player);
         if (player != null)
         {
             player.PlayEvent();
             return;
         }
-        CreatePlayer(eventReference, out EventPlayer eventPlayer);
+        CreatePlayer(eventScriptable, out EventPlayer eventPlayer);
         eventPlayer.PlayEvent();
     }
     #endregion PlayEvents
+
 
     public void StopAudioEvent(EventScriptable eventScriptable)
     {
         RemovePlayer(eventScriptable.eventReference);
     }
+    public void StopAudioEvent(string name)
+    {
+        if (TryGet(name, out EventScriptable result)) StopAudioEvent(result);
+    }
+
+
     public void RunInstanceModification(EventScriptable eventScriptable, string paramName, float value)
     {
         PersistentPlayers.TryGetValue(eventScriptable.eventReference.Guid, out EventPlayer player);
@@ -92,8 +102,10 @@ public class AudioManager : Service<AudioManager>
     }
     public void RunInstanceModification(string name, string paramName, float value)
     {
-        
+        if (TryGet(name, out EventScriptable result)) RunInstanceModification(result, paramName, value);
     }
+
+
 
     //-Ma. We do NOT use FMOD's callbacks. They cause crashes, at random, because they are not on the main thread.
     private void Update()
@@ -103,34 +115,40 @@ public class AudioManager : Service<AudioManager>
         {
             if (player.IsFinished())
             {
-                player.eventInstance.release();
                 finished.Add(player);
             }
         }
-        foreach(EventPlayer eventPlayer in finished)
+        foreach (EventPlayer eventPlayer in finished)
         {
             RemovePlayer(eventPlayer);
         }
 
     }
 
+
     #region PlayerHandler
+
+
     public void RemovePlayer(EventPlayer eventPlayer)
     {
-        if (!OneShotPlayers.Remove(eventPlayer)) OneShotPlayers.Remove(eventPlayer);
-
+        eventPlayer.eventInstance.release();
+        OneShotPlayers.Remove(eventPlayer);
     }
+
+
     public void RemovePlayer(EventReference eventReference)
     {
-        if (!PersistentPlayers.TryGetValue(eventReference.Guid, out _)) {return; }
+        if (!PersistentPlayers.TryGetValue(eventReference.Guid, out EventPlayer eventPlayer)) { return; }
+        eventPlayer.eventInstance.release();
         PersistentPlayers.Remove(eventReference.Guid);
-
     }
-    public void CreatePlayer(EventReference eventReference, out EventPlayer eventPlayer)
+
+
+    public void CreatePlayer(EventScriptable eventScriptable, out EventPlayer eventPlayer)
     {
-        eventPlayer = new EventPlayer(eventReference);
-        if(eventPlayer.isOneshot()) OneShotPlayers.Add(eventPlayer);
-        else PersistentPlayers.Add(eventReference.Guid, eventPlayer);
+        eventPlayer = new EventPlayer(eventScriptable.eventReference);
+        if (!eventPlayer.isOneshot() || eventScriptable.type == EventScriptable.Override.persistent) PersistentPlayers.Add(eventScriptable.eventReference.Guid, eventPlayer) ;
+        else OneShotPlayers.Add(eventPlayer);
     }
     #endregion PlayerHandler
 
@@ -139,6 +157,7 @@ public class AudioManager : Service<AudioManager>
     {
         return audioBanks.FirstOrDefault(p => p.eventName == eventName).eventReference;
     }
+
 
     public bool TryGet(string eventName, out EventScriptable result)
     {

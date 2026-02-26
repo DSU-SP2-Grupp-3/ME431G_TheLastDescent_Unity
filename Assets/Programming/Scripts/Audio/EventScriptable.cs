@@ -10,7 +10,12 @@ using UnityEngine;
 public class EventScriptable : ScriptableObject
 {
     public string eventName;
-
+    public enum Override
+    {
+        persistent,
+        multi
+    }
+    public Override type;
     [SerializeField]
     public EventReference eventReference;
     void OnValidate()
