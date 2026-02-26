@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class EventCollection : Service<EventCollection>
 {
+    /*
     [SerializeField]
     private SimpleEventPlayer[] eventPlayers;
 
@@ -13,10 +14,11 @@ public class EventCollection : Service<EventCollection>
 
     public void PlayEvent(string eventName)
     {
-        SimpleEventPlayer player = eventPlayers.Where(p => p.eventName == eventName).First();
+        SimpleEventPlayer player = eventPlayers.FirstOrDefault(p => p.eventName == eventName);
         if (player)
         {
             player.PlayEvent();
         }
     }
+    */
 }

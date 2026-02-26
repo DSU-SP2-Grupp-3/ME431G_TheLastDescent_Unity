@@ -45,7 +45,7 @@ public class AttackCommand : Command
     {
         if (trigger == "attack")
         {
-            eventCollection.PlayEvent(attackEventName);
+            audioManager.PlayAudioEvent(attackEventName);
             PerformAttack();
         }
         if (trigger == "end") animationEnded = true;
