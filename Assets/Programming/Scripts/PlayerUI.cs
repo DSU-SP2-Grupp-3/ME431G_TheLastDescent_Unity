@@ -19,16 +19,28 @@ public class PlayerUI : MonoBehaviour
     [SerializeField]
     private Image actionPointsImage;
 
+    [SerializeField]
+    private GameObject statsContext;
+
     private float maxHP;
     private float maxAP;
 
     private Locator<AgentManager> locatorAgentManager;
     private AgentManager agentManager;
 
-    private void Start()
+    private Locator<ModeSwitcher> modeSwitcherLocator;
+
+    private void Awake()
     {
         locatorAgentManager = new Locator<AgentManager>();
         agentManager = locatorAgentManager.Get();
+
+        modeSwitcherLocator = new Locator<ModeSwitcher>();
+    }
+
+    private void Start()
+    {
+        SetStatsVisbility(false);
 
         player.localStats.HitPointsChanged += HitPointsChanged;
         player.localStats.ActionPointsChanged += ActionPointsChanged;
@@ -43,6 +55,18 @@ public class PlayerUI : MonoBehaviour
     public void ClickedOnPlayer()
     {
         agentManager.SelectPlayer(player);
+    }
+
+    public void SetStatsVisbility(bool show)
+    {
+        if (modeSwitcherLocator.TryGet(out ModeSwitcher modeSwitcher))
+        {
+            if (modeSwitcher.mode == RoundClock.ProgressMode.TurnBased)
+            {
+                return;
+            }
+        }
+        statsContext.SetActive(show);
     }
 
     private void HitPointsChanged(float changed)

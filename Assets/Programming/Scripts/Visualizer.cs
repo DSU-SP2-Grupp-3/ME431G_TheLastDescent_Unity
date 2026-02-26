@@ -98,7 +98,7 @@ public class Visualizer : MonoBehaviour
         // if real time don't show preview or ap cost
         if (realTime || turnManager.Get().executingTurn) return;
         previewLineRenderer.positionCount = 0;
-        
+
         if (commandPackage.empty) return;
         HighlightAgents(commandPackage.highlights);
 
