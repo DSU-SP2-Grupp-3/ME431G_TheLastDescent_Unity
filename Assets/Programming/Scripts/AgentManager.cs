@@ -14,7 +14,6 @@ public class AgentManager : Service<AgentManager>
     private List<WorldAgent> players;
     private List<WorldAgent> allAgents;
     private Locator<OrthographicCameraMover> cameraMover;
-    private Locator<SelectionIndicator> indicatorLocator;
 
     private Locator<InputManager> inputManager;
     private Locator<ModeSwitcher> modeSwitcher;
@@ -37,7 +36,6 @@ public class AgentManager : Service<AgentManager>
         modeSwitcher = new();
         turnManager = new();
         cameraMover = new();
-        indicatorLocator = new();
     }
 
     private void Start()
@@ -114,14 +112,6 @@ public class AgentManager : Service<AgentManager>
         {
             selectedPlayer = playerAgent;
             cameraMover.Get().SetCameraTarget(selectedPlayer.cameraFocusTransform);
-            if (indicatorLocator.TryGet(out SelectionIndicator indicator))
-            {
-                indicator.SetIndicatorTarget(selectedPlayer.transform);
-            }
-            else
-            {
-                Debug.LogWarning("Indicator prefab does not exist in scene");
-            }
         }
     }
 

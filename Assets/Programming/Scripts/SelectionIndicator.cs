@@ -1,30 +1,28 @@
 using UnityEngine;
 
-public class SelectionIndicator : Service<SelectionIndicator>
+public class SelectionIndicator : MonoBehaviour
 {
     [Tooltip("The target Transform to move the camera from, should be a model and not an actor if possible")]
     public Transform targetGameObject;
     public Vector3 offset;
-    private Locator<ModeSwitcher> modeSwitcher;
-    private void Awake()
-    {
-        Register();
-        modeSwitcher = new();
-    }
+
+    public bool active { get; private set; }
+
     public void SetIndicatorTarget(Transform target)
     {
         targetGameObject = target;
+        active = true;
     }
+    public void DisableIndicator()
+    {
+        targetGameObject = null;
+        transform.position = new Vector3(0, -100, 0);
+        active = false;
+    }
+
     private void LateUpdate()
     {
-        if (modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased)
-        {
-            gameObject.transform.position = targetGameObject.transform.position + offset;
-        }
-        else
-        {
-            gameObject.transform.position = new Vector3(0, -100, 0);
-        }
         Vector3 targetPosition = targetGameObject.position;
+        gameObject.transform.position = targetPosition + offset;
     }
 }

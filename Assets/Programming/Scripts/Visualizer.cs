@@ -100,7 +100,7 @@ public class Visualizer : MonoBehaviour
         previewLineRenderer.positionCount = 0;
 
         if (commandPackage.empty) return;
-        HighlightAgents(commandPackage.highlights);
+        HighlightAgents(commandPackage.highlights, realTime);
 
         if (commandPackage.clickOnAgentOnly) return;
         if (!canQueue)
@@ -120,18 +120,18 @@ public class Visualizer : MonoBehaviour
         }
     }
 
-    private void HighlightAgents(HashSet<WorldAgent> toHighlight)
+    private void HighlightAgents(Dictionary<WorldAgent, bool> toHighlight, bool realtime)
     {
         foreach (WorldAgent highlightedAgent in highlightedAgents)
         {
             highlightedAgent.Dehighlight();
         }
         highlightedAgents.Clear();
-        foreach (WorldAgent agent in toHighlight)
+        foreach (KeyValuePair<WorldAgent, bool> pair in toHighlight)
         {
-            agent.Highlight();
+            if (!realtime || pair.Value) pair.Key.Highlight();
         }
-        highlightedAgents.UnionWith(toHighlight);
+        highlightedAgents.UnionWith(toHighlight.Keys);
     }
 
     public void AppendQueuedPath(NavMeshPath inputPath, WorldAgent agent)

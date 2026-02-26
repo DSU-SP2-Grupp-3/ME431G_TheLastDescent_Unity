@@ -61,6 +61,7 @@ public class WorldAgent : MonoBehaviour
     private Locator<ModeSwitcher> modeSwitcher;
     private Locator<AgentManager> agentManager;
     private Locator<TurnManager> turnManager;
+    private Locator<Indicator> indicator;
 
     public AgentManager manager => agentManager.Get();
 
@@ -82,6 +83,7 @@ public class WorldAgent : MonoBehaviour
         agentManager = new();
         modeSwitcher = new();
         turnManager = new();
+        indicator = new();
 
         if (stats) localStats = stats.Clone();
         if (team == Team.Player) active = true;
@@ -132,8 +134,6 @@ public class WorldAgent : MonoBehaviour
 
     private void ExitTurnBased(TurnManager _)
     {
-        // todo: thought this would fix funky animation behaviour where stop moving trigger is permanently on
-        // todo: it did not but the queue should still be interrupted when entering real time I think /se
         InterruptCommandQueue();
     }
 
@@ -265,12 +265,12 @@ public class WorldAgent : MonoBehaviour
 
     public void Highlight()
     {
-        // highlight world agent
+        indicator.Get().GetIndicator(transform);
     }
 
     public void Dehighlight()
     {
-        // stop highlighting world agent
+        indicator.Get().DisableIndicator(transform);
     }
 
     private void OnDisable()
