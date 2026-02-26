@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class DestructivePopup : MonoBehaviour
 {
-    public GameObject popPrefab; 
-    
+    public GameObject popPrefab;
+    private GameObject temporaryGameObject;
+    private TextUpdater temporaryTextUpdater;
     public void SpawnPop(string popUpText, Vector3 position)
     {
-        popPrefab.GetComponent<TextUpdater>()
+        temporaryGameObject = Instantiate(popPrefab, position, Quaternion.identity, transform);
+        temporaryTextUpdater = temporaryGameObject.GetComponent<TextUpdater>();
+        temporaryTextUpdater.SetText(popUpText);
     }
 }
