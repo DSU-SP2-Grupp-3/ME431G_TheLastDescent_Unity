@@ -13,7 +13,7 @@ public static class ParameterReference
         for(int i = 0; i < count; i++)
         {
             desc.getParameterDescriptionByIndex(i, out PARAMETER_DESCRIPTION param);
-                    Debug.Log($"Parameter: {param.name}");
+            Debug.Log($"Parameter: {param.name}");
             paramDesc.Add(param);
         }
         return paramDesc;

@@ -70,6 +70,12 @@ public class AudioManager : Service<AudioManager>
 
     private void PlayAudio(EventScriptable eventScriptable)
     {
+        if(eventScriptable.type == EventScriptable.Override.multi)
+        {
+            CreatePlayer(eventScriptable, out EventPlayer tempEvent);
+            tempEvent.PlayEvent();
+            return;
+        }
         PersistentPlayers.TryGetValue(eventScriptable.eventReference.Guid, out EventPlayer player);
         if (player != null)
         {

@@ -7,18 +7,17 @@ using UnityEngine;
 /// They always contain a runtime instance of a EventPlayer.
 /// Cannot trigger persistent sounds.
 /// </summary>
-public class EventMono : MonoBehaviour, IEventInst
+public class EventMono : MonoBehaviour
 {
 
     [SerializeField]
     public EventReference eventReference;
-    public EventInstance eventInstance {get; set;}
+    public EventInstance eventInstance;
     public EventPlayer eventPlayer;
-    private EventMono()
+    void Start()
     {
         eventPlayer = new(eventReference);
-        eventPlayer.eventInstance = eventInstance;
-        eventPlayer.AttachToGameObject(gameObject);
+        eventInstance = eventPlayer.eventInstance;
     }
     public void RunInstanceModification(string name, float value)
     {
