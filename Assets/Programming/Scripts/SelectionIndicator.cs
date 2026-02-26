@@ -22,7 +22,10 @@ public class SelectionIndicator : MonoBehaviour
 
     private void LateUpdate()
     {
-        Vector3 targetPosition = targetGameObject.position;
-        gameObject.transform.position = targetPosition + offset;
+        if (targetGameObject)
+        {
+            Vector3 targetPosition = targetGameObject.position;
+            gameObject.transform.position = targetPosition + offset;
+        }
     }
 }

@@ -59,14 +59,8 @@ public class PlayerUI : MonoBehaviour
 
     public void SetStatsVisbility(bool show)
     {
-        if (modeSwitcherLocator.TryGet(out ModeSwitcher modeSwitcher))
-        {
-            if (modeSwitcher.mode == RoundClock.ProgressMode.TurnBased)
-            {
-                return;
-            }
-        }
-        statsContext.SetActive(show);
+        if (!show && modeSwitcherLocator.Get().mode == RoundClock.ProgressMode.TurnBased) statsContext.SetActive(true);
+        else statsContext.SetActive(show);
     }
 
     private void HitPointsChanged(float changed)

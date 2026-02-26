@@ -43,10 +43,10 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
     private void EnterTurnBased()
     {
         Debug.Log("Enter turn based");
+        roundClock.Get().EnterTurnBased();
         OnEnterTurnBased?.Invoke(turnManager.Get());
         OnTurnBasedEntered?.Invoke();
         if (automaticTurnBasedEntrance) OnTurnBasedEnteredForced?.Invoke();
-        roundClock.Get().EnterTurnBased();
         turnManager.Get().Activate();
     }
 
@@ -74,9 +74,9 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
     private void EnterRealTime()
     {
         Debug.Log("Enter real time");
+        roundClock.Get().EnterRealTime();
         OnEnterRealTime?.Invoke(turnManager.Get());
         OnRealTimeEntered?.Invoke();
-        roundClock.Get().EnterRealTime();
         turnManager.Get().Deactivate();
     }
 }

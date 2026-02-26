@@ -205,6 +205,7 @@ public static class CommandManager
         public float TotalPackageCommandCost()
         {
             float total = 0f;
+            if (commands == null) return total;
             foreach (Command command in commands)
             {
                 total += command.cost;
