@@ -6,10 +6,16 @@ using UnityEngine.EventSystems;
 
 public class InputManager : Service<InputManager>
 {
-    public event Action<WorldAgent> ClickedOnPlayer;
-    public event Action<WorldAgent> ClickedOnEnemy;
-    public event Action<Vector3> MovePlayerInput;
-    public event Action<GameObject> ClickedEnvironment;
+    /// <summary>
+    /// Triggers every update, passing the raycasthit object if the mouse is not hovering over a ui element,
+    /// otherwise null
+    /// </summary>
+    public event Action<RaycastHit, bool> OnHover;
+    /// <summary>
+    /// Triggers when the left mouse button is clicked
+    /// </summary>
+    public event Action OnClick;
+    
 
     [SerializeField]
     private LayerMask clickableLayers;
@@ -30,45 +36,23 @@ public class InputManager : Service<InputManager>
         Deregister();
     }
 
+    private void FixedUpdate()
+    {
+        // don't perform physics raycast if the mouse is over a ui element
+        if (IsPointerOverUIElement())
+        {
+            OnHover?.Invoke(default(RaycastHit), false);
+            return;
+        }
+        
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        bool didHit = Physics.Raycast(ray, out RaycastHit hit, clickableLayers);
+        OnHover?.Invoke(hit, didHit);
+    }
+
     private void Update()
     {
-        // todo: refactor input manager so that we can preview what commands are about to be added to the selected player
-        
-        if (Input.GetMouseButtonDown(0))
-        {
-            // don't perform physics raycast if the mouse is over a ui element
-            if (IsPointerOverUIElement()) return;
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, clickableLayers))
-            {
-                ProcessClick(hit);
-            }
-        }
-    }
-
-    private void ProcessClick(RaycastHit hit)
-    {
-        if (HitLayer(hit, "Interactable"))
-        {
-            ClickedEnvironment?.Invoke(hit.collider.gameObject);
-        }
-        if (HitLayer(hit, "Player"))
-        {
-            ClickedOnPlayer?.Invoke(hit.collider.GetComponentInParent<WorldAgent>());
-        }
-        if (HitLayer(hit, "Ground"))
-        {
-            MovePlayerInput?.Invoke(hit.point);
-        }
-        if (HitLayer(hit, "Enemy"))
-        {
-            ClickedOnEnemy?.Invoke(hit.collider.GetComponentInParent<WorldAgent>());
-        }
-    }
-
-    private bool HitLayer(RaycastHit hit, string layerName)
-    {
-        return hit.collider.gameObject.layer == LayerMask.NameToLayer(layerName);
+        if (Input.GetMouseButtonDown(0)) OnClick?.Invoke();
     }
     
 

@@ -5,10 +5,12 @@ using UnityEngine;
 public class EnemyGroup : MonoBehaviour
 {
     private List<WorldAgent> enemies;
+    private List<EnemyGroup> childEnemyGroups;
 
     private void Start()
     {
         enemies = new();
+        childEnemyGroups = new();
         for (int i = 0; i < transform.childCount; i++)
         {
             if (transform.GetChild(i).TryGetComponent<WorldAgent>(out WorldAgent agent))
@@ -18,6 +20,10 @@ public class EnemyGroup : MonoBehaviour
                     enemies.Add(agent);
                     agent.ForcedEnterTurnBased += OnEnemyForceEnterTurnBased;
                 }
+            }
+            if (transform.GetChild(i).TryGetComponent<EnemyGroup>(out EnemyGroup group))
+            {
+                childEnemyGroups.Add(group);
             }
         }
     }
@@ -33,6 +39,10 @@ public class EnemyGroup : MonoBehaviour
                 enemy.Activate();
             }
         }
+        foreach (EnemyGroup group in childEnemyGroups)
+        {
+            group.ActivateGroup();
+        }
     }
 
     public void ActivateGroup()
@@ -41,6 +51,10 @@ public class EnemyGroup : MonoBehaviour
         {
             enemy.ForcedEnterTurnBased -= OnEnemyForceEnterTurnBased;
             enemy.Activate();
+        }
+        foreach (EnemyGroup group in childEnemyGroups)
+        {
+            group.ActivateGroup();
         }
     }
 }

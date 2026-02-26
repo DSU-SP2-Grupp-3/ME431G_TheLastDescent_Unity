@@ -14,8 +14,8 @@ public class DebugCommand : Command
         this.waitTime1 = waitTime1;
         this.waitTime2 = waitTime2;
     }
-    
-    public override IEnumerator Execute()
+
+    protected override IEnumerator Execute()
     {
         Debug.Log($"Debug Command Start: {debugString}");
         yield return new WaitForSeconds(waitTime1);

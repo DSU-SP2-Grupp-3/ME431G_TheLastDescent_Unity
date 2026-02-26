@@ -27,7 +27,7 @@ public class AttackCommand : Command
         this.attackEventName = attackEventName;
     }
 
-    public override IEnumerator Execute()
+    protected override IEnumerator Execute()
     {
         invokingAgent.AnimationEventTriggered += CaptureAnimationEvent;
         invokingAgent.animator.SetTrigger("StartAttack");

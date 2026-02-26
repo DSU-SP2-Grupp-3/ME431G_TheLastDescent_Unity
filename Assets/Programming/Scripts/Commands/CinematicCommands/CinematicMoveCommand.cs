@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -11,20 +12,17 @@ public class CinematicMoveCommand : Command
     {
         this.cinematicMoveInfos = cinematicMoveInfos;
     }
-    public override IEnumerator Execute()
+    protected override IEnumerator Execute()
     {
+        List<IEnumerator> enumerator = new();
         cinematicKitLocator = new();
+        Locator<TurnManager> turnManagerLocator = new();
         foreach(CinematicMoveInfo agentinfo in cinematicMoveInfos)
         {
-
-        
-
             WorldAgent worldAgent = cinematicKitLocator.Get().GetActor(agentinfo.ID);
-            worldAgent.OverwriteQueue(new MoveCommand(invokingAgent.transform.position - agentinfo.relativePosition, worldAgent));
-            Debug.Log(worldAgent);
-            
+            enumerator.Add(worldAgent.OverwriteQueueIEnumerator(new MoveCommand(invokingAgent.transform.position - agentinfo.relativePosition, worldAgent)));
         }
-        yield return null;
+        yield return turnManagerLocator.Get().WaitForAll(enumerator);
     }
     public override void Break() { }
     public override float cost { get; }

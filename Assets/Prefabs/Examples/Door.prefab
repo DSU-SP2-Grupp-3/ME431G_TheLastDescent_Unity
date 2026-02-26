@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 538868793170990546}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.05, y: 0, z: 10.88}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -103,11 +103,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b18b60669053492ab0421e52b7e090f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultSelected: 0
   team: 4
   animator: {fileID: 0}
   navMeshAgent: {fileID: 0}
   cameraFocusTransform: {fileID: 0}
   stats: {fileID: 0}
+  equippedWeapon: {fileID: 0}
+  actorID: 0
 --- !u!1 &4334379602142150981
 GameObject:
   m_ObjectHideFlags: 0

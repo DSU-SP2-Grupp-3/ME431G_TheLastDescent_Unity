@@ -8,7 +8,7 @@ public class CinematicStartCommand : Command
     {
         this.actorIds = actorIds;
     }
-    public override IEnumerator Execute()
+    protected override IEnumerator Execute()
     {
         yield return new WaitUntil(() => new Locator<CinematicKitService>().Get().FindActors(actorIds));
     }

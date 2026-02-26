@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 3246933497800447990}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.706441, y: -1.2462718, z: 6.5163693}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -47,13 +47,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b18b60669053492ab0421e52b7e090f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultSelected: 0
   team: 0
   animator: {fileID: 0}
   navMeshAgent: {fileID: 8111949255621238428}
-  lineRenderer: {fileID: 4992964854613596264}
   cameraFocusTransform: {fileID: 0}
   stats: {fileID: 0}
   equippedWeapon: {fileID: 0}
+  actorID: 0
 --- !u!195 &8111949255621238428
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -244,10 +245,5 @@ PrefabInstance:
 --- !u!4 &3792454968935739974 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4597265435287836103, guid: c6155ba65860a3d42ba9c433be8b0b93, type: 3}
-  m_PrefabInstance: {fileID: 823390435888539521}
-  m_PrefabAsset: {fileID: 0}
---- !u!120 &4992964854613596264 stripped
-LineRenderer:
-  m_CorrespondingSourceObject: {fileID: 5631705334890889193, guid: c6155ba65860a3d42ba9c433be8b0b93, type: 3}
   m_PrefabInstance: {fileID: 823390435888539521}
   m_PrefabAsset: {fileID: 0}

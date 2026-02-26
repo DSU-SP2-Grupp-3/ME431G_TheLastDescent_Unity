@@ -26,6 +26,11 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
         turnManager = new();
     }
 
+    private void Start()
+    { 
+        EnterRealTime();
+    }
+
     public bool TryEnterTurnBased(bool automatic = false)
     {
         automaticTurnBasedEntrance = automatic;

@@ -23,7 +23,7 @@ public class TurnManager : Service<TurnManager>
     private Locator<AgentManager> agentManager;
     private Locator<ModeSwitcher> modeSwitcher;
 
-    private bool executingTurn;
+    public bool executingTurn { get; private set; }
 
     private void Awake()
     {
@@ -36,12 +36,11 @@ public class TurnManager : Service<TurnManager>
         modeSwitcher = new();
     }
 
-    private void Start()
+    public void Ready()
     {
-        Locator<ReadyButton> readyButton = new();
-        readyButton.Get().ReadyButtonPressed += () => playerReady = true;
+        playerReady = true;
     }
-
+    
     public void Activate()
     {
         cycle = StartCoroutine(TurnCycle());

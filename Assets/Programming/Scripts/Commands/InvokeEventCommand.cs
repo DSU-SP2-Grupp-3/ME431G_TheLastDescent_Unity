@@ -13,8 +13,8 @@ public class InvokeEventCommand : Command
     {
         this.unityEvent = unityEvent;
     }
-    
-    public override IEnumerator Execute()
+
+    protected override IEnumerator Execute()
     {
         yield return null;
         unityEvent.Invoke();
