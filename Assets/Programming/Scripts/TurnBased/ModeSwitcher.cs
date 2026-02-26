@@ -8,8 +8,10 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
 {
     public event Action<TurnManager> OnEnterTurnBased;
     public UnityEvent OnTurnBasedEntered;
+    public UnityEvent OnTurnBasedEnteredForced;
     public event Action<TurnManager> OnEnterRealTime;
     public UnityEvent OnRealTimeEntered;
+    public UnityEvent OnRealTimeEnteredForced;
 
     private Locator<RoundClock> roundClock;
 
@@ -18,16 +20,16 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
     public RoundClock.ProgressMode mode => roundClock.Get().currentMode;
 
     private bool automaticTurnBasedEntrance;
-    
+
     private void Awake()
     {
-        Register(); 
+        Register();
         roundClock = new();
         turnManager = new();
     }
 
     private void Start()
-    { 
+    {
         EnterRealTime();
     }
 
@@ -37,13 +39,14 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
         EnterTurnBased();
         return true;
     }
-    
+
     private void EnterTurnBased()
     {
         Debug.Log("Enter turn based");
+        roundClock.Get().EnterTurnBased();
         OnEnterTurnBased?.Invoke(turnManager.Get());
         OnTurnBasedEntered?.Invoke();
-        roundClock.Get().EnterTurnBased();
+        if (automaticTurnBasedEntrance) OnTurnBasedEnteredForced?.Invoke();
         turnManager.Get().Activate();
     }
 
@@ -59,6 +62,11 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
             Debug.Log("Entered turn based manually, don't automatically exit");
             return false;
         }
+        if (forced && automaticTurnBasedEntrance)
+        {
+            // turn based forced by enemies, and all enemies have died
+            OnRealTimeEnteredForced?.Invoke();
+        }
         EnterRealTime();
         return true;
     }
@@ -66,9 +74,9 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
     private void EnterRealTime()
     {
         Debug.Log("Enter real time");
+        roundClock.Get().EnterRealTime();
         OnEnterRealTime?.Invoke(turnManager.Get());
         OnRealTimeEntered?.Invoke();
-        roundClock.Get().EnterRealTime();
         turnManager.Get().Deactivate();
     }
 }

@@ -15,6 +15,7 @@ public class InputManager : Service<InputManager>
     /// Triggers when the left mouse button is clicked
     /// </summary>
     public event Action OnClick;
+    public event Action OnHold;
     
 
     [SerializeField]
@@ -53,6 +54,7 @@ public class InputManager : Service<InputManager>
     private void Update()
     {
         if (Input.GetMouseButtonDown(0)) OnClick?.Invoke();
+        if (Input.GetMouseButton(0)) OnHold?.Invoke();
     }
     
 

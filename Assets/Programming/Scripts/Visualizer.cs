@@ -82,29 +82,32 @@ public class Visualizer : MonoBehaviour
 
     private void OnPreviewUpdated(CommandManager.CommandPackage commandPackage)
     {
-        // reset cursor stuff
-        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-        packageAPDisplay.gameObject.SetActive(false);
-
+        // reset prefabs
+        previewLineRenderer.positionCount = 0;
+        packageAPDisplay.color = Color.white;
+        packageAPDisplay.rectTransform.anchoredPosition = Vector2.zero;
+        
         // calculate bools
         bool canQueue = commandPackage.CanQueueCommands();
         bool realTime = modeSwitcher.Get().mode == RoundClock.ProgressMode.RealTime;
-
+        float packageCost = commandPackage.TotalPackageCommandCost();
+        
         // show package cursor
-        if (canQueue || realTime)
-        {
-            CursorInfo cInfo = commandPackage.cursorInfo;
-            if (cInfo) Cursor.SetCursor(cInfo.texture, cInfo.hotSpot, cInfo.cursorMode);
-        }
-
-        if (realTime || turnManager.Get().executingTurn) return;
-        previewLineRenderer.positionCount = 0;
+        CursorInfo cInfo = commandPackage.cursorInfo;
+        if (cInfo) Cursor.SetCursor(cInfo.texture, cInfo.hotSpot, cInfo.cursorMode);
+        else Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
 
         if (commandPackage.empty) return;
-        HighlightAgents(commandPackage.highlights);
+        
+        // if real time don't show preview or ap cost
+        if (turnManager.Get().executingTurn) return;
+        
+        HighlightAgents(commandPackage.highlights, realTime);
 
-        if (commandPackage.clickOnAgentOnly) return;
-        if (!canQueue) return;
+        if (realTime || commandPackage.clickOnAgentOnly) return;
+        
+        if (!canQueue) packageAPDisplay.color = Color.red;
+
         if (commandPackage.TotalPackageCommandCost() > 0f)
         {
             packageAPDisplay.gameObject.SetActive(true);
@@ -112,24 +115,25 @@ public class Visualizer : MonoBehaviour
             packageAPDisplay.rectTransform.anchoredPosition = mousePosition;
             packageAPDisplay.text = $"{commandPackage.TotalPackageCommandCost():0.0} AP";
         }
+        
         foreach (Command command in commandPackage.commands)
         {
             command.VisualizePreview(this);
         }
     }
 
-    private void HighlightAgents(HashSet<WorldAgent> toHighlight)
+    private void HighlightAgents(Dictionary<WorldAgent, bool> toHighlight, bool realtime)
     {
         foreach (WorldAgent highlightedAgent in highlightedAgents)
         {
             highlightedAgent.Dehighlight();
         }
         highlightedAgents.Clear();
-        foreach (WorldAgent agent in toHighlight)
+        foreach (KeyValuePair<WorldAgent, bool> pair in toHighlight)
         {
-            agent.Highlight();
+            if (!realtime || pair.Value) pair.Key.Highlight();
         }
-        highlightedAgents.UnionWith(toHighlight);
+        highlightedAgents.UnionWith(toHighlight.Keys);
     }
 
     public void AppendQueuedPath(NavMeshPath inputPath, WorldAgent agent)

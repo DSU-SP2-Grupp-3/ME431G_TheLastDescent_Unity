@@ -14,7 +14,6 @@ public class AgentManager : Service<AgentManager>
     private List<WorldAgent> players;
     private List<WorldAgent> allAgents;
     private Locator<OrthographicCameraMover> cameraMover;
-    private Locator<SelectionIndicator> indicatorLocator;
 
     private Locator<InputManager> inputManager;
     private Locator<ModeSwitcher> modeSwitcher;
@@ -37,7 +36,6 @@ public class AgentManager : Service<AgentManager>
         modeSwitcher = new();
         turnManager = new();
         cameraMover = new();
-        indicatorLocator = new();
     }
 
     private void Start()
@@ -45,6 +43,7 @@ public class AgentManager : Service<AgentManager>
         InputManager im = inputManager.Get();
         im.OnHover += PreviewCommand;
         im.OnClick += ProcessClick;
+        im.OnHold += ProcessHold;
         modeSwitcher.Get().OnEnterTurnBased += (_) => allPlayersSelected = false;
     }
 
@@ -73,21 +72,34 @@ public class AgentManager : Service<AgentManager>
     private void ProcessClick()
     {
         if (currentCommandPackage.empty) return;
-        else if (currentCommandPackage.clickOnAgentOnly) SelectPlayer(currentCommandPackage.agent);
+        else if (currentCommandPackage.type == "select") SelectPlayer(currentCommandPackage.agent);
         else
         {
-            if (!currentCommandPackage.QueueCommands(modeSwitcher.Get().mode)) NotEnoughAP?.Invoke();
+            QueueCurrentPackage();
+        }
+    }
 
-            // move other characters if select all is active
-            if (allPlayersSelected && currentCommandPackage.type == "move")
+    private void ProcessHold()
+    {
+        if (currentCommandPackage.type == "move" && modeSwitcher.Get().mode == RoundClock.ProgressMode.RealTime)
+        {
+            QueueCurrentPackage();
+        }
+    }
+
+    private void QueueCurrentPackage()
+    {
+        if (!currentCommandPackage.QueueCommands(modeSwitcher.Get().mode)) NotEnoughAP?.Invoke();
+        
+        // move other characters if select all is active
+        if (allPlayersSelected && currentCommandPackage.type == "move")
+        {
+            IMoveCommand moveCommand = currentCommandPackage.commands[0] as IMoveCommand;
+            foreach (WorldAgent agent in players)
             {
-                IMoveCommand moveCommand = currentCommandPackage.commands[0] as IMoveCommand;
-                foreach (WorldAgent agent in players)
-                {
-                    if (agent == selectedPlayer) continue;
-                    MoveInRangeCommand moveInRangeCommand = new MoveInRangeCommand(moveCommand.ToPosition(), 3f, agent);
-                    agent.OverwriteQueue(moveInRangeCommand);
-                }
+                if (agent == selectedPlayer) continue;
+                MoveInRangeCommand moveInRangeCommand = new MoveInRangeCommand(moveCommand.ToPosition(), 3f, agent);
+                agent.OverwriteQueue(moveInRangeCommand);
             }
         }
     }
@@ -114,14 +126,6 @@ public class AgentManager : Service<AgentManager>
         {
             selectedPlayer = playerAgent;
             cameraMover.Get().SetCameraTarget(selectedPlayer.cameraFocusTransform);
-            if (indicatorLocator.TryGet(out SelectionIndicator indicator))
-            {
-                indicator.SetIndicatorTarget(selectedPlayer.transform);
-            }
-            else
-            {
-                Debug.LogWarning("Indicator prefab does not exist in scene");
-            }
         }
     }
 
