@@ -85,26 +85,28 @@ public class Visualizer : MonoBehaviour
         // reset cursor stuff
         Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
         packageAPDisplay.gameObject.SetActive(false);
+        packageAPDisplay.color = Color.white;
 
         // calculate bools
         bool canQueue = commandPackage.CanQueueCommands();
         bool realTime = modeSwitcher.Get().mode == RoundClock.ProgressMode.RealTime;
 
         // show package cursor
-        if (canQueue || realTime)
-        {
-            CursorInfo cInfo = commandPackage.cursorInfo;
-            if (cInfo) Cursor.SetCursor(cInfo.texture, cInfo.hotSpot, cInfo.cursorMode);
-        }
+        CursorInfo cInfo = commandPackage.cursorInfo;
+        if (cInfo) Cursor.SetCursor(cInfo.texture, cInfo.hotSpot, cInfo.cursorMode);
 
+        // if real time don't show preview or ap cost
         if (realTime || turnManager.Get().executingTurn) return;
         previewLineRenderer.positionCount = 0;
-
+        
         if (commandPackage.empty) return;
         HighlightAgents(commandPackage.highlights);
 
         if (commandPackage.clickOnAgentOnly) return;
-        if (!canQueue) return;
+        if (!canQueue)
+        {
+            packageAPDisplay.color = Color.red;
+        }
         if (commandPackage.TotalPackageCommandCost() > 0f)
         {
             packageAPDisplay.gameObject.SetActive(true);

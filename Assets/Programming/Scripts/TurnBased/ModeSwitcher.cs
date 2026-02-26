@@ -8,8 +8,10 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
 {
     public event Action<TurnManager> OnEnterTurnBased;
     public UnityEvent OnTurnBasedEntered;
+    public UnityEvent OnTurnBasedEnteredForced;
     public event Action<TurnManager> OnEnterRealTime;
     public UnityEvent OnRealTimeEntered;
+    public UnityEvent OnRealTimeEnteredForced;
 
     private Locator<RoundClock> roundClock;
 
@@ -18,16 +20,16 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
     public RoundClock.ProgressMode mode => roundClock.Get().currentMode;
 
     private bool automaticTurnBasedEntrance;
-    
+
     private void Awake()
     {
-        Register(); 
+        Register();
         roundClock = new();
         turnManager = new();
     }
 
     private void Start()
-    { 
+    {
         EnterRealTime();
     }
 
@@ -37,12 +39,13 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
         EnterTurnBased();
         return true;
     }
-    
+
     private void EnterTurnBased()
     {
         Debug.Log("Enter turn based");
         OnEnterTurnBased?.Invoke(turnManager.Get());
         OnTurnBasedEntered?.Invoke();
+        if (automaticTurnBasedEntrance) OnTurnBasedEnteredForced?.Invoke();
         roundClock.Get().EnterTurnBased();
         turnManager.Get().Activate();
     }
@@ -58,6 +61,11 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
         {
             Debug.Log("Entered turn based manually, don't automatically exit");
             return false;
+        }
+        if (forced && automaticTurnBasedEntrance)
+        {
+            // turn based forced by enemies, and all enemies have died
+            OnRealTimeEnteredForced?.Invoke();
         }
         EnterRealTime();
         return true;
