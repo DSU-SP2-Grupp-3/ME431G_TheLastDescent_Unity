@@ -16,7 +16,7 @@ public abstract class BehaviourDefinition : ScriptableObject
         foreach (WorldAgent candidate in candidates)
         {
             float sqrMagnitude = (fromPosition - candidate.transform.position).sqrMagnitude;
-            if (sqrMagnitude < shortestSqrDistance)
+            if (sqrMagnitude < shortestSqrDistance && candidate.localStats.hitPoints > 0)
             {
                 shortestSqrDistance = sqrMagnitude;
                 shortest = candidate;
