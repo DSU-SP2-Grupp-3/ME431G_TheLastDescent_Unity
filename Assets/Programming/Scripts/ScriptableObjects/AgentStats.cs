@@ -35,17 +35,17 @@ public class AgentStats : ScriptableObject
     public AgentStats Clone()
     {
         AgentStats clone = ScriptableObject.CreateInstance<AgentStats>();
-        
+
         clone.initHitPoints = initHitPoints;
         clone.initActionPoints = initActionPoints;
         clone.initMovement = initMovement;
         clone.initMovementCostModifier = initMovementCostModifier;
-        
+
         clone.hitPoints = initHitPoints;
         clone.actionPoints = initActionPoints;
         clone.movement = initMovement;
         clone.movementCostModifier = initMovementCostModifier;
-        
+
         return clone;
     }
 
