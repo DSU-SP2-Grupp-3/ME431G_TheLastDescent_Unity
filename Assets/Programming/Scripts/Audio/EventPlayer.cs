@@ -14,7 +14,7 @@ public class EventPlayer
         eventInstance = RuntimeManager.CreateInstance(fmodEvent);
     }
 
-    public void AttachToGameObejct(GameObject gameObject)
+    public void AttachToGameObject(GameObject gameObject)
     {
         RuntimeManager.AttachInstanceToGameObject(eventInstance, gameObject);
     }
@@ -25,6 +25,23 @@ public class EventPlayer
     public void PlayEvent()
     {
         eventInstance.start();
+    }
+    public bool IsFinished()
+    {
+        eventInstance.getPlaybackState(out PLAYBACK_STATE state);
+        return state == PLAYBACK_STATE.STOPPED;
+    }
+    
+    public void Stop(bool allowFadeout = true)
+    {
+        eventInstance.stop(allowFadeout ? FMOD.Studio.STOP_MODE.ALLOWFADEOUT : FMOD.Studio.STOP_MODE.IMMEDIATE);
         eventInstance.release();
     }
+    public bool isOneshot()
+    {
+        eventInstance.getDescription(out EventDescription description);
+        description.isOneshot(out bool result);
+        return result;
+    }
+
 }
