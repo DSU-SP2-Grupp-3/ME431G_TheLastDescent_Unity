@@ -16,6 +16,7 @@ public static class CommandManager
         if (!moveCommand.possible || moveCommand.noMovement) return EmptyPackage();
         CommandPackage package = new CommandPackage(agent, moveCommand);
         package.SetType("move");
+        package.SetCursor("Cursors/Walk");
         return package;
     }
 
@@ -46,6 +47,7 @@ public static class CommandManager
         interactionPackage.AddCommand(lookCommand);
         interactionPackage.AddCommand(result.QueueInteractablesCommand(agent));
         interactionPackage.SetType("interaction");
+        interactionPackage.SetCursor("Cursors/Point");
 
         return interactionPackage;
     }
@@ -73,13 +75,12 @@ public static class CommandManager
         LookCommand lookCommand = new LookCommand(attacker, receiver);
 
         Command[] commands = new Command[] { inRangeCommand, lookCommand, attackCommand };
-        Debug.Log($"no movement: {inRangeCommand.noMovement}");
         TrimUnnecessaryMoveCommands(ref commands);
         CommandPackage package = new CommandPackage(attacker, commands);
 
         package.SetAdditionalHighlights(receiver);
         package.SetType("attack");
-        package.SetCursorTexture("Cursors/Crosshair");
+        package.SetCursor("Cursors/Crosshair");
 
         return package;
     }
@@ -163,7 +164,7 @@ public static class CommandManager
             this.type = type;
         }
 
-        public void SetCursorTexture(string resourcePath)
+        public void SetCursor(string resourcePath)
         {
             cursorInfo = Resources.Load<CursorInfo>(resourcePath);
         }
@@ -186,7 +187,7 @@ public static class CommandManager
         public bool CanQueueCommands()
         {
             // don't queue empty commands
-            if (commands.Count == 0) return false;
+            if (commands == null || commands.Count == 0) return false;
             float queueCost = 0f;
             foreach (Command command in commands)
             {

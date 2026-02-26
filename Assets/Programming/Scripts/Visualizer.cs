@@ -82,16 +82,36 @@ public class Visualizer : MonoBehaviour
 
     private void OnPreviewUpdated(CommandManager.CommandPackage commandPackage)
     {
+        // reset cursor stuff
         Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-        if (modeSwitcher.Get().mode == RoundClock.ProgressMode.RealTime || turnManager.Get().executingTurn) return;
+        packageAPDisplay.gameObject.SetActive(false);
+
+        // calculate bools
+        bool canQueue = commandPackage.CanQueueCommands();
+        bool realTime = modeSwitcher.Get().mode == RoundClock.ProgressMode.RealTime;
+
+        // show package cursor
+        if (canQueue || realTime)
+        {
+            CursorInfo cInfo = commandPackage.cursorInfo;
+            if (cInfo) Cursor.SetCursor(cInfo.texture, cInfo.hotSpot, cInfo.cursorMode);
+        }
+
+        if (realTime || turnManager.Get().executingTurn) return;
         previewLineRenderer.positionCount = 0;
 
         if (commandPackage.empty) return;
         HighlightAgents(commandPackage.highlights);
-        CursorInfo cInfo = commandPackage.cursorInfo;
-        if (cInfo) Cursor.SetCursor(cInfo.texture, cInfo.hotSpot, cInfo.cursorMode);
+
         if (commandPackage.clickOnAgentOnly) return;
-        if (!commandPackage.CanQueueCommands()) return;
+        if (!canQueue) return;
+        if (commandPackage.TotalPackageCommandCost() > 0f)
+        {
+            packageAPDisplay.gameObject.SetActive(true);
+            Vector2 mousePosition = Input.mousePosition;
+            packageAPDisplay.rectTransform.anchoredPosition = mousePosition;
+            packageAPDisplay.text = $"{commandPackage.TotalPackageCommandCost():0.0} AP";
+        }
         foreach (Command command in commandPackage.commands)
         {
             command.VisualizePreview(this);
