@@ -49,13 +49,13 @@ public class PlayerUI : MonoBehaviour
     {
         if (changed <= 0)
         {
-            hitPointsText.text = $"HP: 0/{(int)maxHP}";
+            hitPointsText.text = $"HP: 0/{maxHP:0}";
             hitPointsImage.fillAmount = 0;
             button.interactable = false;
         }
         else
         {
-            hitPointsText.text = $"HP: {changed:0}/{changed:0}";
+            hitPointsText.text = $"HP: {changed:0}/{maxHP:0}";
             hitPointsImage.fillAmount = changed / maxHP;
             button.interactable = true;
         }
