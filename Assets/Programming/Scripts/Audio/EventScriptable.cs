@@ -20,6 +20,6 @@ public class EventScriptable : ScriptableObject
     public EventReference eventReference;
     void OnValidate()
     {
-        eventName.Trim().ToLower();
+        eventName = eventName.Trim().ToLower();
     }
 }

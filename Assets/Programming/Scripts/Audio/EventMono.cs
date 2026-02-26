@@ -9,7 +9,6 @@ using UnityEngine;
 /// </summary>
 public class EventMono : MonoBehaviour, IEventInst
 {
-    public string eventName;
 
     [SerializeField]
     public EventReference eventReference;
@@ -24,10 +23,6 @@ public class EventMono : MonoBehaviour, IEventInst
     public void RunInstanceModification(string name, float value)
     {
         eventInstance.setParameterByName(name, value);
-    }
-    void OnValidate()
-    {
-        eventName.Trim().ToLower();
     }
 
 }

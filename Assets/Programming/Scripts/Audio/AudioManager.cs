@@ -33,6 +33,7 @@ public class AudioManager : Service<AudioManager>
     /// <exception cref="Exception">Exception upon null parameter value</exception>
     public void PlayAudioEvent(string name)
     {
+        name = name.ToLower().Trim();
         if (TryGet(name, out EventScriptable eventScriptable))
         {
             PlayAudio(eventScriptable);
@@ -87,6 +88,7 @@ public class AudioManager : Service<AudioManager>
     }
     public void StopAudioEvent(string name)
     {
+        name = name.ToLower().Trim();
         if (TryGet(name, out EventScriptable result)) StopAudioEvent(result);
     }
 
@@ -102,6 +104,7 @@ public class AudioManager : Service<AudioManager>
     }
     public void RunInstanceModification(string name, string paramName, float value)
     {
+        name = name.ToLower().Trim();
         if (TryGet(name, out EventScriptable result)) RunInstanceModification(result, paramName, value);
     }
 
@@ -147,7 +150,7 @@ public class AudioManager : Service<AudioManager>
     public void CreatePlayer(EventScriptable eventScriptable, out EventPlayer eventPlayer)
     {
         eventPlayer = new EventPlayer(eventScriptable.eventReference);
-        if (!eventPlayer.isOneshot() || eventScriptable.type == EventScriptable.Override.persistent) PersistentPlayers.Add(eventScriptable.eventReference.Guid, eventPlayer) ;
+        if (!eventPlayer.isOneshot() || eventScriptable.type == EventScriptable.Override.persistent) PersistentPlayers.Add(eventScriptable.eventReference.Guid, eventPlayer);
         else OneShotPlayers.Add(eventPlayer);
     }
     #endregion PlayerHandler
@@ -155,12 +158,14 @@ public class AudioManager : Service<AudioManager>
 
     public EventReference Get(string eventName)
     {
+        eventName = eventName.ToLower().Trim();
         return audioBanks.FirstOrDefault(p => p.eventName == eventName).eventReference;
     }
 
 
     public bool TryGet(string eventName, out EventScriptable result)
     {
+        eventName = eventName.ToLower().Trim();
         result = audioBanks.FirstOrDefault(p => p.eventName == eventName);
         return result != null;
     }
