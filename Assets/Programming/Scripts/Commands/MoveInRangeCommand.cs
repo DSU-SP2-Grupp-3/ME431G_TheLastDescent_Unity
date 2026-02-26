@@ -74,10 +74,22 @@ public class MoveInRangeCommand : Command, IMoveCommand
         invokingAgent.animator.ResetTrigger("StopMoving");
         invokingAgent.animator.SetTrigger("StartMoving");
         float interrupt = Time.time + interruptTime;
+        invokingAgent.AnimationEventTriggered += CaptureStepEvent;
+
         yield return new WaitUntil(WaitUntilArrivedOrInterrupted(interrupt));
+
+        invokingAgent.AnimationEventTriggered -= CaptureStepEvent;
         invokingAgent.animator.SetTrigger("StopMoving");
         invokingAgent.animator.ResetTrigger("StartMoving");
         invokingAgent.navMeshAgent.ResetPath();
+    }
+
+    private void CaptureStepEvent(string trigger)
+    {
+        if (trigger == "step")
+        {
+            audioManager.PlayAudioEvent("Footstep");
+        }
     }
 
     private Func<bool> WaitUntilArrivedOrInterrupted(float interrupt)
@@ -161,5 +173,6 @@ public class MoveInRangeCommand : Command, IMoveCommand
         invokingAgent.animator.SetTrigger("StopMoving");
         invokingAgent.animator.ResetTrigger("StartMoving");
         invokingAgent.navMeshAgent.ResetPath();
+        invokingAgent.AnimationEventTriggered -= CaptureStepEvent;
     }
 }

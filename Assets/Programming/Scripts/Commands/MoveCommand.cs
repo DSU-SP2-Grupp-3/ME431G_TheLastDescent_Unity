@@ -99,7 +99,7 @@ public class MoveCommand : Command, IMoveCommand
     {
         if (trigger == "step")
         {
-            eventCollection.PlayEvent("Footstep");
+            audioManager.PlayAudioEvent("Footstep");
         }
     }
 
@@ -128,5 +128,6 @@ public class MoveCommand : Command, IMoveCommand
         invokingAgent.animator.SetTrigger("StopMoving");
         invokingAgent.animator.ResetTrigger("StartMoving");
         invokingAgent.navMeshAgent.ResetPath();
+        invokingAgent.AnimationEventTriggered -= CaptureStepEvent;
     }
 }
