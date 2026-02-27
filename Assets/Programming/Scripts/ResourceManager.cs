@@ -19,7 +19,6 @@ public class ResourceManager : ScriptableObject
 
     public void GetResource(float amount)
     {
-        Debug.Log($"Get {amount} of resources");
         collectedResources += amount;
     }
 }
