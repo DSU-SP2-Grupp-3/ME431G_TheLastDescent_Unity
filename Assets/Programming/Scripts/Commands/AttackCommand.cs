@@ -5,7 +5,7 @@ using UnityEngine;
 public class AttackCommand : Command
 {
     // todo: this should probably be variable
-    public override float cost => 1f;
+    public override float cost => 0.95f;
 
     private WorldAgent receivingAgent;
     private DamageManager damageManager;
@@ -53,6 +53,7 @@ public class AttackCommand : Command
 
     private void PerformAttack()
     {
+        Debug.Log("performed attack");
         float damage = invokingAgent.weaponStats.GetDamage();
         damageManager.DealDamageEvent(damage, receivingAgent);
     }

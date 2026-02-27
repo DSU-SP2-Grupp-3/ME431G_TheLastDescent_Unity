@@ -99,6 +99,8 @@ public abstract class BehaviourDefinition : ScriptableObject
                 }
             }
 
+            if (expensiveCorner == 0) return false;
+            
             float distanceRatio = remainingDistance / Vector3.Distance(inputPath.corners[expensiveCorner - 1],
                 inputPath.corners[expensiveCorner]);
             //x3 = x1 + t(x2-x1), t=d/D
