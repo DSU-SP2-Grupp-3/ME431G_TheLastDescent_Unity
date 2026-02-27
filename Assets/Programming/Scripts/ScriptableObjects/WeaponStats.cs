@@ -4,7 +4,7 @@ using UnityEngine;
 public class WeaponStats : ScriptableObject
 {
     [SerializeField]
-    private float minDamage, maxDamage, range, cost;
+    private float minDamage, maxDamage, range, cost = 1f;
 
     public float attackRange => range;
     public float attackCost => cost;
