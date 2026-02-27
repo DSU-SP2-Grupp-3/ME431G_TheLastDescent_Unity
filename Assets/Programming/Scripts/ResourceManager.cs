@@ -21,4 +21,9 @@ public class ResourceManager : ScriptableObject
     {
         collectedResources += amount;
     }
+
+    private void OnEnable()
+    {
+        collectedResources = 0;
+    }
 }
