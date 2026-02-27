@@ -28,8 +28,8 @@ public class TextUpdater : MonoBehaviour
         }
     }
 
-    public void SetText(string text)
+    public void SetText(float number)
     {
-        textComponent.text = text;
+        textComponent.text = $"{number}DMG";
     }
 }
