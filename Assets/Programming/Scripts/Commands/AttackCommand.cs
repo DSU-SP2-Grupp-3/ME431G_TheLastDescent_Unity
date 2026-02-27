@@ -55,6 +55,7 @@ public class AttackCommand : Command
 
     private void PerformAttack()
     {
+        Debug.Log("performed attack");
         float damage = invokingAgent.weaponStats.GetDamage();
         damageManager.DealDamageEvent(damage, receivingAgent);
     }
