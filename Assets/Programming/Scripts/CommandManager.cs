@@ -164,7 +164,7 @@ public static class CommandManager
 
         public void SetHighlight(WorldAgent agent, bool inRealTime)
         {
-            highlights.Add(agent, inRealTime);
+            if (agent) highlights.Add(agent, inRealTime);
         }
 
         public void SetType(string type)
