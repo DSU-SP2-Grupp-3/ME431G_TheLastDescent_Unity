@@ -4,8 +4,9 @@ using UnityEngine;
 public class WeaponStats : ScriptableObject
 {
     [SerializeField]
-    private float minDamage, maxDamage, range;
+    private float minDamage, maxDamage, range, cost;
 
     public float attackRange => range;
+    public float attackCost => cost;
     public float GetDamage() => Random.Range(minDamage, maxDamage);
 }

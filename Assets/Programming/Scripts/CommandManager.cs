@@ -75,7 +75,10 @@ public static class CommandManager
             attacker
         );
         if (!inRangeCommand.possible) return EmptyPackage();
-        AttackCommand attackCommand = new AttackCommand(attacker, receiver, damageManager, "PlayerAttack");
+        AttackCommand attackCommand = new AttackCommand(
+            attacker, receiver, damageManager,
+            attacker.weaponStats.attackCost, "PlayerAttack"
+        );
         LookCommand lookCommand = new LookCommand(attacker, receiver);
 
         Command[] commands = new Command[] { inRangeCommand, lookCommand, attackCommand };

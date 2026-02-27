@@ -9,7 +9,6 @@ public class MeleeAttackBehaviour : BehaviourDefinition
     [SerializeField]
     private WorldAgent.Team teamToAttack;
 
-
     public override BehaviourCommands GetIdleBehaviourCommands(WorldAgent aiAgent, AI.AIParameters parameters)
     {
         BehaviourCommands commands = new();
@@ -39,7 +38,8 @@ public class MeleeAttackBehaviour : BehaviourDefinition
         //sets the ais world navMeshAgent to a new path
         NavMeshPath path = new();
         aiAgent.navMeshAgent.CalculatePath(closestTarget.transform.position, path);
-        aiAgent.navMeshAgent.SetPath(path); // SetPath here so remainingDistance can be calculated in TrimPathToMoveRange
+        aiAgent.navMeshAgent
+               .SetPath(path); // SetPath here so remainingDistance can be calculated in TrimPathToMoveRange
         bool trimmed = TrimPathToMoveRange(aiAgent, ref path, aiAgent.localStats.movement);
 
         bool canAttackWithinRemainingDistance =
@@ -57,11 +57,13 @@ public class MeleeAttackBehaviour : BehaviourDefinition
 
             // if the path does not need to be trimmed then we attack the player as well
 
-            
             LookCommand lookCommand = new LookCommand(aiAgent, closestTarget);
             commands.AddCommand(lookCommand);
-            
-            AttackCommand attackPlayerCommand = new AttackCommand(aiAgent, closestTarget, agentManager.damageManager, "EnemyAttack");
+
+            AttackCommand attackPlayerCommand = new AttackCommand(
+                aiAgent, closestTarget, agentManager.damageManager,
+                aiAgent.weaponStats.attackCost, "EnemyAttack"
+            );
             commands.AddCommand(attackPlayerCommand);
         }
         else
@@ -72,7 +74,4 @@ public class MeleeAttackBehaviour : BehaviourDefinition
 
         return commands;
     }
-
-
-
 }
