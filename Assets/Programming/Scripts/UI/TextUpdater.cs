@@ -30,6 +30,6 @@ public class TextUpdater : MonoBehaviour
 
     public void SetText(float number)
     {
-        textComponent.text = $"{number}DMG";
+        textComponent.text = $"{number:0,0} DMG";
     }
 }
