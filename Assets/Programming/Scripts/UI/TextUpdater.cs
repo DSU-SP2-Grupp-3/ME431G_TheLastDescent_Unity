@@ -28,8 +28,9 @@ public class TextUpdater : MonoBehaviour
         }
     }
 
-    public void SetText(float number)
+    public void SetText(float number, Transform transform)
     {
+        TemporaryX = transform.position.x;
         textComponent.text = $"{number:0,0} DMG";
     }
 }

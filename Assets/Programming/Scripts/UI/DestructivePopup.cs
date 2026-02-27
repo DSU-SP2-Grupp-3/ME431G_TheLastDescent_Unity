@@ -16,7 +16,7 @@ public class DestructivePopup : MonoBehaviour
 
     public void SpawnPop(float popUpText, WorldAgent worldAgent)
     {
-        temporaryGameObject = Instantiate(popPrefab, worldAgent.transform.position + Vector3.up, Quaternion.identity, transform);
-        temporaryGameObject.GetComponent<TextUpdater>().SetText(popUpText);
+        temporaryGameObject = Instantiate(popPrefab, worldAgent.cameraFocusTransform.position + Vector3.up, Quaternion.identity, transform);
+        temporaryGameObject.GetComponent<TextUpdater>().SetText(popUpText, worldAgent.cameraFocusTransform);
     }
 }
