@@ -33,13 +33,15 @@ public class PlayerUI : MonoBehaviour
     private void Awake()
     {
         locatorAgentManager = new Locator<AgentManager>();
-        agentManager = locatorAgentManager.Get();
+        
 
         modeSwitcherLocator = new Locator<ModeSwitcher>();
     }
 
     private void Start()
     {
+        agentManager = locatorAgentManager.Get();
+
         SetStatsVisbility(false);
 
         player.localStats.HitPointsChanged += HitPointsChanged;
