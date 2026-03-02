@@ -86,26 +86,27 @@ public class Visualizer : MonoBehaviour
         previewLineRenderer.positionCount = 0;
         packageAPDisplay.color = Color.white;
         packageAPDisplay.rectTransform.anchoredPosition = Vector2.zero;
-        
+
         // calculate bools
         bool canQueue = commandPackage.CanQueueCommands();
         bool realTime = modeSwitcher.Get().mode == RoundClock.ProgressMode.RealTime;
         float packageCost = commandPackage.TotalPackageCommandCost();
-        
+
         // show package cursor
         CursorInfo cInfo = commandPackage.cursorInfo;
         if (cInfo) Cursor.SetCursor(cInfo.texture, cInfo.hotSpot, cInfo.cursorMode);
         else Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
 
-        if (commandPackage.empty) return;
-        
-        // if real time don't show preview or ap cost
         if (turnManager.Get().executingTurn) return;
-        
+
         HighlightAgents(commandPackage.highlights, realTime);
 
+        if (commandPackage.empty) return;
+
+        // if real time don't show preview or ap cost
+
         if (realTime || commandPackage.clickOnAgentOnly) return;
-        
+
         if (!canQueue) packageAPDisplay.color = Color.red;
 
         if (commandPackage.TotalPackageCommandCost() > 0f)
@@ -115,7 +116,7 @@ public class Visualizer : MonoBehaviour
             packageAPDisplay.rectTransform.anchoredPosition = mousePosition;
             packageAPDisplay.text = $"{commandPackage.TotalPackageCommandCost():0.0} AP";
         }
-        
+
         foreach (Command command in commandPackage.commands)
         {
             command.VisualizePreview(this);

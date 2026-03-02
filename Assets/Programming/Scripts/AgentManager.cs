@@ -26,6 +26,7 @@ public class AgentManager : Service<AgentManager>
     private bool allPlayersSelected;
 
     private CommandManager.CommandPackage currentCommandPackage;
+    private ResourceManager.ClickAbility currentClickAbility;
 
     private void Awake()
     {
@@ -42,13 +43,30 @@ public class AgentManager : Service<AgentManager>
     {
         InputManager im = inputManager.Get();
         im.OnHover += PreviewCommand;
-        im.OnClick += ProcessClick;
+        im.OnRightClick += ProcessRightClick;
         im.OnHold += ProcessHold;
+        im.OnLeftClick += () => currentClickAbility = null;
         modeSwitcher.Get().OnEnterTurnBased += (_) => allPlayersSelected = false;
     }
 
     private void PreviewCommand(RaycastHit hit, bool didHit)
     {
+        if (currentClickAbility != null)
+        {
+            if (didHit && hit.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
+            {
+                WorldAgent hoveredAgent = hit.collider.GetComponentInParent<WorldAgent>();
+                currentCommandPackage = CommandManager.GetSelectPlayerPackage(hoveredAgent, currentClickAbility);
+            }
+            else
+            {
+                currentCommandPackage = CommandManager.EmptyPackage();
+                currentCommandPackage.SetCursor(currentClickAbility.invalidCursorPath);
+            }
+            PreviewUpdated?.Invoke(currentCommandPackage);
+            return;
+        }
+
         if (!didHit || turnManager.Get().executingTurn)
         {
             currentCommandPackage = CommandManager.EmptyPackage();
@@ -60,23 +78,27 @@ public class AgentManager : Service<AgentManager>
         currentCommandPackage = (LayerMask.LayerToName(go.layer)) switch
         {
             "Interactable" => CommandManager.GetInteractionPackage(selectedPlayer, go),
-            "Player" => CommandManager.GetSelectPlayerPackage(go.GetComponentInParent<WorldAgent>()),
+            "Player" => CommandManager.GetSelectPlayerPackage(
+                go.GetComponentInParent<WorldAgent>(),
+                null
+            ),
             "Ground" => CommandManager.GetMovePackage(selectedPlayer, hit.point),
-            "Enemy" => CommandManager.GetAttackEnemyPackage(selectedPlayer, go.GetComponentInParent<WorldAgent>(),
-                damageManager),
+            "Enemy" => CommandManager.GetAttackEnemyPackage(
+                selectedPlayer,
+                go.GetComponentInParent<WorldAgent>(),
+                damageManager
+            ),
             _ => CommandManager.EmptyPackage()
         };
+
         PreviewUpdated?.Invoke(currentCommandPackage);
     }
 
-    private void ProcessClick()
+    private void ProcessRightClick()
     {
         if (currentCommandPackage.empty) return;
         else if (currentCommandPackage.type == "select") SelectPlayer(currentCommandPackage.agent);
-        else
-        {
-            QueueCurrentPackage();
-        }
+        else if (currentCommandPackage.commands.Count > 0) QueueCurrentPackage();
     }
 
     private void ProcessHold()
@@ -89,6 +111,7 @@ public class AgentManager : Service<AgentManager>
 
     private void QueueCurrentPackage()
     {
+        currentClickAbility = null;
         if (!currentCommandPackage.QueueCommands(modeSwitcher.Get().mode)) NotEnoughAP?.Invoke();
 
         // move other characters if select all is active
@@ -102,6 +125,11 @@ public class AgentManager : Service<AgentManager>
                 agent.OverwriteQueue(moveInRangeCommand);
             }
         }
+    }
+
+    public void SetClickAbility(ResourceManager.ClickAbility clickAbility)
+    {
+        currentClickAbility = clickAbility;
     }
 
     public void RegisterAgent(WorldAgent agent)
@@ -126,6 +154,11 @@ public class AgentManager : Service<AgentManager>
         {
             selectedPlayer = playerAgent;
             cameraMover.Get().SetCameraTarget(selectedPlayer.cameraFocusTransform);
+            if (currentCommandPackage != null && currentCommandPackage.type == "select" && currentClickAbility != null)
+            {
+                // todo: use click ability by clicking on portrait
+                QueueCurrentPackage();
+            }
         }
     }
 

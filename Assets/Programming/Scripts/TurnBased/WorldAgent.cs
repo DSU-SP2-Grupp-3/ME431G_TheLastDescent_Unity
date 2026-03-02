@@ -272,12 +272,15 @@ public class WorldAgent : MonoBehaviour
 
     public void Highlight()
     {
+        Debug.Log("highlight");
+        if (dead) return;
         if (indicatorFocusTransform) indicator.Get().GetIndicator(indicatorFocusTransform);
         else indicator.Get().GetIndicator(transform);
     }
 
     public void Dehighlight()
     {
+        Debug.Log("dehighlight");
         if (indicatorFocusTransform) indicator.Get().DisableIndicator(indicatorFocusTransform);
         else indicator.Get().DisableIndicator(transform);
     }

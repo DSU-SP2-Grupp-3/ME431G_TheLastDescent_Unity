@@ -17,7 +17,7 @@ public static class CommandManager
         CommandPackage package = new CommandPackage(agent, moveCommand);
         package.SetHighlight(agent, false);
         package.SetType("move");
-        package.SetCursor("Cursors/Walk");
+        package.SetCursor("Walk");
         return package;
     }
 
@@ -50,16 +50,27 @@ public static class CommandManager
         interactionPackage.SetHighlight(agent, false);
         interactionPackage.SetHighlight(result.interactableAgent, true);
         interactionPackage.SetType("interaction");
-        interactionPackage.SetCursor("Cursors/Point");
+        interactionPackage.SetCursor("Point");
 
         return interactionPackage;
     }
 
-    public static CommandPackage GetSelectPlayerPackage(WorldAgent agent)
+    public static CommandPackage GetSelectPlayerPackage(WorldAgent agent, ResourceManager.ClickAbility clickAbility)
     {
         CommandPackage package = new CommandPackage(agent);
         package.SetHighlight(agent, true);
         package.SetType("select");
+
+        if (clickAbility != null)
+        {
+            package.SetCursor(clickAbility.validCursorPath);
+            foreach (Command command in clickAbility.commands)
+            {
+                command.ChangeInvoker(agent);
+                package.AddCommand(command);
+            }
+        }
+
         return package;
     }
 
@@ -88,9 +99,20 @@ public static class CommandManager
         package.SetHighlight(attacker, false);
         package.SetHighlight(receiver, false);
         package.SetType("attack");
-        package.SetCursor("Cursors/Crosshair");
+        package.SetCursor("Crosshair");
 
         return package;
+    }
+
+    public static CommandPackage GetHealPackage(WorldAgent invoker, float amount, float cost)
+    {
+        HealCommand healCommand = new HealCommand(invoker, amount, cost);
+        CommandPackage healPackage = new CommandPackage(invoker, healCommand);
+        healPackage.SetHighlight(invoker, true);
+        healPackage.SetType("heal");
+        healPackage.SetCursor("Heal");
+
+        return healPackage;
     }
 
     public static bool AllMoveCommandsPossible(Command[] commands)
@@ -130,7 +152,7 @@ public static class CommandManager
         public CommandPackage()
         {
             this.agent = null;
-            this.commands = null;
+            this.commands = new();
             highlights = new Dictionary<WorldAgent, bool>();
             empty = true;
         }
@@ -138,7 +160,7 @@ public static class CommandManager
         public CommandPackage(WorldAgent agent)
         {
             this.agent = agent;
-            this.commands = null;
+            this.commands = new();
             highlights = new Dictionary<WorldAgent, bool>();
             clickOnAgentOnly = true;
         }
@@ -174,7 +196,7 @@ public static class CommandManager
 
         public void SetCursor(string resourcePath)
         {
-            cursorInfo = Resources.Load<CursorInfo>(resourcePath);
+            cursorInfo = Resources.Load<CursorInfo>($"Cursors/{resourcePath}");
         }
 
         public bool QueueCommands(RoundClock.ProgressMode mode)
