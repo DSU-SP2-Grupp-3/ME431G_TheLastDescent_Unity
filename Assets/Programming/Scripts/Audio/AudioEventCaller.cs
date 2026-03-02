@@ -36,6 +36,25 @@ public class AudioEventCaller : MonoBehaviour
             }
         }
     }
+    public void SetValue(float value)
+    {
+        Locator<AudioManager> locator = new();
+        if (locator.TryGet(out AudioManager locatedService))
+        {
+            if (eventMono != null)
+            {
+                locatedService.RunInstanceModification(eventMono, ParameterName, value);
+            }
+            else if (eventScriptable != null)
+            {
+                locatedService.RunInstanceModification(eventPlayerName, ParameterName, value);
+            }
+            else
+            {
+                locatedService.RunInstanceModification(eventPlayerName, ParameterName, value);
+            }
+        }
+    }
     public void PlayEvent()
     {
         unityEvent?.Invoke();
