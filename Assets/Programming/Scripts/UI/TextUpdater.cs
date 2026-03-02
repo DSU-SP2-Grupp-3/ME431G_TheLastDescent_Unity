@@ -5,21 +5,22 @@ using UnityEngine;
 public class TextUpdater : MonoBehaviour
 {
     [SerializeField] private TMP_Text textComponent;
+    [SerializeField] private RectTransform rectTransform;
     [SerializeField] [Min(0)] private float fadeRate;
     [SerializeField] [Min(0)] private float riseRate;
-    private float TemporaryX;
+    public Vector3 Target;
 
     private void Start()
     {
-        TemporaryX = transform.position.x;
-        textComponent.color = Color.magenta;
+        textComponent.color = Color.yellow;
+        transform.position = Camera.main.WorldToScreenPoint(Target);
     }
 
     private void Update()
     {
         textComponent.alpha -= fadeRate * Time.deltaTime;
         textComponent.transform.position = new Vector3(
-            TemporaryX, 
+            transform.position.x, 
             transform.position.y + (riseRate * fadeRate * 100 * Time.deltaTime),
             transform.position.z);
         if (textComponent.alpha <= 0f)
@@ -28,9 +29,8 @@ public class TextUpdater : MonoBehaviour
         }
     }
 
-    public void SetText(float number, Transform transform)
+    public void SetText(float number)
     {
-        TemporaryX = transform.position.x;
         textComponent.text = $"{number:0,0} DMG";
     }
 }
