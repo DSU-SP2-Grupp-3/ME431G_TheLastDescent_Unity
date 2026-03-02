@@ -15,7 +15,7 @@ public class InputManager : Service<InputManager>
     /// Triggers when the left mouse button is clicked
     /// </summary>
     public event Action OnClick;
-    
+    public event Action OnHold;
 
     [SerializeField]
     private LayerMask clickableLayers;
@@ -23,6 +23,9 @@ public class InputManager : Service<InputManager>
     private Camera mainCamera;
 
     private int UILayer;
+
+    private const float holdDelay = 0.15f;
+    private float lastStartHold;
 
     private void Awake()
     {
@@ -44,7 +47,7 @@ public class InputManager : Service<InputManager>
             OnHover?.Invoke(default(RaycastHit), false);
             return;
         }
-        
+
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         bool didHit = Physics.Raycast(ray, out RaycastHit hit, clickableLayers);
         OnHover?.Invoke(hit, didHit);
@@ -52,42 +55,48 @@ public class InputManager : Service<InputManager>
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0)) OnClick?.Invoke();
+        if (Input.GetMouseButtonDown(0))
+        {
+            OnClick?.Invoke();
+            lastStartHold = Time.time;
+        }
+        if (Input.GetMouseButton(0))
+        {
+            if (lastStartHold + holdDelay < Time.time) OnHold?.Invoke();
+        }
     }
-    
 
     #region Check if mouse is over UI
-        // https://discussions.unity.com/t/how-to-detect-if-mouse-is-over-ui/821330
-        
-        //Returns 'true' if we touched or hovering on Unity UI element.
-        public bool IsPointerOverUIElement()
+
+    // https://discussions.unity.com/t/how-to-detect-if-mouse-is-over-ui/821330
+
+    //Returns 'true' if we touched or hovering on Unity UI element.
+    public bool IsPointerOverUIElement()
+    {
+        return IsPointerOverUIElement(GetEventSystemRaycastResults());
+    }
+
+    //Returns 'true' if we touched or hovering on Unity UI element.
+    private bool IsPointerOverUIElement(List<RaycastResult> eventSystemRaysastResults)
+    {
+        for (int index = 0; index < eventSystemRaysastResults.Count; index++)
         {
-            return IsPointerOverUIElement(GetEventSystemRaycastResults());
+            RaycastResult curRaysastResult = eventSystemRaysastResults[index];
+            if (curRaysastResult.gameObject.layer == UILayer)
+                return true;
         }
+        return false;
+    }
 
-
-        //Returns 'true' if we touched or hovering on Unity UI element.
-        private bool IsPointerOverUIElement(List<RaycastResult> eventSystemRaysastResults)
-        {
-            for (int index = 0; index < eventSystemRaysastResults.Count; index++)
-            {
-                RaycastResult curRaysastResult = eventSystemRaysastResults[index];
-                if (curRaysastResult.gameObject.layer == UILayer)
-                    return true;
-            }
-            return false;
-        }
-
-
-        //Gets all event system raycast results of current mouse or touch position.
-        static List<RaycastResult> GetEventSystemRaycastResults()
-        {
-            PointerEventData eventData = new PointerEventData(EventSystem.current);
-            eventData.position = Input.mousePosition;
-            List<RaycastResult> raysastResults = new List<RaycastResult>();
-            EventSystem.current.RaycastAll(eventData, raysastResults);
-            return raysastResults;
-        }
+    //Gets all event system raycast results of current mouse or touch position.
+    static List<RaycastResult> GetEventSystemRaycastResults()
+    {
+        PointerEventData eventData = new PointerEventData(EventSystem.current);
+        eventData.position = Input.mousePosition;
+        List<RaycastResult> raysastResults = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, raysastResults);
+        return raysastResults;
+    }
 
     #endregion
 }

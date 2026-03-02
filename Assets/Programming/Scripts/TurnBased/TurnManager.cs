@@ -22,6 +22,7 @@ public class TurnManager : Service<TurnManager>
     private Locator<RoundClock> roundClock;
     private Locator<AgentManager> agentManager;
     private Locator<ModeSwitcher> modeSwitcher;
+    private Locator<Modal> modalLocator;
 
     public bool executingTurn { get; private set; }
 
@@ -34,11 +35,20 @@ public class TurnManager : Service<TurnManager>
         roundClock = new();
         agentManager = new();
         modeSwitcher = new();
+        modalLocator = new();
     }
 
     public void Ready()
     {
-        playerReady = true;
+        if (AllPlayersAPUsed()) playerReady = true;
+        else
+        {
+            modalLocator.Get().Prompt(
+                "Some characters have unused AP. Do you still want to end your turn?",
+                () => playerReady = true,
+                () => playerReady = false
+            );
+        } 
     }
     
     public void Activate()
@@ -168,6 +178,19 @@ public class TurnManager : Service<TurnManager>
         return !agentManager.Get().GetFilteredAgents(AgentIsNotDead, AgentIsActive, AgentIsEnemy).Any();
     }
 
+    private bool AllPlayersAPUsed()
+    {
+        bool used = true;
+        foreach (WorldAgent playerAgent in agentManager.Get().GetPlayerAgents())
+        {
+            if (playerAgent.localStats.actionPoints >= 0.05f)
+            {
+                used = false;
+            }
+        }
+        return used;
+    }
+    
     [Serializable]
     public struct Events
     {

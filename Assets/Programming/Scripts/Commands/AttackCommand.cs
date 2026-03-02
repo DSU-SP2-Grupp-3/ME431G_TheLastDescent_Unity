@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class AttackCommand : Command
 {
-    // todo: this should probably be variable
-    public override float cost => 1f;
+    private float attackCost;
+    public override float cost => attackCost;
 
     private WorldAgent receivingAgent;
     private DamageManager damageManager;
@@ -17,12 +17,14 @@ public class AttackCommand : Command
     public AttackCommand(WorldAgent invokingAgent,
                          WorldAgent receivingAgent,
                          DamageManager damageManager,
+                         float attackCost,
                          string attackEventName)
         : base(invokingAgent)
     {
         this.receivingAgent = receivingAgent;
         this.damageManager = damageManager;
         this.attackEventName = attackEventName;
+        this.attackCost = attackCost;
     }
 
     protected override IEnumerator Execute()
@@ -45,7 +47,7 @@ public class AttackCommand : Command
     {
         if (trigger == "attack")
         {
-            eventCollection.PlayEvent(attackEventName);
+            audioManager.PlayAudioEvent(attackEventName);
             PerformAttack();
         }
         if (trigger == "end") animationEnded = true;
@@ -53,6 +55,7 @@ public class AttackCommand : Command
 
     private void PerformAttack()
     {
+        Debug.Log("performed attack");
         float damage = invokingAgent.weaponStats.GetDamage();
         damageManager.DealDamageEvent(damage, receivingAgent);
     }

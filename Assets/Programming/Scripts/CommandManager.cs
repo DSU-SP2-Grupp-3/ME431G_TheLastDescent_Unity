@@ -15,6 +15,7 @@ public static class CommandManager
         MoveCommand moveCommand = new MoveCommand(agent.GetLastMoveCommandToPosition(), position, agent);
         if (!moveCommand.possible || moveCommand.noMovement) return EmptyPackage();
         CommandPackage package = new CommandPackage(agent, moveCommand);
+        package.SetHighlight(agent, false);
         package.SetType("move");
         package.SetCursor("Cursors/Walk");
         return package;
@@ -46,6 +47,8 @@ public static class CommandManager
 
         interactionPackage.AddCommand(lookCommand);
         interactionPackage.AddCommand(result.QueueInteractablesCommand(agent));
+        interactionPackage.SetHighlight(agent, false);
+        interactionPackage.SetHighlight(result.interactableAgent, true);
         interactionPackage.SetType("interaction");
         interactionPackage.SetCursor("Cursors/Point");
 
@@ -55,6 +58,7 @@ public static class CommandManager
     public static CommandPackage GetSelectPlayerPackage(WorldAgent agent)
     {
         CommandPackage package = new CommandPackage(agent);
+        package.SetHighlight(agent, true);
         package.SetType("select");
         return package;
     }
@@ -71,14 +75,18 @@ public static class CommandManager
             attacker
         );
         if (!inRangeCommand.possible) return EmptyPackage();
-        AttackCommand attackCommand = new AttackCommand(attacker, receiver, damageManager, "PlayerAttack");
+        AttackCommand attackCommand = new AttackCommand(
+            attacker, receiver, damageManager,
+            attacker.weaponStats.attackCost, "PlayerAttack"
+        );
         LookCommand lookCommand = new LookCommand(attacker, receiver);
 
         Command[] commands = new Command[] { inRangeCommand, lookCommand, attackCommand };
         TrimUnnecessaryMoveCommands(ref commands);
         CommandPackage package = new CommandPackage(attacker, commands);
 
-        package.SetAdditionalHighlights(receiver);
+        package.SetHighlight(attacker, false);
+        package.SetHighlight(receiver, false);
         package.SetType("attack");
         package.SetCursor("Cursors/Crosshair");
 
@@ -114,7 +122,7 @@ public static class CommandManager
         public string type { get; private set; }
         public CursorInfo cursorInfo { get; private set; }
         public readonly WorldAgent agent;
-        public readonly HashSet<WorldAgent> highlights;
+        public readonly Dictionary<WorldAgent, bool> highlights;
         public readonly List<Command> commands;
         public readonly bool empty;
         public readonly bool clickOnAgentOnly;
@@ -123,7 +131,7 @@ public static class CommandManager
         {
             this.agent = null;
             this.commands = null;
-            highlights = new HashSet<WorldAgent>();
+            highlights = new Dictionary<WorldAgent, bool>();
             empty = true;
         }
 
@@ -131,7 +139,7 @@ public static class CommandManager
         {
             this.agent = agent;
             this.commands = null;
-            highlights = new HashSet<WorldAgent>() { agent };
+            highlights = new Dictionary<WorldAgent, bool>();
             clickOnAgentOnly = true;
         }
 
@@ -139,14 +147,14 @@ public static class CommandManager
         {
             this.agent = agent;
             this.commands = commands.ToList();
-            highlights = new HashSet<WorldAgent>() { agent };
+            highlights = new Dictionary<WorldAgent, bool>();
         }
 
         public CommandPackage(WorldAgent agent, Command command)
         {
             this.agent = agent;
             commands = new List<Command>() { command };
-            highlights = new HashSet<WorldAgent>() { agent };
+            highlights = new Dictionary<WorldAgent, bool>();
         }
 
         public void AddCommand(Command command)
@@ -154,9 +162,9 @@ public static class CommandManager
             commands.Add(command);
         }
 
-        public void SetAdditionalHighlights(WorldAgent agent)
+        public void SetHighlight(WorldAgent agent, bool inRealTime)
         {
-            highlights.Add(agent);
+            if (agent) highlights.Add(agent, inRealTime);
         }
 
         public void SetType(string type)
@@ -200,6 +208,7 @@ public static class CommandManager
         public float TotalPackageCommandCost()
         {
             float total = 0f;
+            if (commands == null) return total;
             foreach (Command command in commands)
             {
                 total += command.cost;

@@ -16,9 +16,10 @@ public abstract class Command
         Successful, // command has stopped executing and completed successfully
         Failed, // command has stopped executing and did not complete successfully
     }
+
     public Status status { get; set; }
     protected WorldAgent invokingAgent;
-    protected EventCollection eventCollection;
+    protected AudioManager audioManager;
     public abstract float cost { get; }
     public IEnumerator ExecuteCommand()
     {
@@ -34,7 +35,7 @@ public abstract class Command
 
     public Command(WorldAgent invokingAgent)
     {
-        eventCollection = new Locator<EventCollection>().Get();
+        audioManager = new Locator<AudioManager>().Get();
         this.invokingAgent = invokingAgent;
         status = Status.Pending;
     }
