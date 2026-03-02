@@ -1401,7 +1401,7 @@ Transform:
   m_GameObject: {fileID: 3336956259090082529}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3002,8 +3002,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8589840841999032628}
   - {fileID: 6913362169945385132}
+  - {fileID: 8589840841999032628}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4281112615519480919
@@ -3040,7 +3040,8 @@ MonoBehaviour:
   animator: {fileID: 5474678374904609022}
   navMeshAgent: {fileID: 9163769210025672173}
   cameraFocusTransform: {fileID: 6913362169945385132}
-  stats: {fileID: 11400000, guid: 99bfa7c8d88a5f2428c9ec23ca256013, type: 2}
+  indicatorFocusTransform: {fileID: 0}
+  stats: {fileID: 0}
   equippedWeapon: {fileID: 11400000, guid: 42fc0f221ce5dc245930838cc567165b, type: 2}
   actorID: 0
 --- !u!195 &9163769210025672173
