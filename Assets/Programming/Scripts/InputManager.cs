@@ -16,6 +16,8 @@ public class InputManager : Service<InputManager>
     /// </summary>
     public event Action OnClick;
     public event Action OnHold;
+    public event Action OnScrollUp;
+    public event Action OnScrollDown;
 
     [SerializeField]
     private LayerMask clickableLayers;
@@ -55,6 +57,15 @@ public class InputManager : Service<InputManager>
 
     private void Update()
     {
+        if (Input.mouseScrollDelta.y > 0)
+        {
+            OnScrollUp?.Invoke();
+        }
+        if (Input.mouseScrollDelta.y < 0)
+        {
+            OnScrollDown?.Invoke();
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             OnClick?.Invoke();
