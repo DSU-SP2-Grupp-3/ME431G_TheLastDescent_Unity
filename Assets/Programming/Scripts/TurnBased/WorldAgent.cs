@@ -25,6 +25,8 @@ public class WorldAgent : MonoBehaviour
 
     [Tooltip("True if this is the agent (player) should be the default selection when loading the scene")]
     public bool defaultSelected;
+    [Tooltip("If true, prevent queueing commands while the command queue is being executed")]
+    public bool lockDuringQueueExecution;
 
     public Team team;
     [Header("References")]
@@ -145,6 +147,7 @@ public class WorldAgent : MonoBehaviour
 
     public void QueueCommands(Command[] commands)
     {
+        if (lockDuringQueueExecution && currentExecutingCommandCoroutine != null) return;
         if (dead) return;
         commandPacketSizes.Push(commands.Length);
         foreach (Command command in commands)
@@ -157,6 +160,7 @@ public class WorldAgent : MonoBehaviour
 
     public void OverwriteQueue(Command command)
     {
+        if (lockDuringQueueExecution && currentExecutingCommandCoroutine != null) return;
         InterruptCommandQueue();
         QueueCommand(command);
         StartCoroutine(ExecuteCommandQueue());
@@ -164,6 +168,7 @@ public class WorldAgent : MonoBehaviour
 
     public void OverwriteQueue(Command[] commands)
     {
+        if (lockDuringQueueExecution && currentExecutingCommandCoroutine != null) return;
         InterruptCommandQueue();
         QueueCommands(commands);
         StartCoroutine(ExecuteCommandQueue());
@@ -257,6 +262,7 @@ public class WorldAgent : MonoBehaviour
     {
         // todo: emit event here so agent manager can check if all players are dead
         Debug.Log($"Agent {name} has died");
+        Dehighlight();
         InterruptCommandQueue();
         dead = true;
         animator.SetTrigger("Die");
