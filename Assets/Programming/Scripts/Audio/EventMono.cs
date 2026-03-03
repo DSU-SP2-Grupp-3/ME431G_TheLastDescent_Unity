@@ -3,9 +3,9 @@ using FMODUnity;
 using UnityEngine;
 
 /// <summary>
-/// -Ma. Monobehaviors act as event catalysts
+/// -Ma. Monobehaviors act as runtime instance containers and .
 /// They always contain a runtime instance of a EventPlayer.
-/// Cannot trigger persistent sounds.
+/// May not produce an omni-present sound.
 /// </summary>
 public class EventMono : MonoBehaviour
 {
@@ -14,14 +14,15 @@ public class EventMono : MonoBehaviour
     public EventReference eventReference;
     public EventInstance eventInstance;
     public EventPlayer eventPlayer;
-    void Start()
+    void Awake()
     {
         eventPlayer = new(eventReference);
         eventInstance = eventPlayer.eventInstance;
+        RuntimeManager.AttachInstanceToGameObject(eventInstance, gameObject);
     }
     public void RunInstanceModification(string name, float value)
     {
-        eventInstance.setParameterByName(name, value);
+        eventPlayer.eventInstance.setParameterByName(name, value);
     }
 
 }

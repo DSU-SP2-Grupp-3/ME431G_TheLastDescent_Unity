@@ -43,7 +43,7 @@ public class AttackCommand : Command
 
     public override void VisualizeInQueue(Visualizer visualizer) { }
 
-    private void CaptureAnimationEvent(string trigger)
+    private void CaptureAnimationEvent(string trigger, GameObject gameObject)
     {
         if (trigger == "attack")
         {
