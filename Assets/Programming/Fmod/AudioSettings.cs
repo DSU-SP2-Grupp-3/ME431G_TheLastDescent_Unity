@@ -14,22 +14,22 @@ public class AudioSettings : MonoBehaviour
     [Range(0f, 1f)]
     public float musicVolume;
     [Range(0f,1f)]
-    public float ambianceVolume;
+    public float ambienceVolume;
     [Range(0f,1f)]
-    public float dialogVolume;
+    public float dialogueVolume;
     
 
     [SerializeField] private string masterVCAPath;
     [SerializeField] private string effectVCAPath;
     [SerializeField] private string musicVCAPath;
-    [SerializeField] private string ambianceVCAPath;
-    [SerializeField] private string dialogVCAPath;
+    [SerializeField] private string ambienceVCAPath;
+    [SerializeField] private string dialogueVCAPath;
     
     private VCA masterVCA;
     private VCA effectVCA;
     private VCA musicVCA;
-    private VCA ambianceVCA;
-    private VCA dialogVCA;
+    private VCA ambienceVCA;
+    private VCA dialogueVCA;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
@@ -51,8 +51,8 @@ public class AudioSettings : MonoBehaviour
         masterVCA = RuntimeManager.GetVCA(masterVCAPath);
         effectVCA = RuntimeManager.GetVCA(effectVCAPath);
         musicVCA = RuntimeManager.GetVCA(musicVCAPath);
-        ambianceVCA = RuntimeManager.GetVCA(ambianceVCAPath);
-        dialogVCA = RuntimeManager.GetVCA(dialogVCAPath);
+        ambienceVCA = RuntimeManager.GetVCA(ambienceVCAPath);
+        dialogueVCA = RuntimeManager.GetVCA(dialogueVCAPath);
     }
 
     // Update is called once per frame
@@ -61,7 +61,7 @@ public class AudioSettings : MonoBehaviour
         masterVCA.setVolume(masterVolume);
         effectVCA.setVolume(effectVolume);
         musicVCA.setVolume(musicVolume);
-        ambianceVCA.setVolume(ambianceVolume);
-        dialogVCA.setVolume(dialogVolume);
+        ambienceVCA.setVolume(ambienceVolume);
+        dialogueVCA.setVolume(dialogueVolume);
     }
 }

@@ -10,7 +10,7 @@ public class SettingsManager : Service<SettingsManager>
     public Slider MasterSlider;
     public Slider SFXSlider;
     public Slider MusicSlider;
-    public Slider AmbianceSlider;
+    public Slider AmbienceSlider;
     public Slider DialogueSlider;
 
     public void Open() { open?.Invoke(); }
@@ -18,8 +18,8 @@ public class SettingsManager : Service<SettingsManager>
     public void MasterVol() { AudioSettings.Instance.masterVolume = MasterSlider.value; }    
     public void SFXVol() { AudioSettings.Instance.effectVolume = SFXSlider.value; }
     public void MusicVol() { AudioSettings.Instance.musicVolume = MusicSlider.value; }
-    public void AmbianceVol() { AudioSettings.Instance.ambianceVolume = AmbianceSlider.value; }
-    public void DialogVol() { AudioSettings.Instance.dialogVolume = DialogueSlider.value; }
+    public void AmbianceVol() { AudioSettings.Instance.ambienceVolume = AmbienceSlider.value; }
+    public void DialogVol() { AudioSettings.Instance.dialogueVolume = DialogueSlider.value; }
 
     public void Update()
     {
