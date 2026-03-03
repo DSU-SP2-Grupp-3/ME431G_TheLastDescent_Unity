@@ -27,11 +27,30 @@ public class AudioEventCaller : MonoBehaviour
             else if (eventScriptable != null)
             {
                 locatedService.PlayAudioEvent(eventScriptable);
-                locatedService.RunInstanceModification(eventPlayerName, ParameterName, value);
+                locatedService.RunInstanceModification(eventScriptable, ParameterName, value);
             }
             else
             {
                 locatedService.PlayAudioEvent(eventPlayerName);
+                locatedService.RunInstanceModification(eventPlayerName, ParameterName, value);
+            }
+        }
+    }
+    public void SetValue(float value)
+    {
+        Locator<AudioManager> locator = new();
+        if (locator.TryGet(out AudioManager locatedService))
+        {
+            if (eventMono != null)
+            {
+                locatedService.RunInstanceModification(eventMono, ParameterName, value);
+            }
+            else if (eventScriptable != null)
+            {
+                locatedService.RunInstanceModification(eventScriptable, ParameterName, value);
+            }
+            else
+            {
                 locatedService.RunInstanceModification(eventPlayerName, ParameterName, value);
             }
         }

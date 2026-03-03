@@ -41,7 +41,18 @@ public class AudioManager : Service<AudioManager>
         }
         throw new Exception($"Null Reference error. name: {name} does not exist in the audiobank");
     }
-
+        public void PlayAudioEvent(string name, GameObject gameObject)
+    {
+        name = name.ToLower().Trim();
+        if (TryGet(name, out EventScriptable eventScriptable))
+        {
+            CreatePlayer(eventScriptable, out EventPlayer player);
+            player.AttachToGameObject(gameObject);
+            player.PlayEvent();
+            return;
+        }
+        throw new Exception($"Null Reference error. name: {name} does not exist in the audiobank");
+    }
 
     /// <summary>
     /// Plays audio from a monobehavior player.
