@@ -106,7 +106,7 @@ public class AudioManager : Service<AudioManager>
     }
     public void RunInstanceModification(EventMono eventMono, string paramName, float value)
     {
-        eventMono.RunInstanceModification(paramName, value);
+        eventMono.eventPlayer.RunInstanceModification(paramName, value);
     }
     public void RunInstanceModification(string name, string paramName, float value)
     {
@@ -162,17 +162,20 @@ public class AudioManager : Service<AudioManager>
     #endregion PlayerHandler
 
 
-    public EventReference Get(string eventName)
+    public EventScriptable Get(string eventName)
     {
-        eventName = eventName.ToLower().Trim();
-        return audioBanks.FirstOrDefault(p => p.eventName == eventName).eventReference;
+        string eventNameC = eventName.ToLower().Trim();
+        EventScriptable result = audioBanks.FirstOrDefault(p => p.eventName == eventNameC);
+        if (result == null) result = Resources.Load<EventScriptable>(eventName);
+        return result;
     }
 
 
     public bool TryGet(string eventName, out EventScriptable result)
     {
-        eventName = eventName.ToLower().Trim();
-        result = audioBanks.FirstOrDefault(p => p.eventName == eventName);
+        string eventNameC = eventName.ToLower().Trim();
+        result = audioBanks.FirstOrDefault(p => p.eventName == eventNameC);
+        if (result == null) result = Resources.Load<EventScriptable>(eventName);
         return result != null;
     }
 }
