@@ -30,7 +30,7 @@ public class HealCommand : Command
 
     protected override IEnumerator Execute()
     {
-        // todo: queueing two heal commands in a row soft locks the game
+        // todo: healing command sometimes softlocks the game, check animation triggers
         invokingAgent.AnimationEventTriggered += CaptureAnimationEvent;
         invokingAgent.animator.SetTrigger("StartHeal");
         yield return new WaitUntil(() => animationEnded);
@@ -54,6 +54,7 @@ public class HealCommand : Command
 
     private void PerformHeal()
     {
+        // todo: breaking before healing still spends resources;
         damageManager.DealDamage(-amount, invokingAgent);
     }
 }
