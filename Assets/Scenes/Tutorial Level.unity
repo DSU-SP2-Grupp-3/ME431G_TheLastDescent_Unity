@@ -2855,6 +2855,40 @@ Transform:
   - {fileID: 5461460701658776030}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &200981580 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3427061958597539996, guid: 0f123977ee723bf40b5c3d46180c89bf, type: 3}
+  m_PrefabInstance: {fileID: 705466215}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &200981581 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8951907812052039266, guid: 0f123977ee723bf40b5c3d46180c89bf, type: 3}
+  m_PrefabInstance: {fileID: 705466215}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 200981580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48cc78417f8ded94a9147b015bbf43da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &200981583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 200981580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f5a2c451c9ed8344a98437b3870e7b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  masterVolume: 1
+  effectVolume: 1
+  musicVolume: 1
+  masterVCAPath: vca:/Master
+  effectVCAPath: vca:/SFX
+  musicVCAPath: vca:/Music
 --- !u!1001 &211495750
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11244,7 +11278,10 @@ PrefabInstance:
     - {fileID: 5408515296962631908, guid: 0f123977ee723bf40b5c3d46180c89bf, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3427061958597539996, guid: 0f123977ee723bf40b5c3d46180c89bf, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 200981583}
   m_SourcePrefab: {fileID: 100100000, guid: 0f123977ee723bf40b5c3d46180c89bf, type: 3}
 --- !u!1001 &717394755
 PrefabInstance:
@@ -17083,20 +17120,40 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3236223146473153483, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
+      propertyPath: unityEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3236223146473153483, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
+      propertyPath: unityEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3236223146473153483, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
       propertyPath: unityEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 200981581}
     - target: {fileID: 3236223146473153483, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
       propertyPath: onTypeLetter.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3236223146473153483, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
+      propertyPath: unityEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3236223146473153483, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
       propertyPath: unityEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: PlayEvent
+      value: PlayAudioEvent
       objectReference: {fileID: 0}
     - target: {fileID: 3236223146473153483, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
       propertyPath: unityEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: SimpleEventPlayer, Programming
+      value: AudioManager, Programming
+      objectReference: {fileID: 0}
+    - target: {fileID: 3236223146473153483, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
+      propertyPath: unityEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 11400000, guid: 9104f0682f655a54e81a1df85a023753, type: 2}
+    - target: {fileID: 3236223146473153483, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
+      propertyPath: unityEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: EventScriptable, Programming
       objectReference: {fileID: 0}
     - target: {fileID: 3575951970234186291, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
       propertyPath: player
@@ -19091,6 +19148,8 @@ GameObject:
   - component: {fileID: 1212067779}
   - component: {fileID: 1212067778}
   - component: {fileID: 1212067777}
+  - component: {fileID: 1212067783}
+  - component: {fileID: 1212067784}
   m_Layer: 8
   m_Name: DialogueCommand
   m_TagString: Untagged
@@ -19117,6 +19176,7 @@ MonoBehaviour:
   - {fileID: 1212067779}
   - {fileID: 1212067778}
   - {fileID: 1212067777}
+  - {fileID: 1212067783}
 --- !u!114 &1212067777
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19252,6 +19312,52 @@ Transform:
   m_Children: []
   m_Father: {fileID: 893559859}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1212067783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1212067775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26d992372cf1f8c47b24a7ac31a39262, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unityEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 200981581}
+        m_TargetAssemblyTypeName: AudioManager, Programming
+        m_MethodName: PlayAudioEvent
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 11400000, guid: 48efc4c2b574ce943a8fdfefb3051c27, type: 2}
+          m_ObjectArgumentAssemblyTypeName: EventScriptable, Programming
+          m_IntArgument: 0
+          m_FloatArgument: 1
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1212067784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1212067775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f019bf334f849e409d192c88a968d82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventPlayerName: 
+  ParameterName: 
+  eventScriptable: {fileID: 11400000, guid: 48efc4c2b574ce943a8fdfefb3051c27, type: 2}
+  eventMono: {fileID: 0}
+  unityEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1220120309
 GameObject:
   m_ObjectHideFlags: 0
@@ -20112,6 +20218,11 @@ Transform:
   - {fileID: 758866400}
   m_Father: {fileID: 1534517698}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1267012920 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 561011416928956595, guid: e3f7981901c92644a9521e7163722353, type: 3}
+  m_PrefabInstance: {fileID: 1384867593}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1269833844
 GameObject:
   m_ObjectHideFlags: 0
@@ -21854,6 +21965,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7748407543579373280, guid: e3f7981901c92644a9521e7163722353, type: 3}
+      propertyPath: attenuationObject
+      value: 
+      objectReference: {fileID: 1267012920}
     - target: {fileID: 7764927085769874792, guid: e3f7981901c92644a9521e7163722353, type: 3}
       propertyPath: m_ClearFlags
       value: 2
