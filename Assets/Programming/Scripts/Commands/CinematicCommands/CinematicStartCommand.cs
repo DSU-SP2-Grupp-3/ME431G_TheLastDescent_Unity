@@ -13,5 +13,7 @@ public class CinematicStartCommand : Command
         yield return new WaitUntil(() => new Locator<CinematicKitService>().Get().FindActors(actorIds));
     }
     public override void Break() { }
-    public override float cost { get; }
+    public override float apCost { get; }
+    /// <inheritdoc />
+    public override float resourceCost => 0f;
 }

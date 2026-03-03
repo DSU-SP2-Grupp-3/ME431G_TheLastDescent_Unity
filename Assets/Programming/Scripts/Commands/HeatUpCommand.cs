@@ -1,36 +1,32 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class HealCommand : Command
+public class HeatUpCommand : Command
 {
-    private float healApCost;
-    public override float apCost => healApCost;
+    private float heatUpApCost;
+    public override float apCost => heatUpApCost;
 
-    private float healResourceCost;
-    public override float resourceCost => healResourceCost;
+    private float heatUpResourceCost;
+    public override float resourceCost => heatUpResourceCost;
 
     private float amount;
-    private DamageManager damageManager;
-
     private bool animationEnded;
 
-    public HealCommand(
+
+    public HeatUpCommand(
         WorldAgent invokingAgent,
-        DamageManager damageManager,
         float amount,
-        float healApCost,
-        float healResourceCost
+        float heatUpApCost,
+        float heatUpResourceCost
     ) : base(invokingAgent)
     {
         this.amount = amount;
-        this.healApCost = healApCost;
-        this.healResourceCost = healResourceCost;
-        this.damageManager = damageManager;
+        this.heatUpApCost = heatUpApCost;
+        this.heatUpApCost = heatUpResourceCost;
     }
 
     protected override IEnumerator Execute()
     {
-        // todo: queueing two heal commands in a row soft locks the game
         invokingAgent.AnimationEventTriggered += CaptureAnimationEvent;
         invokingAgent.animator.SetTrigger("StartHeal");
         yield return new WaitUntil(() => animationEnded);
@@ -47,13 +43,13 @@ public class HealCommand : Command
     {
         if (trigger == "heal")
         {
-            PerformHeal();
+            PerformHeatUp();
         }
         if (trigger == "end") animationEnded = true;
     }
 
-    private void PerformHeal()
+    private void PerformHeatUp()
     {
-        damageManager.DealDamage(-amount, invokingAgent);
+
     }
 }

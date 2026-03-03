@@ -7,7 +7,7 @@ using UnityEngine.AI;
 public class MoveCommand : Command, IMoveCommand
 {
     // todo: calculate ap costs via Command.cost and prevent adding commands that would exceed ap cost in turn based
-    public override float cost
+    public override float apCost
     {
         get
         {
@@ -19,6 +19,8 @@ public class MoveCommand : Command, IMoveCommand
             return length * costModifier;
         }
     }
+    /// <inheritdoc />
+    public override float resourceCost => 0f;
 
     private float costModifier => invokingAgent.localStats.movementCostModifier / invokingAgent.localStats.movement;
 

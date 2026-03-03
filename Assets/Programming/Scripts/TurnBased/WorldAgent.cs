@@ -65,6 +65,7 @@ public class WorldAgent : MonoBehaviour
     private Locator<AgentManager> agentManager;
     private Locator<TurnManager> turnManager;
     private Locator<Indicator> indicator;
+    private Locator<RoundClock> roundClock;
 
     public AgentManager manager => agentManager.Get();
 
@@ -74,6 +75,18 @@ public class WorldAgent : MonoBehaviour
     private Stack<int> commandPacketSizes;
 
     public bool queueEmpty => commandQueue.Count == 0;
+    public float queueResourceCost
+    {
+        get
+        {
+            float total = 0f;
+            foreach (Command command in commandQueue)
+            {
+                total += command.resourceCost;
+            }
+            return total;
+        }
+    }
     private bool breakCommandQueue;
 
     private void Awake()
@@ -87,9 +100,10 @@ public class WorldAgent : MonoBehaviour
         modeSwitcher = new();
         turnManager = new();
         indicator = new();
+        roundClock = new();
 
-        if (stats) localStats = stats.Clone();
         if (team == Team.Player) active = true;
+        if (stats) localStats = stats.Clone();
     }
 
     private void Start()
@@ -153,7 +167,7 @@ public class WorldAgent : MonoBehaviour
         foreach (Command command in commands)
         {
             commandQueue.Enqueue(command);
-            if (localStats) localStats.actionPoints -= command.cost;
+            if (localStats) localStats.actionPoints.value -= command.apCost;
         }
         CommandQueueUpdated?.Invoke(this, commandQueue, null);
     }
@@ -202,11 +216,11 @@ public class WorldAgent : MonoBehaviour
         {
             Queue<Command> shortenedQueue = new();
             Command[] commandArray = commandQueue.ToArray();
-            localStats.actionPoints = localStats.initActionPoints;
+            localStats.actionPoints.value = localStats.initActionPoints;
             for (int i = 0; i < commandArray.Length - size; i++)
             {
                 shortenedQueue.Enqueue(commandArray[i]);
-                if (localStats) localStats.actionPoints -= commandArray[i].cost;
+                if (localStats) localStats.actionPoints.value -= commandArray[i].apCost;
             }
             commandQueue = shortenedQueue;
             CommandQueueUpdated?.Invoke(this, commandQueue, null);
@@ -215,7 +229,7 @@ public class WorldAgent : MonoBehaviour
 
     public IEnumerator ExecuteCommandQueue()
     {
-        if (localStats) localStats.actionPoints = localStats.initActionPoints;
+        if (localStats) localStats.actionPoints.value = localStats.initActionPoints;
         commandPacketSizes.Clear();
         while (commandQueue.TryDequeue(out Command command))
         {
@@ -338,7 +352,7 @@ public class WorldAgent : MonoBehaviour
         float totalCost = 0f;
         foreach (Command command in commandQueue)
         {
-            totalCost += command.cost;
+            totalCost += command.apCost;
         }
         return totalCost;
     }

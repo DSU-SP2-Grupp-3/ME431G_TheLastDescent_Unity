@@ -3,7 +3,9 @@ using UnityEngine;
 
 public class DebugCommand : Command
 {
-    public override float cost => 0f;
+    public override float apCost => 0f;
+    /// <inheritdoc />
+    public override float resourceCost => 0f;
 
     private string debugString;
     private float waitTime1, waitTime2;

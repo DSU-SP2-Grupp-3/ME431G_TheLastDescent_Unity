@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class LookCommand : Command
 {
-    public override float cost { get; }
+    public override float apCost { get; }
+    /// <inheritdoc />
+    public override float resourceCost => 0f;
 
     private WorldAgent receivingAgent;
 

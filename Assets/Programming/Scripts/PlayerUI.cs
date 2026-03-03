@@ -11,13 +11,9 @@ public class PlayerUI : MonoBehaviour
     [SerializeField]
     private Button button;
     [SerializeField]
-    private TMP_Text hitPointsText;
+    private TMP_Text hitPointsText, actionPointsText;
     [SerializeField]
-    private TMP_Text actionPointsText;
-    [SerializeField]
-    private Image hitPointsImage;
-    [SerializeField]
-    private Image actionPointsImage;
+    private Image hitPointsImage, actionPointsImage, temperatureImage;
 
     [SerializeField]
     private GameObject statsContext;
@@ -42,14 +38,15 @@ public class PlayerUI : MonoBehaviour
     {
         SetStatsVisbility(false);
 
-        player.localStats.HitPointsChanged += HitPointsChanged;
-        player.localStats.ActionPointsChanged += ActionPointsChanged;
+        player.localStats.hitPoints.Changed += HitPointsChanged;
+        player.localStats.actionPoints.Changed += ActionPointsChanged;
+        player.localStats.temperature.Changed += TemperatureChanged;
 
         maxHP = player.localStats.initHitPoints;
         maxAP = player.localStats.initActionPoints;
 
-        hitPointsText.text = $"HP: {player.localStats.hitPoints:0}/{maxHP:0}";
-        actionPointsText.text = $"AP: {player.localStats.actionPoints:0.0}/{maxAP:0.0}";
+        hitPointsText.text = $"HP: {player.localStats.hitPoints.value:0}/{maxHP:0}";
+        actionPointsText.text = $"AP: {player.localStats.actionPoints.value:0.0}/{maxAP:0.0}";
     }
 
     public void ClickedOnPlayer()
@@ -101,5 +98,10 @@ public class PlayerUI : MonoBehaviour
             actionPointsText.text = $"AP: {changed:0.0}/{maxAP:0.0}";
             actionPointsImage.fillAmount = changed / maxAP;
         }
+    }
+
+    private void TemperatureChanged(float changed)
+    {
+        temperatureImage.fillAmount = changed;
     }
 }

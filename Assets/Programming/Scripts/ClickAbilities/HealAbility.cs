@@ -10,7 +10,7 @@ public class HealAbility : ScriptableObject
 
     public ResourceManager.ClickAbility GetAbility()
     {
-        HealCommand healCommand = new HealCommand(null, damageManager, healAmount, healAPCost);
+        HealCommand healCommand = new HealCommand(null, damageManager, healAmount, healAPCost, healResourceCost);
         ResourceManager.ClickAbility ability = new ResourceManager.ClickAbility(
             healCommand,
             healResourceCost,

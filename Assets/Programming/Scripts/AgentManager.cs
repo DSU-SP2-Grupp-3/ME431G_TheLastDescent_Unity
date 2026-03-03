@@ -9,7 +9,9 @@ public class AgentManager : Service<AgentManager>
 {
     public event Action<WorldAgent> AgentRegistered;
     public event Action<CommandManager.CommandPackage> PreviewUpdated;
+
     public UnityEvent NotEnoughAP;
+    public UnityEvent NotEnouchResources;
 
     private List<WorldAgent> players;
     private List<WorldAgent> allAgents;
@@ -21,7 +23,9 @@ public class AgentManager : Service<AgentManager>
 
     private WorldAgent selectedPlayer;
     private WorldAgent defaultPlayer;
+
     public DamageManager damageManager;
+    public ResourceManager resourceManager;
 
     private bool allPlayersSelected;
 
@@ -65,8 +69,10 @@ public class AgentManager : Service<AgentManager>
             }
             else
             {
+                currentCommandPackage = CommandManager.OnlyCommands(currentClickAbility.commands);
                 currentCommandPackage.SetCursor(currentClickAbility.invalidCursorPath);
             }
+
             PreviewUpdated?.Invoke(currentCommandPackage);
             return;
         }
@@ -116,7 +122,20 @@ public class AgentManager : Service<AgentManager>
     private void QueueCurrentPackage()
     {
         currentClickAbility = null;
-        if (!currentCommandPackage.QueueCommands(modeSwitcher.Get().mode)) NotEnoughAP?.Invoke();
+        if (!resourceManager.CanQueuePackage(currentCommandPackage))
+        {
+            NotEnouchResources?.Invoke();
+            return;
+        }
+        if (!currentCommandPackage.QueueCommands(modeSwitcher.Get().mode))
+        {
+            NotEnoughAP?.Invoke();
+            return;
+        }
+
+        float totalResources = resourceManager.TotalCommandCollectionResourceCost(currentCommandPackage.commands);
+        resourceManager.QueueResource(totalResources);
+        if (modeSwitcher.Get().mode == RoundClock.ProgressMode.RealTime) resourceManager.PayQueue();
 
         // move other characters if select all is active
         if (allPlayersSelected && currentCommandPackage.type == "move")
@@ -178,7 +197,9 @@ public class AgentManager : Service<AgentManager>
     {
         if (modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased)
         {
+            resourceManager.LoseResource(selectedPlayer.queueResourceCost);
             selectedPlayer.UndoLastestCommand();
+            resourceManager.GetResource(selectedPlayer.queueResourceCost);
         }
     }
 

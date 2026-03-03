@@ -10,6 +10,18 @@ public static class CommandManager
         return new CommandPackage();
     }
 
+    public static CommandPackage OnlyCommands(IEnumerable<Command> commands)
+    {
+        CommandPackage empty = new CommandPackage();
+        foreach (Command command in commands)
+        {
+            empty.AddCommand(command);
+        }
+        empty.SetType("commands");
+
+        return empty;
+    }
+
     public static CommandPackage GetMovePackage(WorldAgent agent, Vector3 position)
     {
         MoveCommand moveCommand = new MoveCommand(agent.GetLastMoveCommandToPosition(), position, agent);
@@ -210,7 +222,8 @@ public static class CommandManager
             float queueCost = 0f;
             foreach (Command command in commands)
             {
-                queueCost += command.cost;
+                queueCost += command.apCost;
+                if (!agent) return false;
                 if (agent.TotalCommandQueueCost() + queueCost > agent.localStats.initActionPoints) return false;
             }
             return true;
@@ -222,7 +235,7 @@ public static class CommandManager
             if (commands == null) return total;
             foreach (Command command in commands)
             {
-                total += command.cost;
+                total += command.apCost;
             }
             return total;
         }

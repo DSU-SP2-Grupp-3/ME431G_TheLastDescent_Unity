@@ -4,32 +4,18 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "AgentStats", menuName = "Stats/Agent Stats")]
 public class AgentStats : ScriptableObject
 {
-    public event Action<float> HitPointsChanged;
-    public event Action<float> ActionPointsChanged;
-
     [SerializeField]
-    public float initHitPoints, initActionPoints, initMovement, initMovementCostModifier;
-    private float _hitPoints;
-    public float hitPoints
-    {
-        get => _hitPoints;
-        set
-        {
-            Debug.Log(value);
-            _hitPoints = Mathf.Clamp(value, 0f, initHitPoints);
-            HitPointsChanged?.Invoke(_hitPoints);
-        }
-    }
-    private float _actionPoints;
-    public float actionPoints
-    {
-        get => _actionPoints;
-        set
-        {
-            _actionPoints = value;
-            ActionPointsChanged?.Invoke(_actionPoints);
-        }
-    }
+    public float
+        initHitPoints,
+        initActionPoints,
+        initMovement,
+        initMovementCostModifier,
+        initTemperatureLoss = 0.01f;
+
+    public Watcher<float> hitPoints;
+    public Watcher<float> actionPoints;
+    public Watcher<float> temperature;
+
     public float movement { get; set; }
     public float movementCostModifier { get; set; }
 
@@ -41,13 +27,29 @@ public class AgentStats : ScriptableObject
         clone.initActionPoints = initActionPoints;
         clone.initMovement = initMovement;
         clone.initMovementCostModifier = initMovementCostModifier;
+        clone.initTemperatureLoss = initTemperatureLoss;
 
-        clone.hitPoints = initHitPoints;
-        clone.actionPoints = initActionPoints;
+        clone.hitPoints = new Watcher<float>(initHitPoints, Clamp(0f, initHitPoints));
+        clone.actionPoints = new Watcher<float>(initActionPoints, Clamp(0f, initActionPoints));
+        clone.temperature = new Watcher<float>(1f, Clamp(0f, 1f));
         clone.movement = initMovement;
         clone.movementCostModifier = initMovementCostModifier;
 
+        if (new Locator<RoundClock>().TryGet(out RoundClock roundClock))
+        {
+            roundClock.RoundProgressed += clone.LoseTemperature;
+        }
+        else
+        {
+            RoundClock.OnRegister += (rc) => rc.RoundProgressed += clone.LoseTemperature;
+        }
+
         return clone;
+    }
+
+    private Func<float, float> Clamp(float min, float max)
+    {
+        return (f) => Mathf.Clamp(f, min, max);
     }
 
     /// <summary>
@@ -57,11 +59,16 @@ public class AgentStats : ScriptableObject
     /// <returns>True if damage dealt reduces current hit points below zero, otherwise false</returns>
     public bool TakeDamage(float damage)
     {
-        hitPoints -= damage;
+        hitPoints.value -= damage;
         if (hitPoints <= 0f)
         {
             return true;
         }
         return false;
+    }
+
+    private void LoseTemperature(int round)
+    {
+        temperature.value -= initTemperatureLoss;
     }
 }

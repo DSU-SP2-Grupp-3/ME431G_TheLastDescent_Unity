@@ -20,7 +20,8 @@ public abstract class Command
     public Status status { get; set; }
     protected WorldAgent invokingAgent;
     protected AudioManager audioManager;
-    public abstract float cost { get; }
+    public abstract float apCost { get; }
+    public abstract float resourceCost { get; }
     public IEnumerator ExecuteCommand()
     {
         status = Status.Executing;

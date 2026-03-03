@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 public class MoveInRangeCommand : Command, IMoveCommand
 {
-    public override float cost
+    public override float apCost
     {
         get
         {
@@ -18,6 +18,8 @@ public class MoveInRangeCommand : Command, IMoveCommand
             return length * costModifier;
         }
     }
+    /// <inheritdoc />
+    public override float resourceCost => 0f;
 
     private float costModifier => invokingAgent.localStats.movementCostModifier / invokingAgent.localStats.movement;
 

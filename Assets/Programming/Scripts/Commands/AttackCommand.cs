@@ -5,7 +5,9 @@ using UnityEngine;
 public class AttackCommand : Command
 {
     private float attackCost;
-    public override float cost => attackCost;
+    public override float apCost => attackCost;
+    /// <inheritdoc />
+    public override float resourceCost => 0f;
 
     private WorldAgent receivingAgent;
     private DamageManager damageManager;

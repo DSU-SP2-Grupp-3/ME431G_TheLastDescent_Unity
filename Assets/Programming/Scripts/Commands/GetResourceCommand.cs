@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class GetResourceCommand : Command
 {
-    public override float cost { get; }
+    public override float apCost { get; }
+    public override float resourceCost => 0f;
 
     private float amount;
     private ResourceManager manager;
