@@ -27,7 +27,7 @@ public class AudioEventCaller : MonoBehaviour
             else if (eventScriptable != null)
             {
                 locatedService.PlayAudioEvent(eventScriptable);
-                locatedService.RunInstanceModification(eventPlayerName, ParameterName, value);
+                locatedService.RunInstanceModification(eventScriptable, ParameterName, value);
             }
             else
             {
@@ -47,7 +47,7 @@ public class AudioEventCaller : MonoBehaviour
             }
             else if (eventScriptable != null)
             {
-                locatedService.RunInstanceModification(eventPlayerName, ParameterName, value);
+                locatedService.RunInstanceModification(eventScriptable, ParameterName, value);
             }
             else
             {

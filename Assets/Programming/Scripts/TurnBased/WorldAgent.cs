@@ -10,7 +10,7 @@ public class WorldAgent : MonoBehaviour
 {
     private static bool enemyTakesSimulataneousTurns = false;
 
-    public event Action<string> AnimationEventTriggered;
+    public event Action<string, GameObject> AnimationEventTriggered;
     public event Action<WorldAgent> ForcedEnterTurnBased;
     public event Action<WorldAgent, Queue<Command>, Command> CommandQueueUpdated;
 
@@ -323,6 +323,6 @@ public class WorldAgent : MonoBehaviour
 
     public void TriggerAnimationEvent(string id)
     {
-        AnimationEventTriggered?.Invoke(id);
+        AnimationEventTriggered?.Invoke(id, gameObject);
     }
 }

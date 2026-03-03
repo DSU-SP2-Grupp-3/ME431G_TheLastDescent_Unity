@@ -84,7 +84,6 @@ public class DialogueService : Service<DialogueService>
 
             skipping = false;
             WrittenSentence = "";
-            unityEvent.Invoke();
             ClickCheck = StartCoroutine(OnMouseClick());
             yield return StartCoroutine(DisplayNextLetter());
             textField.text = sentence;
@@ -101,7 +100,7 @@ public class DialogueService : Service<DialogueService>
                 skipping = false;
                 yield break;
             }
-
+            unityEvent.Invoke();
             WrittenSentence += letters.Dequeue();
             textField.text = WrittenSentence;
             yield return new WaitForSeconds(0.04f);
