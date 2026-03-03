@@ -90,7 +90,7 @@ public class AgentManager : Service<AgentManager>
     private void QueueCurrentPackage()
     {
         if (!currentCommandPackage.QueueCommands(modeSwitcher.Get().mode)) NotEnoughAP?.Invoke();
-        
+
         // move other characters if select all is active
         if (allPlayersSelected && currentCommandPackage.type == "move")
         {
@@ -133,7 +133,6 @@ public class AgentManager : Service<AgentManager>
     {
         if (modeSwitcher.Get().mode == RoundClock.ProgressMode.RealTime)
         {
-            SelectPlayer(defaultPlayer);
             allPlayersSelected = true;
         }
     }

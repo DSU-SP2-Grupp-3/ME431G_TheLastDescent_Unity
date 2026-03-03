@@ -32,6 +32,7 @@ public class WorldAgent : MonoBehaviour
     public NavMeshAgent navMeshAgent;
     [Tooltip("Only required if the object will generate a path")]
     public Transform cameraFocusTransform;
+    public Transform indicatorFocusTransform;
 
     [SerializeField]
     private AgentStats stats;
@@ -265,12 +266,14 @@ public class WorldAgent : MonoBehaviour
 
     public void Highlight()
     {
-        indicator.Get().GetIndicator(transform);
+        if (indicatorFocusTransform) indicator.Get().GetIndicator(indicatorFocusTransform);
+        else indicator.Get().GetIndicator(transform);
     }
 
     public void Dehighlight()
     {
-        indicator.Get().DisableIndicator(transform);
+        if (indicatorFocusTransform) indicator.Get().DisableIndicator(indicatorFocusTransform);
+        else indicator.Get().DisableIndicator(transform);
     }
 
     private void OnDisable()
