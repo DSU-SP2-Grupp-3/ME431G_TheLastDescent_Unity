@@ -197,9 +197,9 @@ public class AgentManager : Service<AgentManager>
     {
         if (modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased)
         {
-            resourceManager.LoseResource(selectedPlayer.queueResourceCost);
+            resourceManager.QueueResource(-selectedPlayer.queueResourceCost);
             selectedPlayer.UndoLastestCommand();
-            resourceManager.GetResource(selectedPlayer.queueResourceCost);
+            resourceManager.QueueResource(selectedPlayer.queueResourceCost);
         }
     }
 
