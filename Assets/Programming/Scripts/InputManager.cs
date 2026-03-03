@@ -53,7 +53,7 @@ public class InputManager : Service<InputManager>
 
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         bool didHit = Physics.Raycast(ray, out RaycastHit hit, clickableLayers);
-            OnHover?.Invoke(hit, didHit);
+        OnHover?.Invoke(hit, didHit);
     }
 
     private void Update()

@@ -63,6 +63,16 @@ public class PlayerUI : MonoBehaviour
         else statsContext.SetActive(show);
     }
 
+    public void OnHoverEnter()
+    {
+        agentManager.SetPortraitAgent(player);
+    }
+
+    public void OnHoverExit()
+    {
+        agentManager.SetPortraitAgent(null);
+    }
+
     private void HitPointsChanged(float changed)
     {
         if (changed <= 0)
