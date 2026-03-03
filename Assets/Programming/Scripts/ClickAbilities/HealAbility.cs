@@ -6,10 +6,11 @@ public class HealAbility : ScriptableObject
     public float healAmount;
     public float healAPCost;
     public float healResourceCost;
+    public DamageManager damageManager;
 
     public ResourceManager.ClickAbility GetAbility()
     {
-        HealCommand healCommand = new HealCommand(null, healAmount, healAPCost);
+        HealCommand healCommand = new HealCommand(null, damageManager, healAmount, healAPCost);
         ResourceManager.ClickAbility ability = new ResourceManager.ClickAbility(
             healCommand,
             healResourceCost,

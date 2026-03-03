@@ -266,13 +266,18 @@ public class WorldAgent : MonoBehaviour
         InterruptCommandQueue();
         dead = true;
         animator.SetTrigger("Die");
-        agentManager.Get().damageManager.DealDamageEvent -= TakeDamage;
         navMeshAgent.enabled = false;
+    }
+
+    public void Revive(float damage)
+    {
+        dead = false;
+        animator.SetTrigger("Revive");
+        navMeshAgent.enabled = true;
     }
 
     public void Highlight()
     {
-        Debug.Log("highlight");
         if (dead) return;
         if (indicatorFocusTransform) indicator.Get().GetIndicator(indicatorFocusTransform);
         else indicator.Get().GetIndicator(transform);
@@ -280,7 +285,6 @@ public class WorldAgent : MonoBehaviour
 
     public void Dehighlight()
     {
-        Debug.Log("dehighlight");
         if (indicatorFocusTransform) indicator.Get().DisableIndicator(indicatorFocusTransform);
         else indicator.Get().DisableIndicator(transform);
     }
@@ -293,14 +297,20 @@ public class WorldAgent : MonoBehaviour
 
     private void TakeDamage(float damage, WorldAgent target)
     {
+        if (dead && damage < 0)
+        {
+            Revive(damage);
+            return;
+        }
+
         //currently functions, would be cool if we implemented resistances or elemental damage or something
         if (target != this) return;
         Debug.Log($"{name} receiving {damage} damage");
 
-        bool dead = localStats.TakeDamage(damage);
+        bool zeroHitPointsRemaining = localStats.TakeDamage(damage);
         Debug.Log($"Remaining hit points: {localStats.hitPoints}");
 
-        if (dead)
+        if (zeroHitPointsRemaining)
         {
             Die();
         }

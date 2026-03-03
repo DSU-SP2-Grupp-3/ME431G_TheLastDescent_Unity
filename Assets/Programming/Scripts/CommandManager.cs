@@ -104,17 +104,6 @@ public static class CommandManager
         return package;
     }
 
-    public static CommandPackage GetHealPackage(WorldAgent invoker, float amount, float cost)
-    {
-        HealCommand healCommand = new HealCommand(invoker, amount, cost);
-        CommandPackage healPackage = new CommandPackage(invoker, healCommand);
-        healPackage.SetHighlight(invoker, true);
-        healPackage.SetType("heal");
-        healPackage.SetCursor("Heal");
-
-        return healPackage;
-    }
-
     public static bool AllMoveCommandsPossible(Command[] commands)
     {
         return !commands

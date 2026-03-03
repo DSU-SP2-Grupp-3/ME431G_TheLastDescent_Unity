@@ -15,7 +15,8 @@ public class AgentStats : ScriptableObject
         get => _hitPoints;
         set
         {
-            _hitPoints = value;
+            Debug.Log(value);
+            _hitPoints = Mathf.Clamp(value, 0f, initHitPoints);
             HitPointsChanged?.Invoke(_hitPoints);
         }
     }
