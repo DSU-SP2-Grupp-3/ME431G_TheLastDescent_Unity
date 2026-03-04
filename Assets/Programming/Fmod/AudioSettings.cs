@@ -10,9 +10,9 @@ public class AudioSettings : MonoBehaviour
     [Header("Volume")] [Range(0f, 1f)] 
     public float masterVolume;
     [Range(0f, 1f)]
-    public float effectVolume;
-    [Range(0f, 1f)]
     public float musicVolume;
+    [Range(0f, 1f)]
+    public float effectVolume;
     [Range(0f,1f)]
     public float ambienceVolume;
     [Range(0f,1f)]
@@ -20,14 +20,14 @@ public class AudioSettings : MonoBehaviour
     
 
     [SerializeField] private string masterVCAPath;
-    [SerializeField] private string effectVCAPath;
     [SerializeField] private string musicVCAPath;
+    [SerializeField] private string effectVCAPath;
     [SerializeField] private string ambienceVCAPath;
     [SerializeField] private string dialogueVCAPath;
     
     private VCA masterVCA;
-    private VCA effectVCA;
     private VCA musicVCA;
+    private VCA effectVCA;
     private VCA ambienceVCA;
     private VCA dialogueVCA;
     
@@ -51,8 +51,8 @@ public class AudioSettings : MonoBehaviour
         masterVCA = RuntimeManager.GetVCA(masterVCAPath);
         effectVCA = RuntimeManager.GetVCA(effectVCAPath);
         musicVCA = RuntimeManager.GetVCA(musicVCAPath);
-        ambienceVCA = RuntimeManager.GetVCA(ambienceVCAPath);
         dialogueVCA = RuntimeManager.GetVCA(dialogueVCAPath);
+        ambienceVCA = RuntimeManager.GetVCA(ambienceVCAPath);
     }
 
     // Update is called once per frame

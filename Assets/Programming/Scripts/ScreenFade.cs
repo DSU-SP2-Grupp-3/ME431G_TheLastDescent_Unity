@@ -41,10 +41,8 @@ public class ScreenFade : MonoBehaviour
         float i = 3;
         float time = 3;
         Color color = new();
-        Debug.Log("y01");
         while (time > 0)
         {
-            Debug.Log("ya");
             time -= Time.deltaTime;
             var currentFade = time / i;
             color.a = currentFade;
@@ -61,10 +59,8 @@ public class ScreenFade : MonoBehaviour
         float i = 3;
         float time = 0;
         Color color = new();
-        Debug.Log("y02");
         while (time < i)
         {
-            Debug.Log("y0");
             time += Time.deltaTime;
             var currentFade = time / i;
             color.a = currentFade;

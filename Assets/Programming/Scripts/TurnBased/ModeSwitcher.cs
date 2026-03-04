@@ -30,7 +30,7 @@ public sealed class ModeSwitcher : Service<ModeSwitcher>
 
     private void Start()
     {
-        EnterRealTime();
+        TryEnterRealTime();
     }
 
     public bool TryEnterTurnBased(bool automatic = false)

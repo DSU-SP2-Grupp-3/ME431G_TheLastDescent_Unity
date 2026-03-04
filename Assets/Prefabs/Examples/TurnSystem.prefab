@@ -304,12 +304,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1889929493577312775}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -4.5466523, y: 9.731231, z: -8.5128355}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5934055549027528760}
+  m_Father: {fileID: 2489599178037006765}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4831058190897558048
 MonoBehaviour:
@@ -326,9 +326,13 @@ MonoBehaviour:
   masterVolume: 1
   effectVolume: 1
   musicVolume: 1
+  ambienceVolume: 1
+  dialogueVolume: 1
   masterVCAPath: vca:/Master
   effectVCAPath: vca:/SFX
   musicVCAPath: vca:/Music
+  ambienceVCAPath: vca:/AMB
+  dialogueVCAPath: vca:/Voice
 --- !u!1 &2513619932852766816
 GameObject:
   m_ObjectHideFlags: 0
@@ -1351,6 +1355,7 @@ Transform:
   - {fileID: 3679258299918887771}
   - {fileID: 6092930827153051674}
   - {fileID: 5934055549027528760}
+  - {fileID: 5950090859176194247}
   - {fileID: 9129440660140956831}
   - {fileID: 4728237700439003615}
   m_Father: {fileID: 0}
@@ -3164,10 +3169,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 3672249222095929981, guid: 97ed44b748dc0c841b16e6a5fe72b766, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5950090859176194247}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 97ed44b748dc0c841b16e6a5fe72b766, type: 3}
 --- !u!114 &4091044356747433083 stripped
