@@ -205,7 +205,7 @@ public class WorldAgent : MonoBehaviour
         currentlyExecutingCommand?.Break();
         currentlyExecutingCommand = null;
         StopAllCoroutines();
-        agentManager.Get().resourceManager.RemoveCommandsFromQueue(commandQueue);
+        agentManager.Get().resourceManager.RemoveCommands(commandQueue);
         commandQueue.Clear();
         commandPacketSizes.Clear();
         CommandQueueUpdated?.Invoke(this, commandQueue, null);
@@ -215,7 +215,7 @@ public class WorldAgent : MonoBehaviour
     {
         if (commandPacketSizes.TryPop(out int size))
         {
-            resourceManager.ResetQueue();
+            resourceManager.RemoveCommands(commandQueue);
             Queue<Command> shortenedQueue = new();
             Command[] commandArray = commandQueue.ToArray();
             localStats.actionPoints.value = localStats.initActionPoints;

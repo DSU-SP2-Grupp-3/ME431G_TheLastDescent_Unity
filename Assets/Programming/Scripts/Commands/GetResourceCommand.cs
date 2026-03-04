@@ -23,6 +23,6 @@ public class GetResourceCommand : Command
 
     public override void Break()
     {
-        manager.RemoveCommandsFromQueue(new Command[] { this });
+        manager.RemoveCommands(new Command[] { this });
     }
 }

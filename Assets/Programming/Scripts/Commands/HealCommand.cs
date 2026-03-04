@@ -44,7 +44,7 @@ public class HealCommand : Command
     {
         invokingAgent.animator.SetTrigger("StopHeal");
         invokingAgent.AnimationEventTriggered -= CaptureAnimationEvent;
-        resourceManager.RemoveCommandsFromQueue(new Command[] { this });
+        resourceManager.RemoveCommands(new Command[] { this });
     }
 
     private void CaptureAnimationEvent(string trigger)

@@ -17,7 +17,7 @@ public class ResourceCounter : MonoBehaviour
     private void Awake()
     {
         resourceManager.collectedResources.Changed += OnResourcesChanged;
-        resourceManager.queuedResources.Changed += OnQueuedResourcesChanged;
+        resourceManager.queuedResourceCommands.Changed += OnQueuedResourceCommandsChanged;
     }
 
     private void OnResourcesChanged(float amount)
@@ -25,7 +25,7 @@ public class ResourceCounter : MonoBehaviour
         counter.text = $"{amount:0.}";
     }
 
-    private void OnQueuedResourcesChanged(Queue<Command> newQueue)
+    private void OnQueuedResourceCommandsChanged(List<Command> newQueue)
     {
         float amount = TotalQueueAmount(newQueue);
         if (amount == 0) queueCounter.text = "";
@@ -41,7 +41,7 @@ public class ResourceCounter : MonoBehaviour
         }
     }
 
-    private float TotalQueueAmount(Queue<Command> queue)
+    private float TotalQueueAmount(List<Command> queue)
     {
         return queue.Select(p => p.resourceCost).Sum();
     }

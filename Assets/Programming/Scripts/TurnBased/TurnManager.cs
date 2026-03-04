@@ -45,8 +45,7 @@ public class TurnManager : Service<TurnManager>
     {
         if (resourceManager.InDeficit())
         {
-            // todo: popup here
-            Debug.Log("Not enough resources to execute all queues");
+            turnManagerEvents.ResourceDeficitRejection?.Invoke();
             return;
         }
         if (AllPlayersAPUsed()) playerReady = true;
@@ -203,6 +202,6 @@ public class TurnManager : Service<TurnManager>
     [Serializable]
     public struct Events
     {
-        public UnityEvent StartExecutingTurn, FinishExecutingTurn;
+        public UnityEvent StartExecutingTurn, FinishExecutingTurn, ResourceDeficitRejection;
     }
 }
