@@ -4,7 +4,7 @@ using UnityEngine;
 public class GetResourceCommand : Command
 {
     public override float apCost { get; }
-    public override float resourceCost => 0f;
+    public override float resourceCost => -amount;
 
     private float amount;
     private ResourceManager manager;
@@ -17,9 +17,12 @@ public class GetResourceCommand : Command
 
     protected override IEnumerator Execute()
     {
-        manager.GetResource(amount);
+        manager.PayResource(this);
         yield return null;
     }
 
-    public override void Break() { }
+    public override void Break()
+    {
+        manager.RemoveCommandsFromQueue(new Command[] { this });
+    }
 }

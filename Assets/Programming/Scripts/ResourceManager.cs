@@ -1,44 +1,59 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "ResourceManager", menuName = "Manager/Resource Manager")]
 public class ResourceManager : ScriptableObject
 {
     public Watcher<float> collectedResources;
-    public Watcher<float> queuedResources;
+    public Watcher<Queue<Command>> queuedResources;
 
-    public void GetResource(float amount)
+    public void PayResource(Command command)
     {
-        collectedResources.value += amount;
+        Command nextCommand = queuedResources.value.Peek();
+        if (nextCommand == command)
+        {
+            queuedResources.value.Dequeue();
+            queuedResources.MarkChanged();
+            collectedResources.value -= nextCommand.resourceCost;
+        }
+        else
+        {
+            Debug.LogError($"Commmand {nameof(command)} is not the next command to pay resources");
+        }
     }
 
-    public void LoseResource(float lost)
+    public void QueueResource(Command command)
     {
-        collectedResources.value -= lost;
+        queuedResources.value.Enqueue(command);
+        queuedResources.MarkChanged();
     }
 
-    public void PayQueue()
+    public void RemoveCommandsFromQueue(IEnumerable<Command> commands)
     {
-        Debug.Assert(collectedResources.value >= queuedResources.value);
-        collectedResources.value -= queuedResources.value;
-        ResetQueue();
-    }
-
-    public void QueueResource(float queue)
-    {
-        queuedResources.value += queue;
+        Queue<Command> newQueue = new();
+        Command[] existingCommands = queuedResources.value.ToArray();
+        queuedResources.value.Clear();
+        for (int i = 0; i < existingCommands.Length; i++)
+        {
+            if (!commands.Contains(existingCommands[i])) newQueue.Enqueue(existingCommands[i]);
+        }
+        queuedResources.value = newQueue;
+        queuedResources.MarkChanged();
     }
 
     public void ResetQueue()
     {
-        queuedResources.value = 0f;
+        queuedResources.value.Clear();
+        queuedResources.MarkChanged();
     }
 
     private void OnEnable()
     {
-        collectedResources = new Watcher<float>(0, GreaterThanZero);
-        queuedResources = new Watcher<float>(0, GreaterThanZero);
+        collectedResources = new(0, GreaterThanZero);
+        queuedResources = new();
+        queuedResources.MarkChanged();
     }
 
     private float GreaterThanZero(float value)
@@ -72,7 +87,8 @@ public class ResourceManager : ScriptableObject
 
     public bool CanQueuePackage(CommandManager.CommandPackage package)
     {
-        return TotalCommandCollectionResourceCost(package.commands) <= collectedResources - queuedResources;
+        float queuedTotal = queuedResources.value.Select(c => c.resourceCost).Sum();
+        return TotalCommandCollectionResourceCost(package.commands) <= collectedResources - queuedTotal;
     }
 
     public float TotalCommandCollectionResourceCost(IEnumerable<Command> commands)
@@ -83,5 +99,11 @@ public class ResourceManager : ScriptableObject
             totalResourceCost += command.resourceCost;
         }
         return totalResourceCost;
+    }
+
+    public bool InDeficit()
+    {
+        float totalQueued = queuedResources.value.Select(c => c.resourceCost).Sum();
+        return collectedResources < totalQueued;
     }
 }

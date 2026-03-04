@@ -11,12 +11,14 @@ public class HealCommand : Command
 
     private float amount;
     private DamageManager damageManager;
+    private ResourceManager resourceManager;
 
     private bool animationEnded;
 
     public HealCommand(
         WorldAgent invokingAgent,
         DamageManager damageManager,
+        ResourceManager resourceManager,
         float amount,
         float healApCost,
         float healResourceCost
@@ -26,6 +28,7 @@ public class HealCommand : Command
         this.healApCost = healApCost;
         this.healResourceCost = healResourceCost;
         this.damageManager = damageManager;
+        this.resourceManager = resourceManager;
     }
 
     protected override IEnumerator Execute()
@@ -41,6 +44,7 @@ public class HealCommand : Command
     {
         invokingAgent.animator.SetTrigger("StopHeal");
         invokingAgent.AnimationEventTriggered -= CaptureAnimationEvent;
+        resourceManager.RemoveCommandsFromQueue(new Command[] { this });
     }
 
     private void CaptureAnimationEvent(string trigger)
@@ -54,7 +58,7 @@ public class HealCommand : Command
 
     private void PerformHeal()
     {
-        // todo: breaking before healing still spends resources;
+        resourceManager.PayResource(this);
         damageManager.DealDamage(-amount, invokingAgent);
     }
 }

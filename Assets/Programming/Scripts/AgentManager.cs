@@ -133,9 +133,10 @@ public class AgentManager : Service<AgentManager>
             return;
         }
 
-        float totalResources = resourceManager.TotalCommandCollectionResourceCost(currentCommandPackage.commands);
-        resourceManager.QueueResource(totalResources);
-        if (modeSwitcher.Get().mode == RoundClock.ProgressMode.RealTime) resourceManager.PayQueue();
+        foreach (Command command in currentCommandPackage.commands)
+        {
+            if (command.resourceCost != 0) resourceManager.QueueResource(command);
+        }
 
         // move other characters if select all is active
         if (allPlayersSelected && currentCommandPackage.type == "move")
@@ -197,9 +198,7 @@ public class AgentManager : Service<AgentManager>
     {
         if (modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased)
         {
-            resourceManager.QueueResource(-selectedPlayer.queueResourceCost);
-            selectedPlayer.UndoLastestCommand();
-            resourceManager.QueueResource(selectedPlayer.queueResourceCost);
+            selectedPlayer.UndoLastestCommand(resourceManager);
         }
     }
 

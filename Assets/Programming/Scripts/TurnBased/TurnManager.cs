@@ -24,6 +24,9 @@ public class TurnManager : Service<TurnManager>
     private Locator<ModeSwitcher> modeSwitcher;
     private Locator<Modal> modalLocator;
 
+    [SerializeField]
+    private ResourceManager resourceManager;
+
     public bool executingTurn { get; private set; }
 
     private void Awake()
@@ -40,6 +43,12 @@ public class TurnManager : Service<TurnManager>
 
     public void Ready()
     {
+        if (resourceManager.InDeficit())
+        {
+            // todo: popup here
+            Debug.Log("Not enough resources to execute all queues");
+            return;
+        }
         if (AllPlayersAPUsed()) playerReady = true;
         else
         {
@@ -48,9 +57,9 @@ public class TurnManager : Service<TurnManager>
                 () => playerReady = true,
                 () => playerReady = false
             );
-        } 
+        }
     }
-    
+
     public void Activate()
     {
         cycle = StartCoroutine(TurnCycle());
@@ -190,7 +199,7 @@ public class TurnManager : Service<TurnManager>
         }
         return used;
     }
-    
+
     [Serializable]
     public struct Events
     {

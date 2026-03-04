@@ -110,7 +110,7 @@ public class Visualizer : MonoBehaviour
 
         if (!canQueue || !enoughResouces) packageAPDisplay.color = Color.red;
 
-        if (packageApCost > 0f)
+        if (packageApCost > 0f || packageResourceCost > 0f)
         {
             packageAPDisplay.gameObject.SetActive(true);
             Vector2 mousePosition = Input.mousePosition;

@@ -205,22 +205,26 @@ public class WorldAgent : MonoBehaviour
         currentlyExecutingCommand?.Break();
         currentlyExecutingCommand = null;
         StopAllCoroutines();
+        agentManager.Get().resourceManager.RemoveCommandsFromQueue(commandQueue);
         commandQueue.Clear();
         commandPacketSizes.Clear();
         CommandQueueUpdated?.Invoke(this, commandQueue, null);
     }
 
-    public void UndoLastestCommand()
+    public void UndoLastestCommand(ResourceManager resourceManager)
     {
         if (commandPacketSizes.TryPop(out int size))
         {
+            resourceManager.ResetQueue();
             Queue<Command> shortenedQueue = new();
             Command[] commandArray = commandQueue.ToArray();
             localStats.actionPoints.value = localStats.initActionPoints;
             for (int i = 0; i < commandArray.Length - size; i++)
             {
-                shortenedQueue.Enqueue(commandArray[i]);
-                if (localStats) localStats.actionPoints.value -= commandArray[i].apCost;
+                Command command = commandArray[i];
+                shortenedQueue.Enqueue(command);
+                if (command.resourceCost != 0) resourceManager.QueueResource(command);
+                if (localStats) localStats.actionPoints.value -= command.apCost;
             }
             commandQueue = shortenedQueue;
             CommandQueueUpdated?.Invoke(this, commandQueue, null);
