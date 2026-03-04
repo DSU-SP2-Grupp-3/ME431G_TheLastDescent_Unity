@@ -12,8 +12,6 @@ public class ResourceCounter : MonoBehaviour
     {
         resourceManager.collectedResources.Changed += OnResourcesChanged;
         resourceManager.queuedResources.Changed += OnQueuedResourcesChanged;
-        queueCounter.text = "";
-        counter.text = "0";
     }
 
     private void OnResourcesChanged(float amount)
@@ -23,7 +21,6 @@ public class ResourceCounter : MonoBehaviour
 
     private void OnQueuedResourcesChanged(float amount)
     {
-        Debug.Log(queueCounter);
         if (amount <= 0) queueCounter.text = "";
         else queueCounter.text = $"-{amount:0}";
     }
