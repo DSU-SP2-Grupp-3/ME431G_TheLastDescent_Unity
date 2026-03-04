@@ -33,7 +33,6 @@ public class HealCommand : Command
 
     protected override IEnumerator Execute()
     {
-        // todo: healing command sometimes softlocks the game, check animation triggers
         invokingAgent.AnimationEventTriggered += CaptureAnimationEvent;
         invokingAgent.animator.SetTrigger("StartHeal");
         yield return new WaitUntil(() => animationEnded);

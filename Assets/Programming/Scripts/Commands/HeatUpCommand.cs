@@ -10,19 +10,21 @@ public class HeatUpCommand : Command
     public override float resourceCost => heatUpResourceCost;
 
     private float amount;
+    private ResourceManager resourceManager;
     private bool animationEnded;
-
 
     public HeatUpCommand(
         WorldAgent invokingAgent,
         float amount,
+        ResourceManager resourceManager,
         float heatUpApCost,
         float heatUpResourceCost
     ) : base(invokingAgent)
     {
         this.amount = amount;
+        this.resourceManager = resourceManager;
         this.heatUpApCost = heatUpApCost;
-        this.heatUpApCost = heatUpResourceCost;
+        this.heatUpResourceCost = heatUpResourceCost;
     }
 
     protected override IEnumerator Execute()
@@ -37,6 +39,7 @@ public class HeatUpCommand : Command
     {
         invokingAgent.animator.SetTrigger("StopHeal");
         invokingAgent.AnimationEventTriggered -= CaptureAnimationEvent;
+        resourceManager.RemoveCommands(new Command[] { this });
     }
 
     private void CaptureAnimationEvent(string trigger)
@@ -50,6 +53,9 @@ public class HeatUpCommand : Command
 
     private void PerformHeatUp()
     {
-
+        resourceManager.PayResource(this);
+        // maybe make a temperature manager like the damageManager and use that here
+        // could be useful for managing debuffs
+        invokingAgent.localStats.temperature.value += amount;
     }
 }

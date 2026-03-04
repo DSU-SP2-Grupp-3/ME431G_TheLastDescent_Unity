@@ -58,20 +58,17 @@ public class ResourceManager : ScriptableObject
         public readonly string validCursorPath;
         public readonly string invalidCursorPath;
         public readonly Command[] commands;
-        public readonly float resourceCost;
 
-        public ClickAbility(Command[] commands, float resourceCost, string validCursorPath, string invalidCursorPath)
+        public ClickAbility(Command[] commands, string validCursorPath, string invalidCursorPath)
         {
             this.commands = commands;
-            this.resourceCost = resourceCost;
             this.validCursorPath = validCursorPath;
             this.invalidCursorPath = invalidCursorPath;
         }
 
-        public ClickAbility(Command command, float resourceCost, string validCursorPath, string invalidCursorPath)
+        public ClickAbility(Command command, string validCursorPath, string invalidCursorPath)
         {
             this.commands = new Command[] { command };
-            this.resourceCost = resourceCost;
             this.validCursorPath = validCursorPath;
             this.invalidCursorPath = invalidCursorPath;
         }

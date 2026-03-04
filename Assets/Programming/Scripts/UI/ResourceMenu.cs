@@ -9,6 +9,8 @@ public class ResourceMenu : MonoBehaviour
 
     [SerializeField]
     private HealAbility healAbilityInfo;
+    [SerializeField]
+    private HeatUpAbility heatUpAbilityInfo;
 
     private void Start()
     {
@@ -18,5 +20,10 @@ public class ResourceMenu : MonoBehaviour
     public void ActivateHealAbility()
     {
         agentManager.Get().SetClickAbility(healAbilityInfo.GetAbility());
+    }
+
+    public void ActivateHeatUpAbility()
+    {
+        agentManager.Get().SetClickAbility(heatUpAbilityInfo.GetAbility());
     }
 }

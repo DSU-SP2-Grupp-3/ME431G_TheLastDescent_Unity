@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewHealAbility", menuName = "Ability/Heal", order = 0)]
-public class HealAbility : ScriptableObject
+public class HealAbility : ScriptableObject, IClickAbility
 {
     public float healAmount;
     public float healAPCost;
@@ -19,12 +19,7 @@ public class HealAbility : ScriptableObject
             healAPCost,
             healResourceCost
         );
-        ResourceManager.ClickAbility ability = new ResourceManager.ClickAbility(
-            healCommand,
-            healResourceCost,
-            "Heal", "NoHeal"
-        );
 
-        return ability;
+        return new ResourceManager.ClickAbility(healCommand, "Heal", "NoHeal");
     }
 }
