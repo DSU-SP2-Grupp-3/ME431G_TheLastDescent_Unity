@@ -31,6 +31,14 @@ public class TextUpdater : MonoBehaviour
 
     public void SetText(float number)
     {
-        textComponent.text = $"{number:0,0} DMG";
+        if (number > 0)
+        {
+            textComponent.color = Color.red;
+        }
+        else
+        {
+            textComponent.color = Color.green;
+        }
+        textComponent.text = $"{MathF.Abs(number):0,0} DMG";
     }
 }

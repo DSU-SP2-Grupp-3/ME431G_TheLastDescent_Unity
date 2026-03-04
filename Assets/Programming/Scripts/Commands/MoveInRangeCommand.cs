@@ -84,11 +84,11 @@ public class MoveInRangeCommand : Command, IMoveCommand
         invokingAgent.navMeshAgent.ResetPath();
     }
 
-    private void CaptureStepEvent(string trigger)
+    private void CaptureStepEvent(string trigger, GameObject gameObject)
     {
         if (trigger == "step")
         {
-            audioManager.PlayAudioEvent("Footstep");
+            audioManager.PlayAudioEvent("Footstep", gameObject);
         }
     }
 
