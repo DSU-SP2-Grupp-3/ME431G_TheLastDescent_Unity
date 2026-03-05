@@ -6,5 +6,5 @@ public class CinematicMoveInfo
     [SerializeField]
     public int ID;
     [SerializeField]
-    public Vector3 relativePosition;
+    public Vector3 worldPosition;
 }
