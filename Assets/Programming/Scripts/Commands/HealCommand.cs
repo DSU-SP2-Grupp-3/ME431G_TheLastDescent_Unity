@@ -46,7 +46,7 @@ public class HealCommand : Command
         resourceManager.RemoveCommands(new Command[] { this });
     }
 
-    private void CaptureAnimationEvent(string trigger)
+    private void CaptureAnimationEvent(string trigger, GameObject _)
     {
         if (trigger == "heal")
         {
