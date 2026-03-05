@@ -17,7 +17,7 @@ public class CinematicAnimationCommand : Command
         List<IEnumerator> enumerator = new();
         cinematicKitLocator = new();
         Locator<TurnManager> turnManagerLocator = new();
-        foreach(CinematicAnimationInfo agentinfo in cinematicAnimationInfo)
+        foreach (CinematicAnimationInfo agentinfo in cinematicAnimationInfo)
         {
             WorldAgent worldAgent = cinematicKitLocator.Get().GetActor(agentinfo.ActorID);
             TriggerInfo triggerInfo = new TriggerInfo(agentinfo.startTrigger, agentinfo.endTrigger);
@@ -26,5 +26,7 @@ public class CinematicAnimationCommand : Command
         yield return turnManagerLocator.Get().WaitForAll(enumerator);
     }
     public override void Break() { }
-    public override float cost { get; }
+    public override float apCost { get; }
+    /// <inheritdoc />
+    public override float resourceCost => 0f;
 }
