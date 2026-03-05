@@ -5,11 +5,11 @@ public class SettingsStorage : ScriptableObject
 {
     //-E this is literally just used to store variables across scenes so that settings changed in the menu will stay changed in the game <3
     [Header("Sound/FMOD")] 
-    public float Master;
-    public float Sound;
-    public float Music;
-    public float Dialogue;
-    public float Ambience;
+    public float masterVolume;
+    public float effectVolume;
+    public float musicVolume;
+    public float ambienceVolume;
+    public float dialogueVolume;
     
     [Header("Color")] 
     public Color PlayerHpColor;
