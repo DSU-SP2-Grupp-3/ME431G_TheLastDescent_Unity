@@ -97,11 +97,11 @@ public class MoveCommand : Command, IMoveCommand
         };
     }
 
-    private void CaptureStepEvent(string trigger)
+    private void CaptureStepEvent(string trigger, GameObject gameObject)
     {
         if (trigger == "step")
         {
-            audioManager.PlayAudioEvent("Footstep");
+            audioManager.PlayAudioEvent("Footstep", gameObject);
         }
     }
 
