@@ -20,7 +20,7 @@ public class CinematicMoveCommand : Command
         foreach(CinematicMoveInfo agentinfo in cinematicMoveInfos)
         {
             WorldAgent worldAgent = cinematicKitLocator.Get().GetActor(agentinfo.ID);
-            enumerator.Add(worldAgent.OverwriteQueueIEnumerator(new MoveCommand(invokingAgent.transform.position - agentinfo.relativePosition, worldAgent)));
+            enumerator.Add(worldAgent.OverwriteQueueIEnumerator(new MoveCommand(agentinfo.worldPosition, worldAgent)));
         }
         yield return turnManagerLocator.Get().WaitForAll(enumerator);
     }
