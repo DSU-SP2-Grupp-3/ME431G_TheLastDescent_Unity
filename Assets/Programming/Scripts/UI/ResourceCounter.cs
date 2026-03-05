@@ -1,21 +1,48 @@
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
 public class ResourceCounter : MonoBehaviour
 {
     [SerializeField]
-    private TMP_Text counter;
+    private TMP_Text counter, queueCounter;
     [SerializeField]
     private ResourceManager resourceManager;
+    [SerializeField]
+    private Color positiveColor = Color.green;
+    [SerializeField]
+    private Color negativeColor = Color.red;
 
-    private void Start()
+    private void Awake()
     {
-        resourceManager.ResourcesChanged += OnResourcesChanged;
-        counter.text = "0";
+        resourceManager.collectedResources.Changed += OnResourcesChanged;
+        resourceManager.queuedResourceCommands.Changed += OnQueuedResourceCommandsChanged;
     }
 
     private void OnResourcesChanged(float amount)
     {
         counter.text = $"{amount:0.}";
+    }
+
+    private void OnQueuedResourceCommandsChanged(List<Command> newQueue)
+    {
+        float amount = TotalQueueAmount(newQueue);
+        if (amount == 0) queueCounter.text = "";
+        else if (amount < 0)
+        {
+            queueCounter.color = positiveColor;
+            queueCounter.text = $"+{Mathf.Abs(amount):0}";
+        }
+        else
+        {
+            queueCounter.color = negativeColor;
+            queueCounter.text = $"-{amount:0}";
+        }
+    }
+
+    private float TotalQueueAmount(List<Command> queue)
+    {
+        return queue.Select(p => p.resourceCost).Sum();
     }
 }

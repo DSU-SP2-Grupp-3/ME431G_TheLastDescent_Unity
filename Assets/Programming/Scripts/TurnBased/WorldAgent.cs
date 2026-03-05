@@ -25,6 +25,8 @@ public class WorldAgent : MonoBehaviour
 
     [Tooltip("True if this is the agent (player) should be the default selection when loading the scene")]
     public bool defaultSelected;
+    [Tooltip("If true, prevent queueing commands while the command queue is being executed")]
+    public bool lockDuringQueueExecution;
 
     public Team team;
     [Header("References")]
@@ -63,6 +65,7 @@ public class WorldAgent : MonoBehaviour
     private Locator<AgentManager> agentManager;
     private Locator<TurnManager> turnManager;
     private Locator<Indicator> indicator;
+    private Locator<RoundClock> roundClock;
 
     public AgentManager manager => agentManager.Get();
 
@@ -72,6 +75,18 @@ public class WorldAgent : MonoBehaviour
     private Stack<int> commandPacketSizes;
 
     public bool queueEmpty => commandQueue.Count == 0;
+    public float queueResourceCost
+    {
+        get
+        {
+            float total = 0f;
+            foreach (Command command in commandQueue)
+            {
+                total += command.resourceCost;
+            }
+            return total;
+        }
+    }
     private bool breakCommandQueue;
 
     private void Awake()
@@ -85,9 +100,10 @@ public class WorldAgent : MonoBehaviour
         modeSwitcher = new();
         turnManager = new();
         indicator = new();
+        roundClock = new();
 
-        if (stats) localStats = stats.Clone();
         if (team == Team.Player) active = true;
+        if (stats) localStats = stats.Clone();
     }
 
     private void Start()
@@ -145,18 +161,20 @@ public class WorldAgent : MonoBehaviour
 
     public void QueueCommands(Command[] commands)
     {
+        if (lockDuringQueueExecution && currentExecutingCommandCoroutine != null) return;
         if (dead) return;
         commandPacketSizes.Push(commands.Length);
         foreach (Command command in commands)
         {
             commandQueue.Enqueue(command);
-            if (localStats) localStats.actionPoints -= command.cost;
+            if (localStats) localStats.actionPoints.value -= command.apCost;
         }
         CommandQueueUpdated?.Invoke(this, commandQueue, null);
     }
 
     public void OverwriteQueue(Command command)
     {
+        if (lockDuringQueueExecution && currentExecutingCommandCoroutine != null) return;
         InterruptCommandQueue();
         QueueCommand(command);
         StartCoroutine(ExecuteCommandQueue());
@@ -164,6 +182,7 @@ public class WorldAgent : MonoBehaviour
 
     public void OverwriteQueue(Command[] commands)
     {
+        if (lockDuringQueueExecution && currentExecutingCommandCoroutine != null) return;
         InterruptCommandQueue();
         QueueCommands(commands);
         StartCoroutine(ExecuteCommandQueue());
@@ -186,22 +205,26 @@ public class WorldAgent : MonoBehaviour
         currentlyExecutingCommand?.Break();
         currentlyExecutingCommand = null;
         StopAllCoroutines();
+        agentManager.Get().resourceManager.RemoveCommands(commandQueue);
         commandQueue.Clear();
         commandPacketSizes.Clear();
         CommandQueueUpdated?.Invoke(this, commandQueue, null);
     }
 
-    public void UndoLastestCommand()
+    public void UndoLastestCommand(ResourceManager resourceManager)
     {
         if (commandPacketSizes.TryPop(out int size))
         {
+            resourceManager.RemoveCommands(commandQueue);
             Queue<Command> shortenedQueue = new();
             Command[] commandArray = commandQueue.ToArray();
-            localStats.actionPoints = localStats.initActionPoints;
+            localStats.actionPoints.value = localStats.initActionPoints;
             for (int i = 0; i < commandArray.Length - size; i++)
             {
-                shortenedQueue.Enqueue(commandArray[i]);
-                if (localStats) localStats.actionPoints -= commandArray[i].cost;
+                Command command = commandArray[i];
+                shortenedQueue.Enqueue(command);
+                if (command.resourceCost != 0) resourceManager.QueueResource(command);
+                if (localStats) localStats.actionPoints.value -= command.apCost;
             }
             commandQueue = shortenedQueue;
             CommandQueueUpdated?.Invoke(this, commandQueue, null);
@@ -210,7 +233,7 @@ public class WorldAgent : MonoBehaviour
 
     public IEnumerator ExecuteCommandQueue()
     {
-        if (localStats) localStats.actionPoints = localStats.initActionPoints;
+        if (localStats) localStats.actionPoints.value = localStats.initActionPoints;
         commandPacketSizes.Clear();
         while (commandQueue.TryDequeue(out Command command))
         {
@@ -257,15 +280,23 @@ public class WorldAgent : MonoBehaviour
     {
         // todo: emit event here so agent manager can check if all players are dead
         Debug.Log($"Agent {name} has died");
+        Dehighlight();
         InterruptCommandQueue();
         dead = true;
         animator.SetTrigger("Die");
-        agentManager.Get().damageManager.DealDamageEvent -= TakeDamage;
         navMeshAgent.enabled = false;
+    }
+
+    public void Revive(float damage)
+    {
+        dead = false;
+        animator.SetTrigger("Revive");
+        navMeshAgent.enabled = true;
     }
 
     public void Highlight()
     {
+        if (dead) return;
         if (indicatorFocusTransform) indicator.Get().GetIndicator(indicatorFocusTransform);
         else indicator.Get().GetIndicator(transform);
     }
@@ -284,14 +315,20 @@ public class WorldAgent : MonoBehaviour
 
     private void TakeDamage(float damage, WorldAgent target)
     {
+        if (dead && damage < 0)
+        {
+            Revive(damage);
+            return;
+        }
+
         //currently functions, would be cool if we implemented resistances or elemental damage or something
         if (target != this) return;
         Debug.Log($"{name} receiving {damage} damage");
 
-        bool dead = localStats.TakeDamage(damage);
+        bool zeroHitPointsRemaining = localStats.TakeDamage(damage);
         Debug.Log($"Remaining hit points: {localStats.hitPoints}");
 
-        if (dead)
+        if (zeroHitPointsRemaining)
         {
             Die();
         }
@@ -319,7 +356,7 @@ public class WorldAgent : MonoBehaviour
         float totalCost = 0f;
         foreach (Command command in commandQueue)
         {
-            totalCost += command.cost;
+            totalCost += command.apCost;
         }
         return totalCost;
     }

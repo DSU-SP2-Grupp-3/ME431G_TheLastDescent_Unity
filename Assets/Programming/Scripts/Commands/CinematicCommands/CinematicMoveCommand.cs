@@ -25,5 +25,7 @@ public class CinematicMoveCommand : Command
         yield return turnManagerLocator.Get().WaitForAll(enumerator);
     }
     public override void Break() { }
-    public override float cost { get; }
+    public override float apCost { get; }
+    /// <inheritdoc />
+    public override float resourceCost => 0f;
 }
