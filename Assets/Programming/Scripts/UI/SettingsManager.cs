@@ -16,7 +16,7 @@ public class SettingsManager : Service<SettingsManager>
     public Slider DialogueSlider;
 
     public void Open() { open?.Invoke(); }
-    public void Close() { close?.Invoke(); }
+    public void Close() { close?.Invoke(); Debug.Log("wawa");}
     public void MasterVol() { AudioSettings.Instance.masterVolume = MasterSlider.value; AudioSettings.Instance.UpdateVolumes(); AudioSettings.Instance.SetVolumes();}    
     public void SFXVol() { AudioSettings.Instance.effectVolume = SFXSlider.value; AudioSettings.Instance.UpdateVolumes(); AudioSettings.Instance.SetVolumes();}
     public void MusicVol() { AudioSettings.Instance.musicVolume = MusicSlider.value; AudioSettings.Instance.UpdateVolumes(); AudioSettings.Instance.SetVolumes();}

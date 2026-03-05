@@ -15,6 +15,7 @@ public class SettingsStorage : ScriptableObject
     public Color PlayerHpColor;
     public Color PlayerAPColor;
     public Color DamagePopColor;
+    public Color HealPopColor;
     public Color PathColor;
     public Color IndicatorColor;
 }
