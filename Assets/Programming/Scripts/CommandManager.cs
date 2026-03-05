@@ -10,6 +10,18 @@ public static class CommandManager
         return new CommandPackage();
     }
 
+    public static CommandPackage OnlyCommands(IEnumerable<Command> commands)
+    {
+        CommandPackage empty = new CommandPackage();
+        foreach (Command command in commands)
+        {
+            empty.AddCommand(command);
+        }
+        empty.SetType("commands");
+
+        return empty;
+    }
+
     public static CommandPackage GetMovePackage(WorldAgent agent, Vector3 position)
     {
         MoveCommand moveCommand = new MoveCommand(agent.GetLastMoveCommandToPosition(), position, agent);
@@ -17,7 +29,7 @@ public static class CommandManager
         CommandPackage package = new CommandPackage(agent, moveCommand);
         package.SetHighlight(agent, false);
         package.SetType("move");
-        package.SetCursor("Cursors/Walk");
+        package.SetCursor("Walk");
         return package;
     }
 
@@ -50,16 +62,27 @@ public static class CommandManager
         interactionPackage.SetHighlight(agent, false);
         interactionPackage.SetHighlight(result.interactableAgent, true);
         interactionPackage.SetType("interaction");
-        interactionPackage.SetCursor("Cursors/Point");
+        interactionPackage.SetCursor("Point");
 
         return interactionPackage;
     }
 
-    public static CommandPackage GetSelectPlayerPackage(WorldAgent agent)
+    public static CommandPackage GetSelectPlayerPackage(WorldAgent agent, ResourceManager.ClickAbility clickAbility)
     {
         CommandPackage package = new CommandPackage(agent);
         package.SetHighlight(agent, true);
         package.SetType("select");
+
+        if (clickAbility != null)
+        {
+            package.SetCursor(clickAbility.validCursorPath);
+            foreach (Command command in clickAbility.commands)
+            {
+                command.ChangeInvoker(agent);
+                package.AddCommand(command);
+            }
+        }
+
         return package;
     }
 
@@ -88,7 +111,7 @@ public static class CommandManager
         package.SetHighlight(attacker, false);
         package.SetHighlight(receiver, false);
         package.SetType("attack");
-        package.SetCursor("Cursors/Crosshair");
+        package.SetCursor("Crosshair");
 
         return package;
     }
@@ -130,7 +153,7 @@ public static class CommandManager
         public CommandPackage()
         {
             this.agent = null;
-            this.commands = null;
+            this.commands = new();
             highlights = new Dictionary<WorldAgent, bool>();
             empty = true;
         }
@@ -138,7 +161,7 @@ public static class CommandManager
         public CommandPackage(WorldAgent agent)
         {
             this.agent = agent;
-            this.commands = null;
+            this.commands = new();
             highlights = new Dictionary<WorldAgent, bool>();
             clickOnAgentOnly = true;
         }
@@ -174,7 +197,7 @@ public static class CommandManager
 
         public void SetCursor(string resourcePath)
         {
-            cursorInfo = Resources.Load<CursorInfo>(resourcePath);
+            cursorInfo = Resources.Load<CursorInfo>($"Cursors/{resourcePath}");
         }
 
         public bool QueueCommands(RoundClock.ProgressMode mode)
@@ -199,7 +222,8 @@ public static class CommandManager
             float queueCost = 0f;
             foreach (Command command in commands)
             {
-                queueCost += command.cost;
+                queueCost += command.apCost;
+                if (!agent) return false;
                 if (agent.TotalCommandQueueCost() + queueCost > agent.localStats.initActionPoints) return false;
             }
             return true;
@@ -211,7 +235,7 @@ public static class CommandManager
             if (commands == null) return total;
             foreach (Command command in commands)
             {
-                total += command.cost;
+                total += command.apCost;
             }
             return total;
         }

@@ -5,9 +5,11 @@ using FMOD.Studio;
 
 public class AudioSettings : MonoBehaviour
 {
+    [SerializeField] private SettingsStorage storedSettings;
     public static AudioSettings Instance { get; private set; }
 
-    [Header("Volume")] [Range(0f, 1f)] 
+    [Header("Volume")] 
+    [Range(0f, 1f)] 
     public float masterVolume;
     [Range(0f, 1f)]
     public float musicVolume;
@@ -18,7 +20,7 @@ public class AudioSettings : MonoBehaviour
     [Range(0f,1f)]
     public float dialogueVolume;
     
-
+    [Header("Paths")]
     [SerializeField] private string masterVCAPath;
     [SerializeField] private string musicVCAPath;
     [SerializeField] private string effectVCAPath;
@@ -48,6 +50,12 @@ public class AudioSettings : MonoBehaviour
 
     void Start()
     {
+        masterVolume = storedSettings.masterVolume;
+        effectVolume = storedSettings.effectVolume;
+        musicVolume = storedSettings.musicVolume;
+        ambienceVolume = storedSettings.ambienceVolume;
+        dialogueVolume = storedSettings.dialogueVolume;
+        
         masterVCA = RuntimeManager.GetVCA(masterVCAPath);
         effectVCA = RuntimeManager.GetVCA(effectVCAPath);
         musicVCA = RuntimeManager.GetVCA(musicVCAPath);
@@ -56,12 +64,22 @@ public class AudioSettings : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    public void UpdateVolumes()
     {
-        masterVCA.setVolume(masterVolume);
-        effectVCA.setVolume(effectVolume);
-        musicVCA.setVolume(musicVolume);
-        ambienceVCA.setVolume(ambienceVolume);
-        dialogueVCA.setVolume(dialogueVolume);
+        Debug.Log("volumes updated" + storedSettings.masterVolume + " " + masterVolume);
+        storedSettings.masterVolume = masterVolume;
+        storedSettings.effectVolume = effectVolume;
+        storedSettings.musicVolume = musicVolume;
+        storedSettings.ambienceVolume = ambienceVolume;
+        storedSettings.dialogueVolume = dialogueVolume;
+    }
+
+    public void SetVolumes()
+    {
+        masterVCA.setVolume(storedSettings.masterVolume);
+        effectVCA.setVolume(storedSettings.effectVolume);
+        musicVCA.setVolume(storedSettings.musicVolume);
+        ambienceVCA.setVolume(storedSettings.ambienceVolume);
+        dialogueVCA.setVolume(storedSettings.dialogueVolume);
     }
 }

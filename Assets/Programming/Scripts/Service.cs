@@ -8,22 +8,24 @@ using UnityEngine;
 /// before. Only the instance that registered itself most recently will be accessed by the Locator.
 /// </summary>
 /// <typeparam name="T">The type of the component that is inheriting Service. For example: Clock : Service&lt;Clock></typeparam>
-public abstract class Service<T> : MonoBehaviour
+public abstract class Service<T> : MonoBehaviour where T : class
 {
-    public event Action<Service<T>> OnRegister;
-    public event Action<Service<T>> OnDeregister; 
-    
+    public static event Action<T> OnRegister;
+    public static event Action<T> OnDeregister;
+
     public static Service<T> instance;
+
+    public static bool registered => instance;
+
     protected void Register()
     {
-        if (instance) OnDeregister?.Invoke(instance);
+        if (instance) OnDeregister?.Invoke(instance as T);
         instance = this;
-        OnRegister?.Invoke(instance);
+        OnRegister?.Invoke(instance as T);
     }
     protected void Deregister()
     {
-        if (instance) OnDeregister?.Invoke(instance);
+        if (instance) OnDeregister?.Invoke(instance as T);
         instance = null;
     }
-
 }

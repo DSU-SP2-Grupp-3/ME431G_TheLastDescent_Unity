@@ -14,13 +14,15 @@ public class InputManager : Service<InputManager>
     /// <summary>
     /// Triggers when the left mouse button is clicked
     /// </summary>
-    public event Action OnClick;
+    public event Action OnRightClick;
+    public event Action OnLeftClick;
     public event Action OnHold;
     public event Action OnScrollUp;
     public event Action OnScrollDown;
 
     [SerializeField]
     private LayerMask clickableLayers;
+    [SerializeField] private LayerMask[] layerPriority;
 
     private Camera mainCamera;
 
@@ -51,10 +53,26 @@ public class InputManager : Service<InputManager>
         }
 
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        bool didHit = Physics.Raycast(ray, out RaycastHit hit, clickableLayers);
+        RaycastHit[] AllRayReturns = Physics.RaycastAll(ray, float.MaxValue, clickableLayers);
+        var hit = GetRayPriority(AllRayReturns, out bool didHit);
         OnHover?.Invoke(hit, didHit);
     }
-
+    private RaycastHit GetRayPriority(RaycastHit[] allRayReturns, out bool didHit)
+    {
+        foreach (LayerMask priorityLayer in layerPriority)
+        {
+            foreach (RaycastHit hit in allRayReturns)
+            {
+                if (((1 << hit.collider.gameObject.layer) & priorityLayer) != 0)
+                {
+                    didHit = true;
+                    return hit;
+                }
+            }
+        }
+        didHit = false;
+        return new RaycastHit();
+    }
     private void Update()
     {
         if (Input.mouseScrollDelta.y > 0)
@@ -68,9 +86,14 @@ public class InputManager : Service<InputManager>
 
         if (Input.GetMouseButtonDown(0))
         {
-            OnClick?.Invoke();
+            OnRightClick?.Invoke();
             lastStartHold = Time.time;
         }
+        if (Input.GetMouseButtonDown(1))
+        {
+            OnLeftClick?.Invoke();
+        }
+
         if (Input.GetMouseButton(0))
         {
             if (lastStartHold + holdDelay < Time.time) OnHold?.Invoke();

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -41,10 +42,12 @@ public class MeleeAttackBehaviour : BehaviourDefinition
         aiAgent.navMeshAgent
                .SetPath(path); // SetPath here so remainingDistance can be calculated in TrimPathToMoveRange
         bool trimmed = TrimPathToMoveRange(aiAgent, ref path, aiAgent.localStats.movement);
-
+        
         bool canAttackWithinRemainingDistance =
-            aiAgent.navMeshAgent.remainingDistance
-            < aiAgent.localStats.movement + aiAgent.weaponStats.attackRange;
+            (aiAgent.navMeshAgent.remainingDistance 
+            < aiAgent.localStats.movement + aiAgent.weaponStats.attackRange) 
+            && !NavMesh.Raycast(aiAgent.transform.position, closestTarget.transform.position, out NavMeshHit navMeshHit, NavMesh.AllAreas);
+
         if (!trimmed || canAttackWithinRemainingDistance)
         {
             //create and queue a movecommand using the path and the agent
