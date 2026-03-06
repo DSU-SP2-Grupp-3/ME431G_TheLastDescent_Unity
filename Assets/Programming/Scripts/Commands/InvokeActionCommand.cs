@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class InvokeActionCommand : Command
 {
-    public override float cost => 0f;
-    
+    public override float apCost => 0f;
+    /// <inheritdoc />
+    public override float resourceCost => 0f;
+
     private Action action;
 
     public InvokeActionCommand(WorldAgent invokingAgent, Action action) : base(invokingAgent)

@@ -20,11 +20,15 @@ public class CinematicLookAtCommand : Command
         foreach(CinematicLookAtInfo agentinfo in cinematicLookAtInfos)
         {
             WorldAgent StartAgent = cinematicKitLocator.Get().GetActor(agentinfo.IDStart);
-            WorldAgent EndAgent = cinematicKitLocator.Get().GetActor(agentinfo.IDStart);
+            WorldAgent EndAgent = cinematicKitLocator.Get().GetActor(agentinfo.IDTarget);
+            Debug.Log(StartAgent);
+            Debug.Log(EndAgent);
             enumerator.Add(StartAgent.OverwriteQueueIEnumerator(new LookCommand(StartAgent, EndAgent)));
         }
         yield return turnManagerLocator.Get().WaitForAll(enumerator);
     }
     public override void Break() { }
-    public override float cost { get; }
+    public override float apCost { get; }
+    /// <inheritdoc />
+    public override float resourceCost => 0f;
 }

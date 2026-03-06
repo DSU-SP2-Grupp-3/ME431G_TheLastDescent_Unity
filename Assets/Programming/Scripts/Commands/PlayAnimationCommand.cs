@@ -4,7 +4,9 @@ using UnityEngine;
 public class PlayAnimationCommand : Command
 {
 
-    public override float cost => 0f;
+    public override float apCost => 0f;
+    /// <inheritdoc />
+    public override float resourceCost => 0f;
 
     private Animator animator;
     private TriggerInfo triggerInfo;

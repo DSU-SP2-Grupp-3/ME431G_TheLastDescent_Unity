@@ -25,6 +25,9 @@ public class Visualizer : MonoBehaviour
 
     private HashSet<WorldAgent> highlightedAgents;
 
+    [SerializeField]
+    private ResourceManager resourceManager;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
@@ -86,36 +89,40 @@ public class Visualizer : MonoBehaviour
         previewLineRenderer.positionCount = 0;
         packageAPDisplay.color = Color.white;
         packageAPDisplay.rectTransform.anchoredPosition = Vector2.zero;
-        
+
         // calculate bools
         bool canQueue = commandPackage.CanQueueCommands();
+        bool enoughResouces = resourceManager.CanQueuePackage(commandPackage);
         bool realTime = modeSwitcher.Get().mode == RoundClock.ProgressMode.RealTime;
-        float packageCost = commandPackage.TotalPackageCommandCost();
-        
+        float packageApCost = commandPackage.TotalPackageCommandCost();
+        float packageResourceCost = resourceManager.TotalCommandCollectionResourceCost(commandPackage.commands);
+
         // show package cursor
         CursorInfo cInfo = commandPackage.cursorInfo;
         if (cInfo) Cursor.SetCursor(cInfo.texture, cInfo.hotSpot, cInfo.cursorMode);
         else Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+        packageAPDisplay.text = "";
 
-        if (commandPackage.empty) return;
-        
-        // if real time don't show preview or ap cost
         if (turnManager.Get().executingTurn) return;
-        
+
         HighlightAgents(commandPackage.highlights, realTime);
 
-        if (realTime || commandPackage.clickOnAgentOnly) return;
-        
-        if (!canQueue) packageAPDisplay.color = Color.red;
 
-        if (commandPackage.TotalPackageCommandCost() > 0f)
+        if (!canQueue || !enoughResouces) packageAPDisplay.color = Color.red;
+
+        if (packageApCost > 0f || packageResourceCost > 0f)
         {
             packageAPDisplay.gameObject.SetActive(true);
             Vector2 mousePosition = Input.mousePosition;
             packageAPDisplay.rectTransform.anchoredPosition = mousePosition;
-            packageAPDisplay.text = $"{commandPackage.TotalPackageCommandCost():0.0} AP";
+            if (!realTime) packageAPDisplay.text = $"{packageApCost:0.0} AP\n";
+            if (packageResourceCost > 0) packageAPDisplay.text += $"{packageResourceCost:0} Res";
         }
-        
+
+        if (commandPackage.empty) return;
+
+        if (realTime || commandPackage.clickOnAgentOnly) return;
+
         foreach (Command command in commandPackage.commands)
         {
             command.VisualizePreview(this);

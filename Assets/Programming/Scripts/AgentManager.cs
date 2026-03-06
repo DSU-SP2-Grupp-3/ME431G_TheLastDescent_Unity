@@ -9,7 +9,9 @@ public class AgentManager : Service<AgentManager>
 {
     public event Action<WorldAgent> AgentRegistered;
     public event Action<CommandManager.CommandPackage> PreviewUpdated;
+
     public UnityEvent NotEnoughAP;
+    public UnityEvent NotEnouchResources;
 
     private List<WorldAgent> players;
     private List<WorldAgent> allAgents;
@@ -21,11 +23,15 @@ public class AgentManager : Service<AgentManager>
 
     private WorldAgent selectedPlayer;
     private WorldAgent defaultPlayer;
+
     public DamageManager damageManager;
+    public ResourceManager resourceManager;
 
     private bool allPlayersSelected;
 
     private CommandManager.CommandPackage currentCommandPackage;
+    private ResourceManager.ClickAbility currentClickAbility;
+    private WorldAgent portraitAgent;
 
     private void Awake()
     {
@@ -42,13 +48,35 @@ public class AgentManager : Service<AgentManager>
     {
         InputManager im = inputManager.Get();
         im.OnHover += PreviewCommand;
-        im.OnClick += ProcessClick;
+        im.OnRightClick += ProcessRightClick;
         im.OnHold += ProcessHold;
+        im.OnLeftClick += () => currentClickAbility = null;
         modeSwitcher.Get().OnEnterTurnBased += (_) => allPlayersSelected = false;
     }
 
     private void PreviewCommand(RaycastHit hit, bool didHit)
     {
+        if (currentClickAbility != null)
+        {
+            if (didHit && hit.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
+            {
+                WorldAgent hoveredAgent = hit.collider.GetComponentInParent<WorldAgent>();
+                currentCommandPackage = CommandManager.GetSelectPlayerPackage(hoveredAgent, currentClickAbility);
+            }
+            else if (portraitAgent)
+            {
+                currentCommandPackage = CommandManager.GetSelectPlayerPackage(portraitAgent, currentClickAbility);
+            }
+            else
+            {
+                currentCommandPackage = CommandManager.OnlyCommands(currentClickAbility.commands);
+                currentCommandPackage.SetCursor(currentClickAbility.invalidCursorPath);
+            }
+
+            PreviewUpdated?.Invoke(currentCommandPackage);
+            return;
+        }
+
         if (!didHit || turnManager.Get().executingTurn)
         {
             currentCommandPackage = CommandManager.EmptyPackage();
@@ -60,23 +88,27 @@ public class AgentManager : Service<AgentManager>
         currentCommandPackage = (LayerMask.LayerToName(go.layer)) switch
         {
             "Interactable" => CommandManager.GetInteractionPackage(selectedPlayer, go),
-            "Player" => CommandManager.GetSelectPlayerPackage(go.GetComponentInParent<WorldAgent>()),
+            "Player" => CommandManager.GetSelectPlayerPackage(
+                go.GetComponentInParent<WorldAgent>(),
+                null
+            ),
             "Ground" => CommandManager.GetMovePackage(selectedPlayer, hit.point),
-            "Enemy" => CommandManager.GetAttackEnemyPackage(selectedPlayer, go.GetComponentInParent<WorldAgent>(),
-                damageManager),
+            "Enemy" => CommandManager.GetAttackEnemyPackage(
+                selectedPlayer,
+                go.GetComponentInParent<WorldAgent>(),
+                damageManager
+            ),
             _ => CommandManager.EmptyPackage()
         };
+
         PreviewUpdated?.Invoke(currentCommandPackage);
     }
 
-    private void ProcessClick()
+    private void ProcessRightClick()
     {
         if (currentCommandPackage.empty) return;
         else if (currentCommandPackage.type == "select") SelectPlayer(currentCommandPackage.agent);
-        else
-        {
-            QueueCurrentPackage();
-        }
+        if (currentCommandPackage.commands.Count > 0) QueueCurrentPackage();
     }
 
     private void ProcessHold()
@@ -89,7 +121,22 @@ public class AgentManager : Service<AgentManager>
 
     private void QueueCurrentPackage()
     {
-        if (!currentCommandPackage.QueueCommands(modeSwitcher.Get().mode)) NotEnoughAP?.Invoke();
+        currentClickAbility = null;
+        if (!resourceManager.CanQueuePackage(currentCommandPackage))
+        {
+            NotEnouchResources?.Invoke();
+            return;
+        }
+        if (!currentCommandPackage.QueueCommands(modeSwitcher.Get().mode))
+        {
+            NotEnoughAP?.Invoke();
+            return;
+        }
+
+        foreach (Command command in currentCommandPackage.commands)
+        {
+            if (command.resourceCost != 0) resourceManager.QueueResource(command);
+        }
 
         // move other characters if select all is active
         if (allPlayersSelected && currentCommandPackage.type == "move")
@@ -102,6 +149,16 @@ public class AgentManager : Service<AgentManager>
                 agent.OverwriteQueue(moveInRangeCommand);
             }
         }
+    }
+
+    public void SetClickAbility(ResourceManager.ClickAbility clickAbility)
+    {
+        currentClickAbility = clickAbility;
+    }
+
+    public void SetPortraitAgent(WorldAgent agent)
+    {
+        portraitAgent = agent;
     }
 
     public void RegisterAgent(WorldAgent agent)
@@ -141,7 +198,7 @@ public class AgentManager : Service<AgentManager>
     {
         if (modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased)
         {
-            selectedPlayer.UndoLastestCommand();
+            selectedPlayer.UndoLastestCommand(resourceManager);
         }
     }
 

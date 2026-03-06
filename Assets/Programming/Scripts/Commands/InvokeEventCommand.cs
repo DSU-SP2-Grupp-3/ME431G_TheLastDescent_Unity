@@ -5,8 +5,10 @@ using UnityEngine.Events;
 
 public class InvokeEventCommand : Command
 {
-    public override float cost => 0f;
-    
+    public override float apCost => 0f;
+    /// <inheritdoc />
+    public override float resourceCost => 0f;
+
     private UnityEvent unityEvent;
 
     public InvokeEventCommand(WorldAgent invokingAgent, UnityEvent unityEvent) : base(invokingAgent)

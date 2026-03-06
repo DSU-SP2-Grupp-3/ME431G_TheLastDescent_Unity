@@ -17,7 +17,9 @@ public class PlayAudioCommand : Command
 
     }
     public override void Break() { }
-    public override float cost { get; }
+    public override float apCost { get; }
+    /// <inheritdoc />
+    public override float resourceCost => 0f;
 }
 
 
