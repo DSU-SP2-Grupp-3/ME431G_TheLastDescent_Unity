@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -59,10 +60,12 @@ public class InputManager : Service<InputManager>
     }
     private RaycastHit GetRayPriority(RaycastHit[] allRayReturns, out bool didHit)
     {
+        allRayReturns = BubbleSortRayCast(allRayReturns);
         foreach (LayerMask priorityLayer in layerPriority)
         {
             foreach (RaycastHit hit in allRayReturns)
             {
+                Debug.DrawRay(hit.point, Vector3.up, Color.blue, 3, false);
                 if (((1 << hit.collider.gameObject.layer) & priorityLayer) != 0)
                 {
                     didHit = true;
@@ -72,6 +75,33 @@ public class InputManager : Service<InputManager>
         }
         didHit = false;
         return new RaycastHit();
+    }
+    private RaycastHit[] BubbleSortRayCast(RaycastHit[] raycastAll)
+    {
+        //-Ma. Might want to change this to quicksort or merge sort if it becomes too expensive
+        var n = raycastAll.Length;
+        while (n > 0)
+        {
+            for (int i = 1; i < n; i++)
+            {
+                if (raycastAll[i - 1].distance > raycastAll[i].distance)
+                {
+
+                    RaycastHit temp = raycastAll[i - 1];
+                    raycastAll[i - 1] = raycastAll[i];
+                    raycastAll[i] = temp;
+                }
+            }
+            n--;
+        }
+
+        Debug.Log("this was sorted");
+        for (int i = 0; i < raycastAll.Length; i++)
+        {
+            Debug.Log(raycastAll[i].distance);
+        }
+        Debug.Log("done");
+        return raycastAll;
     }
     private void Update()
     {
