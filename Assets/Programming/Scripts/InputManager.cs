@@ -73,7 +73,7 @@ public class InputManager : Service<InputManager>
         {
             foreach (RaycastHit hit in allRayReturns)
             {
-                Debug.DrawRay(hit.point, Vector3.up, Color.blue, 3, false);
+                //Debug.DrawRay(hit.point, Vector3.up, Color.blue, 3, false);
                 if (((1 << hit.collider.gameObject.layer) & priorityLayer) != 0)
                 {
                     didHit = true;
