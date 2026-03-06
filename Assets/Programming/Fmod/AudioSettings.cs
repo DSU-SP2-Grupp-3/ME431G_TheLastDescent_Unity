@@ -66,7 +66,6 @@ public class AudioSettings : MonoBehaviour
     // Update is called once per frame
     public void UpdateVolumes()
     {
-        Debug.Log("volumes updated" + storedSettings.masterVolume + " " + masterVolume);
         storedSettings.masterVolume = masterVolume;
         storedSettings.effectVolume = effectVolume;
         storedSettings.musicVolume = musicVolume;
