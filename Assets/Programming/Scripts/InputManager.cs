@@ -58,6 +58,14 @@ public class InputManager : Service<InputManager>
         var hit = GetRayPriority(AllRayReturns, out bool didHit);
         OnHover?.Invoke(hit, didHit);
     }
+    //-Ma. For the future, we might do an inital raycast that finds a point and then performs this check with limited distance to avoid raycasts being considered across the entire map.
+    // will likely be needed because of elevation.
+    /// <summary>
+    /// Gets the ray closest to the camera with the highest found layer priority.
+    /// </summary>
+    /// <param name="allRayReturns"></param>
+    /// <param name="didHit"></param>
+    /// <returns></returns>
     private RaycastHit GetRayPriority(RaycastHit[] allRayReturns, out bool didHit)
     {
         allRayReturns = BubbleSortRayCast(allRayReturns);
@@ -76,9 +84,9 @@ public class InputManager : Service<InputManager>
         didHit = false;
         return new RaycastHit();
     }
+    //-Ma. Might want to change this to quicksort or merge sort if it becomes too expensive
     private RaycastHit[] BubbleSortRayCast(RaycastHit[] raycastAll)
     {
-        //-Ma. Might want to change this to quicksort or merge sort if it becomes too expensive
         var n = raycastAll.Length;
         while (n > 0)
         {
@@ -94,13 +102,6 @@ public class InputManager : Service<InputManager>
             }
             n--;
         }
-
-        Debug.Log("this was sorted");
-        for (int i = 0; i < raycastAll.Length; i++)
-        {
-            Debug.Log(raycastAll[i].distance);
-        }
-        Debug.Log("done");
         return raycastAll;
     }
     private void Update()
