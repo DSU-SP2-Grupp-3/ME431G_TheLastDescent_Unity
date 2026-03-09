@@ -12,11 +12,14 @@ public class AgentManager : Service<AgentManager>
 
     public UnityEvent NotEnoughAP;
     public UnityEvent NotEnouchResources;
+    public UnityEvent EnterSpectator;
 
     private List<WorldAgent> players;
     private List<WorldAgent> allAgents;
-    private Locator<OrthographicCameraMover> cameraMover;
 
+    private int numberOfAlivePlayers;
+
+    private Locator<OrthographicCameraMover> cameraMover;
     private Locator<InputManager> inputManager;
     private Locator<ModeSwitcher> modeSwitcher;
     private Locator<TurnManager> turnManager;
@@ -58,7 +61,12 @@ public class AgentManager : Service<AgentManager>
 
     private void PreviewCommand(RaycastHit hit, bool didHit)
     {
-        if (!agentInputActive) return;
+        if (!agentInputActive || selectedPlayer.dead)
+        {
+            currentCommandPackage = CommandManager.EmptyPackage();
+            return;
+        }
+
         if (currentClickAbility != null)
         {
             if (didHit && hit.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
@@ -156,6 +164,31 @@ public class AgentManager : Service<AgentManager>
         }
     }
 
+    private void UpdateNumberOfAlivePlayers(int number)
+    {
+        numberOfAlivePlayers += number;
+        if (numberOfAlivePlayers <= 0)
+        {
+            new Locator<Modal>().Get().Prompt(
+                "Everyone has died.\nReturn to the main menu?",
+                () => { new Locator<SceneChanger>().Get().GoToScene("MainMenu"); },
+                () => { EnterSpectator?.Invoke(); }
+            );
+        }
+    }
+
+    private void SelectAlivePlayer()
+    {
+        List<WorldAgent> remainingPlayers =
+            GetFilteredAgents(
+                a => { return !a.dead && a.team == WorldAgent.Team.Player; }
+            ).ToList();
+        if (remainingPlayers.Any())
+        {
+            SelectPlayer(remainingPlayers.First());
+        }
+    }
+
     public void SetAgentInputActive(bool active)
     {
         agentInputActive = active;
@@ -178,6 +211,9 @@ public class AgentManager : Service<AgentManager>
         if (agent.team == WorldAgent.Team.Player)
         {
             players.Add(agent);
+            UpdateNumberOfAlivePlayers(1);
+            agent.OnDeath += () => UpdateNumberOfAlivePlayers(-1);
+            agent.OnRevive += () => UpdateNumberOfAlivePlayers(1);
             if (!selectedPlayer && agent.defaultSelected)
             {
                 SelectPlayer(agent);
@@ -189,11 +225,21 @@ public class AgentManager : Service<AgentManager>
     public void SelectPlayer(WorldAgent playerAgent)
     {
         allPlayersSelected = false;
+
         if (players.Contains(playerAgent) && !playerAgent.dead)
         {
+            if (selectedPlayer) selectedPlayer.OnDeath -= SelectAlivePlayer;
             selectedPlayer = playerAgent;
+            selectedPlayer.OnDeath += SelectAlivePlayer;
             cameraMover.Get().SetCameraTarget(selectedPlayer.cameraFocusTransform);
         }
+
+#if UNITY_EDITOR
+        if (inputManager.Get().KillFlag())
+        {
+            damageManager.DealDamageEvent(10000, playerAgent);
+        }
+#endif
     }
 
     public void SelectAllPlayers()
