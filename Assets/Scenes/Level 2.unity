@@ -526,9 +526,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1512687326673535338, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: dialogueScriptable
+      value: 
+      objectReference: {fileID: 11400000, guid: ac0c602991d7ca946aa6b9793db32814, type: 2}
+    - target: {fileID: 5928798746086493191, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: dialogueScriptable
+      value: 
+      objectReference: {fileID: 11400000, guid: ac0c602991d7ca946aa6b9793db32814, type: 2}
     - target: {fileID: 8367181169031751602, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
       propertyPath: m_Name
-      value: Interactable Skylt (2)
+      value: Newspaper4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7649,6 +7657,10 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 206107537845185366, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 473944916273301811, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
       propertyPath: m_fontSizeBase
       value: 80
@@ -7709,6 +7721,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2610393265142279370, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2610393265142279370, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 9eb1f13c449026d43b777a12a3cc6f75, type: 3}
+    - target: {fileID: 2752865131062842226, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
+      propertyPath: m_fontSize
+      value: 32
+      objectReference: {fileID: 0}
+    - target: {fileID: 2752865131062842226, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
+      propertyPath: m_margin.z
+      value: -220.44315
+      objectReference: {fileID: 0}
+    - target: {fileID: 2752865131062842226, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 32
+      objectReference: {fileID: 0}
     - target: {fileID: 3200768675608137587, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -7741,6 +7773,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 1247865454}
+    - target: {fileID: 4388260267035095643, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 224
+      objectReference: {fileID: 0}
     - target: {fileID: 4469683062432653646, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 196.74
@@ -7773,6 +7809,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 255425648}
+    - target: {fileID: 6727653779319598545, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 54
+      objectReference: {fileID: 0}
     - target: {fileID: 7369497464456596793, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -8616,9 +8656,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1512687326673535338, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: dialogueScriptable
+      value: 
+      objectReference: {fileID: 11400000, guid: f99a3bc76214d9742981d1a8562ac674, type: 2}
+    - target: {fileID: 5928798746086493191, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: dialogueScriptable
+      value: 
+      objectReference: {fileID: 11400000, guid: f99a3bc76214d9742981d1a8562ac674, type: 2}
     - target: {fileID: 8367181169031751602, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
       propertyPath: m_Name
-      value: Interactable Skylt (5)
+      value: Newspaper6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -22222,6 +22270,76 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 606262107}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &608919234
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1980071646}
+    m_Modifications:
+    - target: {fileID: 1084576617049266857, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -5.99
+      objectReference: {fileID: 0}
+    - target: {fileID: 1084576617049266857, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 44.36
+      objectReference: {fileID: 0}
+    - target: {fileID: 1084576617049266857, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -42.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1084576617049266857, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.71101105
+      objectReference: {fileID: 0}
+    - target: {fileID: 1084576617049266857, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1084576617049266857, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7031808
+      objectReference: {fileID: 0}
+    - target: {fileID: 1084576617049266857, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1084576617049266857, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1084576617049266857, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -270.634
+      objectReference: {fileID: 0}
+    - target: {fileID: 1084576617049266857, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1512687326673535338, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: dialogueScriptable
+      value: 
+      objectReference: {fileID: 11400000, guid: 892d99a7e7d1dd44695b795b87146cf1, type: 2}
+    - target: {fileID: 5928798746086493191, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: dialogueScriptable
+      value: 
+      objectReference: {fileID: 11400000, guid: 892d99a7e7d1dd44695b795b87146cf1, type: 2}
+    - target: {fileID: 8367181169031751602, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: m_Name
+      value: Newspaper7
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+--- !u!4 &608919235 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1084576617049266857, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+  m_PrefabInstance: {fileID: 608919234}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &612622646 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2030496473744698968, guid: 95a7630d079003941a3282c071b7901b, type: 3}
@@ -22450,9 +22568,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1512687326673535338, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: dialogueScriptable
+      value: 
+      objectReference: {fileID: 11400000, guid: fbd18b2af92951143b5b60ad63bef0d3, type: 2}
+    - target: {fileID: 5928798746086493191, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: dialogueScriptable
+      value: 
+      objectReference: {fileID: 11400000, guid: fbd18b2af92951143b5b60ad63bef0d3, type: 2}
+    - target: {fileID: 7673682007198553280, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 08542d0f077efc74fb417a801793cc89, type: 2}
     - target: {fileID: 8367181169031751602, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
       propertyPath: m_Name
-      value: Interactable Skylt (1)
+      value: Poster2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -28360,9 +28490,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1512687326673535338, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: dialogueScriptable
+      value: 
+      objectReference: {fileID: 11400000, guid: 19946f77ed34da4449c0d141549dba71, type: 2}
+    - target: {fileID: 5928798746086493191, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: dialogueScriptable
+      value: 
+      objectReference: {fileID: 11400000, guid: 19946f77ed34da4449c0d141549dba71, type: 2}
     - target: {fileID: 8367181169031751602, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
       propertyPath: m_Name
-      value: Interactable Skylt (4)
+      value: Newspaper5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -36306,7 +36444,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1117453497}
   m_Layer: 0
-  m_Name: DialogTriggers
+  m_Name: DialogueTriggers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47487,9 +47625,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1512687326673535338, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: dialogueScriptable
+      value: 
+      objectReference: {fileID: 11400000, guid: e8520873114bf33498ea421c9d23f240, type: 2}
+    - target: {fileID: 5928798746086493191, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: dialogueScriptable
+      value: 
+      objectReference: {fileID: 11400000, guid: e8520873114bf33498ea421c9d23f240, type: 2}
     - target: {fileID: 8367181169031751602, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
       propertyPath: m_Name
-      value: Interactable Skylt (3)
+      value: Poster3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -56340,6 +56486,76 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1774667832}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &1777550547
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1980071646}
+    m_Modifications:
+    - target: {fileID: 1084576617049266857, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -21.293999
+      objectReference: {fileID: 0}
+    - target: {fileID: 1084576617049266857, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 43.23
+      objectReference: {fileID: 0}
+    - target: {fileID: 1084576617049266857, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 11.004997
+      objectReference: {fileID: 0}
+    - target: {fileID: 1084576617049266857, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.97042185
+      objectReference: {fileID: 0}
+    - target: {fileID: 1084576617049266857, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1084576617049266857, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.2414158
+      objectReference: {fileID: 0}
+    - target: {fileID: 1084576617049266857, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1084576617049266857, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1084576617049266857, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -332.06
+      objectReference: {fileID: 0}
+    - target: {fileID: 1084576617049266857, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1512687326673535338, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: dialogueScriptable
+      value: 
+      objectReference: {fileID: 11400000, guid: 9d183a1130fbb3641950dcea6990d817, type: 2}
+    - target: {fileID: 5928798746086493191, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: dialogueScriptable
+      value: 
+      objectReference: {fileID: 11400000, guid: 9d183a1130fbb3641950dcea6990d817, type: 2}
+    - target: {fileID: 8367181169031751602, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: m_Name
+      value: Newspaper8
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+--- !u!4 &1777550548 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1084576617049266857, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+  m_PrefabInstance: {fileID: 1777550547}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1784730412
 GameObject:
   m_ObjectHideFlags: 0
@@ -62898,6 +63114,8 @@ Transform:
   - {fileID: 937279630}
   - {fileID: 1831111387}
   - {fileID: 999627668}
+  - {fileID: 608919235}
+  - {fileID: 1777550548}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1980391846
@@ -63378,9 +63596,13 @@ PrefabInstance:
       propertyPath: dialogueScriptable
       value: 
       objectReference: {fileID: 11400000, guid: 2a70535e5261bfc44a111193afa2f22a, type: 2}
+    - target: {fileID: 5928798746086493191, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: dialogueScriptable
+      value: 
+      objectReference: {fileID: 11400000, guid: 2a70535e5261bfc44a111193afa2f22a, type: 2}
     - target: {fileID: 8367181169031751602, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
       propertyPath: m_Name
-      value: Interactable Skylt
+      value: Newspaper3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -68194,6 +68416,6 @@ SceneRoots:
   - {fileID: 1623580544}
   - {fileID: 1247865453}
   - {fileID: 328461816}
+  - {fileID: 1980071646}
   - {fileID: 1117453497}
   - {fileID: 1872733791770390379}
-  - {fileID: 1980071646}
