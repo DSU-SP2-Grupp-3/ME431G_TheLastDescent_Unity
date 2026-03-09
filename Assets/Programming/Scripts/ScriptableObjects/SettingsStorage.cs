@@ -31,8 +31,8 @@ public class SettingsStorage : ScriptableObject
         SetPlayerHeatColor();
         SetPathColor();
         SetIndicatorColor();
-        SetDamagePopColor();
-        SetHealPopColor();
+        SetDamageColor();
+        SetHealColor();
     }
     //player HP
     public UnityAction PlayerHpColorEvent = delegate{}; public void SetPlayerHpColor() { PlayerHpColorEvent(); }
@@ -50,8 +50,8 @@ public class SettingsStorage : ScriptableObject
     public UnityAction IndicatorColorEvent = delegate{}; public void SetIndicatorColor() { IndicatorColorEvent(); }
     
     //damage pop, might not get used but it now exists at least?
-    public UnityAction DamagePopColorEvent = delegate{}; public void SetDamagePopColor() { DamagePopColorEvent(); }
+    public UnityAction DamagePopColorEvent = delegate{}; public void SetDamageColor() { DamagePopColorEvent(); }
     
     //heal pop, might not get used but it now exists at least?
-    public UnityAction HealPopColorEvent = delegate{}; public void SetHealPopColor() { HealPopColorEvent(); }
+    public UnityAction HealPopColorEvent = delegate{}; public void SetHealColor() { HealPopColorEvent(); }
 }

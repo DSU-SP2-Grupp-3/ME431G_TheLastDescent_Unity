@@ -335,6 +335,7 @@ MonoBehaviour:
   MusicSlider: {fileID: 6013398099704232184}
   AmbienceSlider: {fileID: 2537833498412535}
   DialogueSlider: {fileID: 1700040381325583608}
+  pathMaterial: {fileID: 0}
 --- !u!95 &3790802440504964969
 Animator:
   serializedVersion: 7
@@ -2254,7 +2255,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   storedSettings: {fileID: 11400000, guid: 5c77ffa27d6886d45a7c42f1f13d3c6c, type: 2}
-  targetImage: {fileID: 1962044907052609139}
+  myImage: {fileID: 1962044907052609139}
   colorType: 0
 --- !u!114 &4438442217925922210
 MonoBehaviour:
@@ -2300,33 +2301,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3725534995853306421}
-        m_TargetAssemblyTypeName: UnityEngine.RectTransform, UnityEngine
-        m_MethodName: set_parent
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 55871978129951685}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 6502196056845579662}
         m_TargetAssemblyTypeName: ColorSetter, Assembly-CSharp
         m_MethodName: SetColor
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 6502196056845579662}
-        m_TargetAssemblyTypeName: ColorSetter, Assembly-CSharp
-        m_MethodName: UpdateColor
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
