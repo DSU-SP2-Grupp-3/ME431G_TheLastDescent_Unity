@@ -17,7 +17,8 @@ public class InputManager : Service<InputManager>
     /// </summary>
     public event Action OnLeftClick;
     public event Action OnRightClick;
-    public event Action OnHold;
+    public event Action OnLeftHold;
+    public event Action OnRightHold;
     public event Action OnScrollUp;
     public event Action OnScrollDown;
 
@@ -117,7 +118,6 @@ public class InputManager : Service<InputManager>
 
         if (Input.GetMouseButtonDown(0))
         {
-            Debug.Log("Is this thing on???");
             OnLeftClick?.Invoke();
             lastStartHold = Time.time;
         }
@@ -128,7 +128,12 @@ public class InputManager : Service<InputManager>
 
         if (Input.GetMouseButton(0))
         {
-            if (lastStartHold + holdDelay < Time.time) OnHold?.Invoke();
+            if (lastStartHold + holdDelay < Time.time) OnLeftHold?.Invoke();
+        }
+        
+        if (Input.GetMouseButton(1))
+        {
+            if (lastStartHold + holdDelay < Time.time) OnRightHold?.Invoke();
         }
     }
 
