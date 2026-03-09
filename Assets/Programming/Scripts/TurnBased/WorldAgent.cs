@@ -13,6 +13,8 @@ public class WorldAgent : MonoBehaviour
     public event Action<string, GameObject> AnimationEventTriggered;
     public event Action<WorldAgent> ForcedEnterTurnBased;
     public event Action<WorldAgent, Queue<Command>, Command> CommandQueueUpdated;
+    public event Action OnDeath;
+    public event Action OnRevive;
 
     public enum Team
     {
@@ -291,19 +293,20 @@ public class WorldAgent : MonoBehaviour
 
     public void Die()
     {
-        // todo: emit event here so agent manager can check if all players are dead
-        Debug.Log($"Agent {name} has died");
         Dehighlight();
         InterruptCommandQueue();
         dead = true;
         animator.SetTrigger("Die");
         navMeshAgent.enabled = false;
+        OnDeath?.Invoke();
     }
 
     public void Revive()
     {
+        if (!dead) return;
         dead = false;
         navMeshAgent.enabled = true;
+        OnRevive?.Invoke();
     }
 
     public void Highlight()

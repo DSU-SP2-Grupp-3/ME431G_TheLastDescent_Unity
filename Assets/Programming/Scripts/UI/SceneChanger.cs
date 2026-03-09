@@ -1,8 +1,13 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SceneChanger : MonoBehaviour
+public class SceneChanger : Service<SceneChanger>
 {
+    private void Awake()
+    {
+        Register();
+    }
+
     public void GoToScene(string nextSceneName)
     {
         SceneManager.LoadScene(nextSceneName);
