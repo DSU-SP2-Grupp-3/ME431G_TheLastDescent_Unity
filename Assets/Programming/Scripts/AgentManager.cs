@@ -33,6 +33,8 @@ public class AgentManager : Service<AgentManager>
     private ResourceManager.ClickAbility currentClickAbility;
     private WorldAgent portraitAgent;
 
+    private bool agentInputActive = true;
+
     private void Awake()
     {
         Register();
@@ -56,6 +58,7 @@ public class AgentManager : Service<AgentManager>
 
     private void PreviewCommand(RaycastHit hit, bool didHit)
     {
+        if (!agentInputActive) return;
         if (currentClickAbility != null)
         {
             if (didHit && hit.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
@@ -106,6 +109,7 @@ public class AgentManager : Service<AgentManager>
 
     private void ProcessRightClick()
     {
+        if (!agentInputActive) return;
         if (currentCommandPackage.empty) return;
         else if (currentCommandPackage.type == "select") SelectPlayer(currentCommandPackage.agent);
         if (currentCommandPackage.commands.Count > 0) QueueCurrentPackage();
@@ -113,6 +117,7 @@ public class AgentManager : Service<AgentManager>
 
     private void ProcessHold()
     {
+        if (!agentInputActive) return;
         if (currentCommandPackage.type == "move" && modeSwitcher.Get().mode == RoundClock.ProgressMode.RealTime)
         {
             QueueCurrentPackage();
@@ -149,6 +154,11 @@ public class AgentManager : Service<AgentManager>
                 agent.OverwriteQueue(moveInRangeCommand);
             }
         }
+    }
+
+    public void SetAgentInputActive(bool active)
+    {
+        agentInputActive = active;
     }
 
     public void SetClickAbility(ResourceManager.ClickAbility clickAbility)
