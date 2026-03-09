@@ -31,14 +31,7 @@ public class TextUpdater : MonoBehaviour
 
     public void SetText(float number)
     {
-        if (number > 0)
-        {
-            textComponent.color = storedSettings.DamageColor;
-        }
-        else
-        {
-            textComponent.color = storedSettings.HealColor;
-        }
+        textComponent.color = number > 0 ? storedSettings.DamageColor : storedSettings.HealColor;
         textComponent.text = $"{MathF.Abs(number):0,0} DMG";
     }
 }
