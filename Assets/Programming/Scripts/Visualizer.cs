@@ -102,6 +102,7 @@ public class Visualizer : MonoBehaviour
         if (cInfo) Cursor.SetCursor(cInfo.texture, cInfo.hotSpot, cInfo.cursorMode);
         else Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
         packageAPDisplay.text = "";
+        // todo: display message text for click abilities
 
         if (turnManager.Get().executingTurn) return;
 

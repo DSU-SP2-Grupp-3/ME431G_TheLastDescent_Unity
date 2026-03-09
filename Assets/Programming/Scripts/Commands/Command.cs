@@ -47,9 +47,4 @@ public abstract class Command
         yield return new WaitForSeconds(0.1f); // -se: wait short time for animator to enter correct animation
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
     }
-
-    public void ChangeInvoker(WorldAgent newInvoker)
-    {
-        invokingAgent = newInvoker;
-    }
 }

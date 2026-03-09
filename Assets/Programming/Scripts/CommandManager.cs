@@ -67,20 +67,37 @@ public static class CommandManager
         return interactionPackage;
     }
 
-    public static CommandPackage GetSelectPlayerPackage(WorldAgent agent, ResourceManager.ClickAbility clickAbility)
+    public static CommandPackage GetSelectPlayerPackage(WorldAgent agent)
     {
         CommandPackage package = new CommandPackage(agent);
         package.SetHighlight(agent, true);
         package.SetType("select");
 
-        if (clickAbility != null)
+        return package;
+    }
+
+    public static CommandPackage GetClickAbilityPackage(RaycastHit hit, bool didHit, WorldAgent agent, ClickAbility clickAbility)
+    {
+        CommandPackage package = new CommandPackage(false);
+        package.SetType("click");
+
+        if (clickAbility.CanClick(hit, agent))
         {
             package.SetCursor(clickAbility.validCursorPath);
-            foreach (Command command in clickAbility.commands)
-            {
-                command.ChangeInvoker(agent);
-                package.AddCommand(command);
-            }
+        }
+        else
+        {
+            package.SetCursor(clickAbility.invalidCursorPath);
+        }
+
+        foreach (Command command in clickAbility.commands)
+        {
+            package.AddCommand(command);
+        }
+
+        foreach (WorldAgent affectedAgent in clickAbility.GetAffectedAgents())
+        {
+            package.SetHighlight(affectedAgent, true);
         }
 
         return package;
@@ -150,12 +167,12 @@ public static class CommandManager
         public readonly bool empty;
         public readonly bool clickOnAgentOnly;
 
-        public CommandPackage()
+        public CommandPackage(bool empty = true)
         {
             this.agent = null;
             this.commands = new();
             highlights = new Dictionary<WorldAgent, bool>();
-            empty = true;
+            this.empty = empty;
         }
 
         public CommandPackage(WorldAgent agent)

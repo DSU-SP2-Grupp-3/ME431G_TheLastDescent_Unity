@@ -33,7 +33,7 @@ public class AgentManager : Service<AgentManager>
     private bool allPlayersSelected;
 
     private CommandManager.CommandPackage currentCommandPackage;
-    private ResourceManager.ClickAbility currentClickAbility;
+    private ClickAbility currentClickAbility;
     private WorldAgent portraitAgent;
 
     private bool agentInputActive = true;
@@ -64,25 +64,20 @@ public class AgentManager : Service<AgentManager>
         if (!agentInputActive || selectedPlayer.dead)
         {
             currentCommandPackage = CommandManager.EmptyPackage();
+            PreviewUpdated?.Invoke(currentCommandPackage);
             return;
         }
 
         if (currentClickAbility != null)
         {
-            if (didHit && hit.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
+            Debug.Log(portraitAgent);
+            if (portraitAgent)
             {
-                WorldAgent hoveredAgent = hit.collider.GetComponentInParent<WorldAgent>();
-                currentCommandPackage = CommandManager.GetSelectPlayerPackage(hoveredAgent, currentClickAbility);
+                currentCommandPackage = CommandManager.GetClickAbilityPackage(
+                    hit, didHit, portraitAgent, currentClickAbility
+                );
             }
-            else if (portraitAgent)
-            {
-                currentCommandPackage = CommandManager.GetSelectPlayerPackage(portraitAgent, currentClickAbility);
-            }
-            else
-            {
-                currentCommandPackage = CommandManager.OnlyCommands(currentClickAbility.commands);
-                currentCommandPackage.SetCursor(currentClickAbility.invalidCursorPath);
-            }
+            else currentCommandPackage = CommandManager.GetClickAbilityPackage(hit, didHit, null, currentClickAbility);
 
             PreviewUpdated?.Invoke(currentCommandPackage);
             return;
@@ -99,10 +94,7 @@ public class AgentManager : Service<AgentManager>
         currentCommandPackage = (LayerMask.LayerToName(go.layer)) switch
         {
             "Interactable" => CommandManager.GetInteractionPackage(selectedPlayer, go),
-            "Player" => CommandManager.GetSelectPlayerPackage(
-                go.GetComponentInParent<WorldAgent>(),
-                null
-            ),
+            "Player" => CommandManager.GetSelectPlayerPackage(go.GetComponentInParent<WorldAgent>()),
             "Ground" => CommandManager.GetMovePackage(selectedPlayer, hit.point),
             "Enemy" => CommandManager.GetAttackEnemyPackage(
                 selectedPlayer,
@@ -119,6 +111,11 @@ public class AgentManager : Service<AgentManager>
     {
         if (!agentInputActive) return;
         if (currentCommandPackage.empty) return;
+        else if (currentCommandPackage.type == "click")
+        {
+            // if this is not the final click of the click ability then return and wait for future clicks
+            if (!currentClickAbility.Click()) return;
+        }
         else if (currentCommandPackage.type == "select") SelectPlayer(currentCommandPackage.agent);
         if (currentCommandPackage.commands.Count > 0) QueueCurrentPackage();
     }
@@ -192,9 +189,10 @@ public class AgentManager : Service<AgentManager>
     public void SetAgentInputActive(bool active)
     {
         agentInputActive = active;
+        currentClickAbility = null;
     }
 
-    public void SetClickAbility(ResourceManager.ClickAbility clickAbility)
+    public void SetClickAbility(ClickAbility clickAbility)
     {
         currentClickAbility = clickAbility;
     }
