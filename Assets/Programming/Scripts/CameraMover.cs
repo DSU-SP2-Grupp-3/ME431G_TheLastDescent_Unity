@@ -10,6 +10,17 @@ public class CameraMover : MonoBehaviour
     [Tooltip("Zoom / Distance to target")]
     public float zoom;
 
+    private InputManager inputManager;
+    private void Start()
+    {
+       Locator<InputManager> locator = new();
+       inputManager = locator.Get();
+       inputManager.OnRightClick += OnRightClick;
+    }
+    private void OnRightClick()
+    {
+        Debug.Log("Test");
+    }
     private void Update()
     {
         /*needs to account for zoom/distance to object

@@ -15,8 +15,8 @@ public class InputManager : Service<InputManager>
     /// <summary>
     /// Triggers when the left mouse button is clicked
     /// </summary>
-    public event Action OnRightClick;
     public event Action OnLeftClick;
+    public event Action OnRightClick;
     public event Action OnHold;
     public event Action OnScrollUp;
     public event Action OnScrollDown;
@@ -117,12 +117,13 @@ public class InputManager : Service<InputManager>
 
         if (Input.GetMouseButtonDown(0))
         {
-            OnRightClick?.Invoke();
+            Debug.Log("Is this thing on???");
+            OnLeftClick?.Invoke();
             lastStartHold = Time.time;
         }
         if (Input.GetMouseButtonDown(1))
         {
-            OnLeftClick?.Invoke();
+            OnRightClick?.Invoke();
         }
 
         if (Input.GetMouseButton(0))

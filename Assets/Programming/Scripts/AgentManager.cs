@@ -48,9 +48,9 @@ public class AgentManager : Service<AgentManager>
     {
         InputManager im = inputManager.Get();
         im.OnHover += PreviewCommand;
-        im.OnRightClick += ProcessRightClick;
+        im.OnLeftClick += ProcessRightClick;
         im.OnHold += ProcessHold;
-        im.OnLeftClick += () => currentClickAbility = null;
+        im.OnRightClick += () => currentClickAbility = null;
         modeSwitcher.Get().OnEnterTurnBased += (_) => allPlayersSelected = false;
     }
 
