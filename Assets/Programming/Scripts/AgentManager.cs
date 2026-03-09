@@ -58,7 +58,12 @@ public class AgentManager : Service<AgentManager>
 
     private void PreviewCommand(RaycastHit hit, bool didHit)
     {
-        if (!agentInputActive) return;
+        if (!agentInputActive || selectedPlayer.dead)
+        {
+            currentCommandPackage = CommandManager.EmptyPackage();
+            return;
+        }
+
         if (currentClickAbility != null)
         {
             if (didHit && hit.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
@@ -189,8 +194,17 @@ public class AgentManager : Service<AgentManager>
     public void SelectPlayer(WorldAgent playerAgent)
     {
         allPlayersSelected = false;
+#if UNITY_EDITOR
+        if (Input.GetKey(KeyCode.K))
+        {
+            damageManager.DealDamageEvent(10000, playerAgent);
+            return;
+        }
+#endif
         if (players.Contains(playerAgent) && !playerAgent.dead)
         {
+
+
             selectedPlayer = playerAgent;
             cameraMover.Get().SetCameraTarget(selectedPlayer.cameraFocusTransform);
         }
