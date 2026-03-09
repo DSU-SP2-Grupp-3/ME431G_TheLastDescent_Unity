@@ -13,7 +13,7 @@ public class Visualizer : MonoBehaviour
     private LineRenderer previewLineRenderer;
 
     [SerializeField]
-    private TMP_Text packageAPDisplay;
+    private TMP_Text packageAPDisplay, hintDisplay;
 
     private Dictionary<WorldAgent, VisualizeTools> agentVisualizeTools;
     private Dictionary<WorldAgent, Command> currentlyExecutingCommands;
@@ -102,12 +102,13 @@ public class Visualizer : MonoBehaviour
         if (cInfo) Cursor.SetCursor(cInfo.texture, cInfo.hotSpot, cInfo.cursorMode);
         else Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
         packageAPDisplay.text = "";
-        // todo: display message text for click abilities
+
+        if (commandPackage.hint != null) hintDisplay.text = commandPackage.hint;
+        else hintDisplay.text = "";
 
         if (turnManager.Get().executingTurn) return;
 
         HighlightAgents(commandPackage.highlights, realTime);
-
 
         if (!canQueue || !enoughResouces) packageAPDisplay.color = Color.red;
 

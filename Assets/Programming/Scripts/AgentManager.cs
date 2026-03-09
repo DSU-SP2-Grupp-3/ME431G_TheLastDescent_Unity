@@ -12,6 +12,7 @@ public class AgentManager : Service<AgentManager>
 
     public UnityEvent NotEnoughAP;
     public UnityEvent NotEnouchResources;
+    public UnityEvent InvalidTarget;
     public UnityEvent EnterSpectator;
 
     private List<WorldAgent> players;
@@ -112,6 +113,8 @@ public class AgentManager : Service<AgentManager>
         if (currentCommandPackage.empty) return;
         else if (currentCommandPackage.type == "click")
         {
+            if (!currentClickAbility.valid) InvalidTarget?.Invoke();
+
             // if this is not the final click of the click ability then return and wait for future clicks
             if (!currentClickAbility.Click()) return;
         }

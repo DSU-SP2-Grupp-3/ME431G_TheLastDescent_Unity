@@ -76,7 +76,10 @@ public static class CommandManager
         return package;
     }
 
-    public static CommandPackage GetClickAbilityPackage(RaycastHit hit, bool didHit, WorldAgent agent, ClickAbility clickAbility)
+    public static CommandPackage GetClickAbilityPackage(RaycastHit hit,
+                                                        bool didHit,
+                                                        WorldAgent agent,
+                                                        ClickAbility clickAbility)
     {
         CommandPackage package = new CommandPackage(false);
         package.SetType("click");
@@ -99,6 +102,8 @@ public static class CommandManager
         {
             package.SetHighlight(affectedAgent, true);
         }
+
+        package.SetHint(clickAbility.GetHint());
 
         return package;
     }
@@ -159,6 +164,7 @@ public static class CommandManager
 
     public class CommandPackage
     {
+        public string hint { get; private set; }
         public string type { get; private set; }
         public CursorInfo cursorInfo { get; private set; }
         public readonly WorldAgent agent;
@@ -210,6 +216,11 @@ public static class CommandManager
         public void SetType(string type)
         {
             this.type = type;
+        }
+
+        public void SetHint(string hint)
+        {
+            this.hint = hint;
         }
 
         public void SetCursor(string resourcePath)

@@ -10,7 +10,7 @@ public class ClickAbility
     public readonly List<Command> commands;
     private List<Action<ClickInfo, ClickAbility>> clickFuncs;
     private List<Func<ClickInfo, ClickAbility, bool>> clickPreviews;
-    private List<string> messages;
+    private List<string> hints;
     private int clickIndex = 0;
     private List<object> data;
     private List<WorldAgent> affectedAgents;
@@ -21,7 +21,7 @@ public class ClickAbility
     {
         clickFuncs = new();
         clickPreviews = new();
-        messages = new();
+        hints = new();
         data = new();
         affectedAgents = new();
         commands = new();
@@ -33,12 +33,12 @@ public class ClickAbility
     public void AddClickAction(
         Action<ClickInfo, ClickAbility> clickFunc,
         Func<ClickInfo, ClickAbility, bool> preview,
-        string message
+        string hint
     )
     {
         clickFuncs.Add(clickFunc);
         clickPreviews.Add(preview);
-        messages.Add(message);
+        hints.Add(hint);
     }
 
     public void SetCurrentHover(RaycastHit hit, WorldAgent agent)
@@ -72,6 +72,11 @@ public class ClickAbility
         SetCurrentHover(hit, agent);
         valid = clickPreviews[clickIndex].Invoke(currentInfo, this);
         return valid;
+    }
+
+    public string GetHint()
+    {
+        return hints[clickIndex];
     }
 
     public int AddData(object newData)
