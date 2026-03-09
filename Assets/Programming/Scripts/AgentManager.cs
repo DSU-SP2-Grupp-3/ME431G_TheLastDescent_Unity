@@ -70,7 +70,6 @@ public class AgentManager : Service<AgentManager>
 
         if (currentClickAbility != null)
         {
-            Debug.Log(portraitAgent);
             if (portraitAgent)
             {
                 currentCommandPackage = CommandManager.GetClickAbilityPackage(

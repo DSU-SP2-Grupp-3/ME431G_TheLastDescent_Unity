@@ -61,13 +61,11 @@ public class PlayerUI : MonoBehaviour
 
     public void OnHoverEnter()
     {
-        Debug.Log("enter");
         agentManager.Get().SetPortraitAgent(player);
     }
 
     public void OnHoverExit()
     {
-        Debug.Log("exit");
         agentManager.Get().SetPortraitAgent(null);
     }
 
