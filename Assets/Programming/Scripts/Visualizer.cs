@@ -28,6 +28,8 @@ public class Visualizer : MonoBehaviour
     [SerializeField]
     private ResourceManager resourceManager;
 
+    [SerializeField] private SettingsStorage storedSettings;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
@@ -45,7 +47,7 @@ public class Visualizer : MonoBehaviour
     private void Update()
     {
         // todo: tweak here so we can choose what agents to visualize and when
-
+        
         foreach (Command command in currentlyExecutingCommands.Values)
         {
             command.VisualizeExecution(this);

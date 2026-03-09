@@ -30,7 +30,7 @@ public class ColorSetter : MonoBehaviour
                 storedSettings.PlayerHpColor = myImage.color;
                 break;
             case ColorType.AP:
-                storedSettings.PlayerAPColor = myImage.color;
+                storedSettings.PlayerApColor = myImage.color;
                 break;
             case ColorType.Heat:
                 storedSettings.PlayerHeatColor = myImage.color;
@@ -54,5 +54,11 @@ public class ColorSetter : MonoBehaviour
                 Debug.Log("HOW?? enum set to impossible option");
                 break;
         }
+        ManuallyTriggerColorUpdate();
+    }
+
+    public void ManuallyTriggerColorUpdate()
+    {
+        storedSettings.TriggerAll();
     }
 }

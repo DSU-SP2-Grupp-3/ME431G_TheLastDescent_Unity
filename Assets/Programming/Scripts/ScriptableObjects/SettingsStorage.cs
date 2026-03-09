@@ -14,7 +14,7 @@ public class SettingsStorage : ScriptableObject
 
     [Header("Color")] 
     public Color PlayerHpColor;
-    public Color PlayerAPColor;
+    public Color PlayerApColor;
     public Color PlayerHeatColor;
 
     public Color PathColor;
@@ -26,32 +26,32 @@ public class SettingsStorage : ScriptableObject
     //-E i have to make events :(
     public void TriggerAll() //just triggers all the events <3
     {
-        SetPlayerHpColor(PlayerHpColor);
-        SetPlayerAPColor(PlayerAPColor);
-        SetPlayerHeatColor(PlayerHeatColor);
-        SetPathColor(PathColor);
-        SetIndicatorColor(IndicatorColor);
-        SetDamagePopColor(DamageColor);
-        SetHealPopColor(HealColor);
+        SetPlayerHpColor();
+        SetPlayerApColor();
+        SetPlayerHeatColor();
+        SetPathColor();
+        SetIndicatorColor();
+        SetDamagePopColor();
+        SetHealPopColor();
     }
     //player HP
-    public UnityAction<Color> PlayerHpColorEvent = delegate{}; public void SetPlayerHpColor(Color input) { PlayerHpColorEvent(input); }
+    public UnityAction PlayerHpColorEvent = delegate{}; public void SetPlayerHpColor() { PlayerHpColorEvent(); }
     
     //player AP
-    public UnityAction<Color> PlayerAPColorEvent = delegate{}; public void SetPlayerAPColor(Color input) { PlayerAPColorEvent(input); }
+    public UnityAction PlayerApColorEvent = delegate{}; public void SetPlayerApColor() { PlayerApColorEvent(); }
     
     //player Heat ;) <- silly
-    public UnityAction<Color> PlayerHeatColorEvent = delegate{}; public void SetPlayerHeatColor(Color input) { PlayerHeatColorEvent(input); }
+    public UnityAction PlayerHeatColorEvent = delegate{}; public void SetPlayerHeatColor() { PlayerHeatColorEvent(); }
     
     //path color
-    public UnityAction<Color> PathColorEvent = delegate{}; public void SetPathColor(Color input) { PathColorEvent(input); }
+    public UnityAction PathColorEvent = delegate{}; public void SetPathColor() { PathColorEvent(); }
     
     //indicator color (no idea how this one will work tbh
-    public UnityAction<Color> IndicatorColorEvent = delegate{}; public void SetIndicatorColor(Color input) { IndicatorColorEvent(input); }
+    public UnityAction IndicatorColorEvent = delegate{}; public void SetIndicatorColor() { IndicatorColorEvent(); }
     
     //damage pop, might not get used but it now exists at least?
-    public UnityAction<Color> DamagePopColorEvent = delegate{}; public void SetDamagePopColor(Color input) { DamagePopColorEvent(input); }
+    public UnityAction DamagePopColorEvent = delegate{}; public void SetDamagePopColor() { DamagePopColorEvent(); }
     
     //heal pop, might not get used but it now exists at least?
-    public UnityAction<Color> HealPopColorEvent = delegate{}; public void SetHealPopColor(Color input) { HealPopColorEvent(input); }
+    public UnityAction HealPopColorEvent = delegate{}; public void SetHealPopColor() { HealPopColorEvent(); }
 }
