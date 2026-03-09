@@ -44,10 +44,10 @@ public class ColorSetter : MonoBehaviour
             
             //these two dont need events as the created object always inherits the color correctly <3
             case ColorType.Damage:
-                storedSettings.DamagePopColor = myImage.color;
+                storedSettings.DamageColor = myImage.color;
                 break;
             case ColorType.Heal:
-                storedSettings.HealPopColor = myImage.color;
+                storedSettings.HealColor = myImage.color;
                 break;
 
             default:

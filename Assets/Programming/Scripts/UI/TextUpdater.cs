@@ -33,11 +33,11 @@ public class TextUpdater : MonoBehaviour
     {
         if (number > 0)
         {
-            textComponent.color = storedSettings.DamagePopColor;
+            textComponent.color = storedSettings.DamageColor;
         }
         else
         {
-            textComponent.color = storedSettings.HealPopColor;
+            textComponent.color = storedSettings.HealColor;
         }
         textComponent.text = $"{MathF.Abs(number):0,0} DMG";
     }

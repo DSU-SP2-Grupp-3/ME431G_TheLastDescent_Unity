@@ -25,7 +25,7 @@ public class SettingsManager : Service<SettingsManager>
 
     private void Start()
     {
-        
+        storedSettings.TriggerAll();
         MasterSlider.value = storedSettings.masterVolume;
         SFXSlider.value = storedSettings.effectVolume;
         MusicSlider.value = storedSettings.musicVolume;
