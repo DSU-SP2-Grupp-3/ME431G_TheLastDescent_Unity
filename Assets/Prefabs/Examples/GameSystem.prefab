@@ -305,7 +305,7 @@ Transform:
   m_GameObject: {fileID: 1889929493577312775}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.5466523, y: 9.731231, z: -8.5128355}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -323,6 +323,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f5a2c451c9ed8344a98437b3870e7b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  storedSettings: {fileID: 11400000, guid: 5c77ffa27d6886d45a7c42f1f13d3c6c, type: 2}
   masterVolume: 1
   musicVolume: 1
   effectVolume: 1
@@ -1406,6 +1407,7 @@ Transform:
   - {fileID: 9129440660140956831}
   - {fileID: 4728237700439003615}
   - {fileID: 418514378036653763}
+  - {fileID: 5950090859176194247}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6519055973754001533
@@ -3731,17 +3733,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06d52d3457d04dfe99cec23045d51060, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5840605698435545780 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3576294416519547121, guid: 97ed44b748dc0c841b16e6a5fe72b766, type: 3}
-  m_PrefabInstance: {fileID: 6966069317737853509}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8eb54e86f3624a3a94eb7bab12397396, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &5934055549027528760 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3672249222095929981, guid: 97ed44b748dc0c841b16e6a5fe72b766, type: 3}
@@ -3762,10 +3753,6 @@ PrefabInstance:
     - target: {fileID: 7268438463264284404, guid: 6731b91d7f420b04fbaba4ca5b687668, type: 3}
       propertyPath: m_text
       value: Not Enough AP
-      objectReference: {fileID: 0}
-    - target: {fileID: 7268438463264284404, guid: 6731b91d7f420b04fbaba4ca5b687668, type: 3}
-      propertyPath: m_fontSizeBase
-      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 7268438463264284404, guid: 6731b91d7f420b04fbaba4ca5b687668, type: 3}
       propertyPath: m_fontSizeBase
@@ -4120,7 +4107,7 @@ PrefabInstance:
     - target: {fileID: 5249731142086908125, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: turnManagerEvents.StartExecutingTurn.m_PersistentCalls.m_Calls.Array.data[2].m_Target
       value: 
-      objectReference: {fileID: 5840605698435545780}
+      objectReference: {fileID: 4091044356747433083}
     - target: {fileID: 5249731142086908125, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: turnManagerEvents.StartExecutingTurn.m_PersistentCalls.m_Calls.Array.data[3].m_Target
       value: 
@@ -4136,15 +4123,31 @@ PrefabInstance:
     - target: {fileID: 5249731142086908125, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: turnManagerEvents.FinishExecutingTurn.m_PersistentCalls.m_Calls.Array.data[2].m_Target
       value: 
-      objectReference: {fileID: 5840605698435545780}
+      objectReference: {fileID: 4091044356747433083}
     - target: {fileID: 5249731142086908125, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: turnManagerEvents.FinishExecutingTurn.m_PersistentCalls.m_Calls.Array.data[4].m_Target
       value: 
       objectReference: {fileID: 7099649197221565427}
     - target: {fileID: 5249731142086908125, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: turnManagerEvents.StartExecutingTurn.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: SetAgentInputActive
+      objectReference: {fileID: 0}
+    - target: {fileID: 5249731142086908125, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: turnManagerEvents.FinishExecutingTurn.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: SetAgentInputActive
+      objectReference: {fileID: 0}
+    - target: {fileID: 5249731142086908125, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: turnManagerEvents.ResourceDeficitRejection.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2714695223149099920}
+    - target: {fileID: 5249731142086908125, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: turnManagerEvents.StartExecutingTurn.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
+      value: AgentManager, Programming
+      objectReference: {fileID: 0}
+    - target: {fileID: 5249731142086908125, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: turnManagerEvents.FinishExecutingTurn.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
+      value: AgentManager, Programming
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

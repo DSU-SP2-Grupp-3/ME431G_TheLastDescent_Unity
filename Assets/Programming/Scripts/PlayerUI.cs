@@ -21,23 +21,19 @@ public class PlayerUI : MonoBehaviour
     private float maxHP;
     private float maxAP;
 
-    private Locator<AgentManager> locatorAgentManager;
-    private AgentManager agentManager;
+    private Locator<AgentManager> agentManager;
 
-    private Locator<ModeSwitcher> modeSwitcherLocator;
+    private Locator<ModeSwitcher> modeSwitcher;
 
     private void Awake()
     {
-        locatorAgentManager = new Locator<AgentManager>();
-        
+        agentManager = new Locator<AgentManager>();
 
-        modeSwitcherLocator = new Locator<ModeSwitcher>();
+        modeSwitcher = new Locator<ModeSwitcher>();
     }
 
     private void Start()
     {
-        agentManager = locatorAgentManager.Get();
-
         SetStatsVisbility(false);
 
         player.localStats.hitPoints.Changed += HitPointsChanged;
@@ -53,23 +49,24 @@ public class PlayerUI : MonoBehaviour
 
     public void ClickedOnPlayer()
     {
-        agentManager.SelectPlayer(player);
+        agentManager.Get().SelectPlayer(player);
     }
 
     public void SetStatsVisbility(bool show)
     {
-        if (!show && modeSwitcherLocator.Get().mode == RoundClock.ProgressMode.TurnBased) statsContext.SetActive(true);
+        if (modeSwitcher == null) return;
+        if (!show && modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased) statsContext.SetActive(true);
         else statsContext.SetActive(show);
     }
 
     public void OnHoverEnter()
     {
-        agentManager.SetPortraitAgent(player);
+        agentManager.Get().SetPortraitAgent(player);
     }
 
     public void OnHoverExit()
     {
-        agentManager.SetPortraitAgent(null);
+        agentManager.Get().SetPortraitAgent(null);
     }
 
     private void HitPointsChanged(float changed)
