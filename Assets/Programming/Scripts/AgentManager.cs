@@ -204,7 +204,7 @@ public class AgentManager : Service<AgentManager>
 
     public List<WorldAgent> GetPlayerAgents() => players;
     public List<WorldAgent> GetAllAgents() => allAgents;
-
+    public WorldAgent GetSelectedPlayer() => selectedPlayer;
     public List<Vector3> GetPlayerPositions()
     {
         return players.Select(w => w.transform.position).ToList();

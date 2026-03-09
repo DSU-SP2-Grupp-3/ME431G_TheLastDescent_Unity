@@ -29,7 +29,9 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
     public GameObject rangeIndicator;
     private Locator<ModeSwitcher> modeSwitcher;
     public float FreeMoveSpeed;
+    public float FreeDistanceCap;
     public Transform freeMoveFocus;
+    private AgentManager am;
     private void Awake()
     {
         Register();
@@ -41,6 +43,7 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
     private void Start()
     {
         InputManager im = new Locator<InputManager>().Get();
+        am = new Locator<AgentManager>().Get();
         im.OnScrollUp += ZoomIn;
         im.OnScrollDown += ZoomOut;
         im.OnRightClick += OnRightClick;
@@ -63,6 +66,11 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
         Vector3 move = new Vector3(0.5f, 0, -0.5f) * cameraForce.x + new Vector3(0.5f, 0, 0.5f) * cameraForce.y;
 
         freeMoveFocus.position += move * FreeMoveSpeed;
+        var player = am.GetSelectedPlayer();
+        if(Vector2.Distance(new Vector2(player.transform.position.x, player.transform.position.z), new Vector2(freeMoveFocus.position.x, freeMoveFocus.position.z)) >= FreeDistanceCap)
+        {
+            freeMoveFocus.position = player.transform.position + (freeMoveFocus.position - player.transform.position).normalized * FreeDistanceCap;
+        }
     }
 
     public void SetCameraTarget(Transform target)
