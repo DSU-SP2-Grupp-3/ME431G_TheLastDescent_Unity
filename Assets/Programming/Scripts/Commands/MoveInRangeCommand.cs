@@ -98,7 +98,7 @@ public class MoveInRangeCommand : Command, IMoveCommand
     {
         return () =>
         {
-            if (invokingAgent.navMeshAgent.remainingDistance < playEndAnimationDistance) return true;
+            if (invokingAgent.navMeshAgent.remainingDistance < range) return true;
             else if (Time.time > interrupt)
             {
                 status = Status.Failed;
