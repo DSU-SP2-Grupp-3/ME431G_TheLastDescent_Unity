@@ -11,8 +11,6 @@ public class HeatUpAbility : ScriptableObject, IClickAbility
 
     public ClickAbility GetAbility()
     {
-
-
         ClickAbility clickAbility = new ClickAbility(heatUpAPCost, heatUpResourceCost, "Heal", "NoHeal");
 
         // click heater upper
@@ -29,6 +27,7 @@ public class HeatUpAbility : ScriptableObject, IClickAbility
                 );
                 ability.commands.Clear();
                 ability.commands.Add(heatUpCommand);
+                ability.queueingAgent = validAgent;
             },
             (info, ability) =>
             {

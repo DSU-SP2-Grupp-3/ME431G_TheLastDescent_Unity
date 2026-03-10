@@ -28,6 +28,7 @@ public class HealAbility : ScriptableObject, IClickAbility
                 );
                 ability.commands.Clear();
                 ability.commands.Add(healCommand);
+                ability.queueingAgent = validAgent;
             },
             (info, ability) =>
             {
@@ -39,7 +40,7 @@ public class HealAbility : ScriptableObject, IClickAbility
                 }
                 else return false;
             },
-            "Target: alive and damaged player"
+            "Target: alive and damaged party member"
         );
 
         return clickAbility;

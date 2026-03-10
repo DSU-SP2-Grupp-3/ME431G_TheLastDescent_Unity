@@ -81,7 +81,7 @@ public static class CommandManager
                                                         WorldAgent agent,
                                                         ClickAbility clickAbility)
     {
-        CommandPackage package = new CommandPackage(false);
+        CommandPackage package = new CommandPackage(clickAbility.queueingAgent);
         package.SetType("click");
 
         if (clickAbility.CanClick(hit, agent))
@@ -104,6 +104,19 @@ public static class CommandManager
         }
 
         package.SetHint(clickAbility.GetHint());
+
+        return package;
+    }
+
+    public static CommandPackage GetFinalizedClickAbilityPackage(ClickAbility clickAbility)
+    {
+        CommandPackage package = new CommandPackage(clickAbility.queueingAgent);
+        package.SetType("click");
+
+        foreach (Command command in clickAbility.commands)
+        {
+            package.AddCommand(command);
+        }
 
         return package;
     }
@@ -230,6 +243,7 @@ public static class CommandManager
 
         public bool QueueCommands(RoundClock.ProgressMode mode)
         {
+
             switch (mode)
             {
                 case RoundClock.ProgressMode.TurnBased:

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class ClickAbility
 {
+    public WorldAgent queueingAgent;
     public readonly string validCursorPath;
     public readonly string invalidCursorPath;
     public readonly List<Command> commands;
@@ -84,6 +85,12 @@ public class ClickAbility
         int index = data.Count;
         data.Add(newData);
         return index;
+    }
+
+    public T GetData<T>(int index)
+    {
+        object dataEntry = data[index];
+        return (T)dataEntry;
     }
 
     public void AddAffectedAgent(WorldAgent affected)

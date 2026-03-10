@@ -18,7 +18,7 @@ public abstract class Command
     }
 
     public Status status { get; set; }
-    protected WorldAgent invokingAgent;
+    public WorldAgent invokingAgent { get; protected set; }
     protected AudioManager audioManager;
     public abstract float apCost { get; }
     public abstract float resourceCost { get; }

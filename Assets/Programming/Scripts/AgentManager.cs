@@ -117,6 +117,7 @@ public class AgentManager : Service<AgentManager>
 
             // if this is not the final click of the click ability then return and wait for future clicks
             if (!currentClickAbility.Click()) return;
+            currentCommandPackage = CommandManager.GetFinalizedClickAbilityPackage(currentClickAbility);
         }
         else if (currentCommandPackage.type == "select") SelectPlayer(currentCommandPackage.agent);
         if (currentCommandPackage.commands.Count > 0) QueueCurrentPackage();

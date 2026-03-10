@@ -91,9 +91,9 @@ public class Visualizer : MonoBehaviour
         packageAPDisplay.rectTransform.anchoredPosition = Vector2.zero;
 
         // calculate bools
-        bool canQueue = commandPackage.CanQueueCommands();
         bool enoughResouces = resourceManager.CanQueuePackage(commandPackage);
         bool realTime = modeSwitcher.Get().mode == RoundClock.ProgressMode.RealTime;
+        bool canQueue = commandPackage.CanQueueCommands() || realTime;
         float packageApCost = commandPackage.TotalPackageCommandCost();
         float packageResourceCost = resourceManager.TotalCommandCollectionResourceCost(commandPackage.commands);
 
@@ -123,7 +123,7 @@ public class Visualizer : MonoBehaviour
 
         if (commandPackage.empty) return;
 
-        if (realTime || commandPackage.clickOnAgentOnly) return;
+        if ((realTime || commandPackage.clickOnAgentOnly) && commandPackage.type != "click") return;
 
         foreach (Command command in commandPackage.commands)
         {
