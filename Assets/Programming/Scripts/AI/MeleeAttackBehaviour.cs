@@ -56,6 +56,7 @@ public class MeleeAttackBehaviour : BehaviourDefinition
                 aiAgent.weaponStats.attackRange,
                 aiAgent
             );
+            aiMovement.SetLineOfSightTarget(closestTarget);
             commands.AddCommand(aiMovement);
 
             // if the path does not need to be trimmed then we attack the player as well
