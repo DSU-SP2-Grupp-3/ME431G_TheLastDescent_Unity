@@ -10,6 +10,7 @@ public class ReviveCommand : Command
 
     private WorldAgent revivee;
     private DamageManager damageManager;
+    private ResourceManager resourceManager;
     private float amount;
     private float thisResourceCost;
     private float thisApCost;
@@ -21,6 +22,7 @@ public class ReviveCommand : Command
         WorldAgent invokingAgent,
         WorldAgent revivee,
         DamageManager damageManager,
+        ResourceManager resourceManager,
         float amount,
         float resourceCost,
         float apCost
@@ -28,6 +30,7 @@ public class ReviveCommand : Command
     {
         this.revivee = revivee;
         this.damageManager = damageManager;
+        this.resourceManager = resourceManager;
         this.amount = amount;
         thisApCost = apCost;
         thisResourceCost = resourceCost;
@@ -42,6 +45,7 @@ public class ReviveCommand : Command
 
         revivee.Revive();
         damageManager.DealDamageEvent(-amount, revivee);
+        resourceManager.PayResource(this);
 
         revivee.AnimationEventTriggered -= CaptureEndTrigger;
     }

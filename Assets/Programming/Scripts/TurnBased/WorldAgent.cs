@@ -30,7 +30,7 @@ public class WorldAgent : MonoBehaviour
     [Tooltip("If true, prevent queueing commands while the command queue is being executed")]
     public bool lockDuringQueueExecution;
     [Tooltip("If true this agent will revive if dead after exiting turn based and all enemies are dead")]
-    public bool reviveAfterCombat = true;
+    public bool reviveAfterCombat;
     [Range(0f, 1f), Tooltip("The portion of hp restored when revived automatically after combat")]
     public float reviveHitPointPortion;
 
@@ -164,7 +164,8 @@ public class WorldAgent : MonoBehaviour
         if (reviveAfterCombat && dead)
         {
             float autoReviveAmount = localStats.initHitPoints * reviveHitPointPortion;
-            ReviveCommand reviveCommand = new ReviveCommand(this, this, damageManager, autoReviveAmount, 0f, 0f);
+            ResourceManager rm = agentManager.Get().resourceManager;
+            ReviveCommand reviveCommand = new ReviveCommand(this, this, damageManager, rm, autoReviveAmount, 0f, 0f);
             OverwriteQueue(reviveCommand, true);
         }
     }
@@ -311,7 +312,6 @@ public class WorldAgent : MonoBehaviour
 
     public void Highlight()
     {
-        if (dead) return;
         if (indicatorFocusTransform) indicator.Get().GetIndicator(indicatorFocusTransform);
         else indicator.Get().GetIndicator(transform);
     }
