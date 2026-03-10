@@ -9,7 +9,8 @@ public class AgentStats : ScriptableObject
         initHitPoints,
         initActionPoints,
         initMovement,
-        initMovementCostModifier,
+        initMovementCostModifier = 1f,
+        initDamageModifier = 1f,
         initTemperatureLoss = 0.01f;
 
     public Watcher<float> hitPoints;
@@ -18,6 +19,7 @@ public class AgentStats : ScriptableObject
 
     public float movement { get; set; }
     public float movementCostModifier { get; set; }
+    public float damageModifier { get; set; }
 
     public AgentStats Clone()
     {
@@ -27,6 +29,7 @@ public class AgentStats : ScriptableObject
         clone.initActionPoints = initActionPoints;
         clone.initMovement = initMovement;
         clone.initMovementCostModifier = initMovementCostModifier;
+        clone.initDamageModifier = initDamageModifier;
         clone.initTemperatureLoss = initTemperatureLoss;
 
         clone.hitPoints = new Watcher<float>(initHitPoints, Clamp(0f, initHitPoints));
@@ -34,6 +37,7 @@ public class AgentStats : ScriptableObject
         clone.temperature = new Watcher<float>(1f, Clamp(0f, 1f));
         clone.movement = initMovement;
         clone.movementCostModifier = initMovementCostModifier;
+        clone.damageModifier = initDamageModifier;
 
         if (new Locator<RoundClock>().TryGet(out RoundClock roundClock))
         {
