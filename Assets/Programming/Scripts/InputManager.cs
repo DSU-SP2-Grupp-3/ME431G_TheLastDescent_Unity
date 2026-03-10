@@ -19,6 +19,8 @@ public class InputManager : Service<InputManager>
     public event Action OnRightClick;
     public event Action OnLeftHold;
     public event Action OnRightHold;
+    
+    public event Action OnRightUp;
     public event Action OnScrollUp;
     public event Action OnScrollDown;
 
@@ -116,6 +118,8 @@ public class InputManager : Service<InputManager>
         }
         return raycastAll;
     }
+
+    private bool rightMouseHasBeenDown = false;
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.K))
@@ -150,6 +154,11 @@ public class InputManager : Service<InputManager>
         if (Input.GetMouseButton(1))
         {
             if (lastStartHold + holdDelay < Time.time) OnRightHold?.Invoke();
+        }
+
+        if (Input.GetMouseButtonUp(1))
+        {
+            OnRightUp?.Invoke();
         }
     }
 
