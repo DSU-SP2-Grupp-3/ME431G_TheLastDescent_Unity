@@ -33,19 +33,16 @@ public class AttackCommand : Command
     protected override IEnumerator Execute()
     {
         if (receivingAgent.dead) yield break;
-        receivingAgent.OnDeath += Break;
         invokingAgent.AnimationEventTriggered += CaptureAnimationEvent;
         invokingAgent.animator.SetTrigger("StartAttack");
         yield return new WaitUntil(() => animationEnded);
         invokingAgent.AnimationEventTriggered -= CaptureAnimationEvent;
-        receivingAgent.OnDeath -= Break;
     }
 
     public override void Break()
     {
         invokingAgent.animator.SetTrigger("StopAttack");
         invokingAgent.AnimationEventTriggered -= CaptureAnimationEvent;
-        receivingAgent.OnDeath -= Break;
     }
 
     public override void VisualizeInQueue(Visualizer visualizer) { }
