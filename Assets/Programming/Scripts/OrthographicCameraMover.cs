@@ -58,7 +58,7 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
     
     private void OnRightClick()
     {
-        Mouse.current.WarpCursorPosition(new Vector2(Screen.width/2,Screen.height/2));
+        //Mouse.current.WarpCursorPosition(new Vector2(Screen.width/2,Screen.height/2));
         freeMoveFocus.position = targetGameObject.position;
         savedCharacter = targetGameObject;
         targetGameObject = freeMoveFocus;
