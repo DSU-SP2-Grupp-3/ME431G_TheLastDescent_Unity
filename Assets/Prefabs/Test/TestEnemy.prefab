@@ -3036,6 +3036,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultSelected: 0
+  lockDuringQueueExecution: 0
+  reviveAfterCombat: 0
+  reviveHitPointPortion: 0
   team: 2
   animator: {fileID: 5474678374904609022}
   navMeshAgent: {fileID: 9163769210025672173}
@@ -3043,6 +3046,7 @@ MonoBehaviour:
   indicatorFocusTransform: {fileID: 0}
   stats: {fileID: 0}
   equippedWeapon: {fileID: 11400000, guid: 42fc0f221ce5dc245930838cc567165b, type: 2}
+  damageManager: {fileID: 11400000, guid: 8bf77c0c527a44d4297df7af4e954cc4, type: 2}
   actorID: 0
 --- !u!195 &9163769210025672173
 NavMeshAgent:

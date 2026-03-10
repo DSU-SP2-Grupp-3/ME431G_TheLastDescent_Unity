@@ -13,6 +13,7 @@ public class AttackCommand : Command
     private DamageManager damageManager;
 
     private bool animationEnded;
+    private bool receiverDied;
 
     private string attackEventName;
 
@@ -31,6 +32,7 @@ public class AttackCommand : Command
 
     protected override IEnumerator Execute()
     {
+        if (receivingAgent.dead) yield break;
         invokingAgent.AnimationEventTriggered += CaptureAnimationEvent;
         invokingAgent.animator.SetTrigger("StartAttack");
         yield return new WaitUntil(() => animationEnded);
@@ -49,7 +51,6 @@ public class AttackCommand : Command
     {
         if (trigger == "attack")
         {
-            audioManager.PlayAudioEvent(attackEventName);
             PerformAttack();
         }
         if (trigger == "end") animationEnded = true;
@@ -57,7 +58,7 @@ public class AttackCommand : Command
 
     private void PerformAttack()
     {
-        Debug.Log("performed attack");
+        audioManager.PlayAudioEvent(attackEventName);
         float damage = invokingAgent.weaponStats.GetDamage();
         damageManager.DealDamageEvent(damage, receivingAgent);
     }

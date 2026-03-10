@@ -216,12 +216,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultSelected: 0
+  lockDuringQueueExecution: 0
+  reviveAfterCombat: 1
+  reviveHitPointPortion: 0.1
   team: 0
   animator: {fileID: 3872888211663564274}
   navMeshAgent: {fileID: 7076631293186839885}
   cameraFocusTransform: {fileID: 8422451221981947097}
+  indicatorFocusTransform: {fileID: 0}
   stats: {fileID: 11400000, guid: 781734abf7c8bcf4095b28600dd9534d, type: 2}
   equippedWeapon: {fileID: 11400000, guid: a975a668248ddab4fb8254746403b0c6, type: 2}
+  damageManager: {fileID: 11400000, guid: 8bf77c0c527a44d4297df7af4e954cc4, type: 2}
   actorID: 0
 --- !u!54 &3797529464980948739
 Rigidbody:

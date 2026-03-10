@@ -13,6 +13,9 @@ public class WorldAgent : MonoBehaviour
     public event Action<string, GameObject> AnimationEventTriggered;
     public event Action<WorldAgent> ForcedEnterTurnBased;
     public event Action<WorldAgent, Queue<Command>, Command> CommandQueueUpdated;
+    public event Action OnDeath;
+    public event Action OnRevive;
+    public event Action OnActivate;
 
     public enum Team
     {
@@ -27,6 +30,10 @@ public class WorldAgent : MonoBehaviour
     public bool defaultSelected;
     [Tooltip("If true, prevent queueing commands while the command queue is being executed")]
     public bool lockDuringQueueExecution;
+    [Tooltip("If true this agent will revive if dead after exiting turn based and all enemies are dead")]
+    public bool reviveAfterCombat;
+    [Range(0f, 1f), Tooltip("The portion of hp restored when revived automatically after combat")]
+    public float reviveHitPointPortion;
 
     public Team team;
     [Header("References")]
@@ -53,6 +60,8 @@ public class WorldAgent : MonoBehaviour
             }
         }
     }
+
+    private DamageManager damageManager;
 
     public int actorID;
     /// True if this agent should enter into the turn order when turn based mode is activated
@@ -110,9 +119,10 @@ public class WorldAgent : MonoBehaviour
     {
         AgentManager am = agentManager.Get();
         am.RegisterAgent(this);
+        damageManager = am.damageManager;
 
         //subscribe TakeDamage to the DamageManager of the PlayerManager
-        am.damageManager.DealDamageEvent += TakeDamage;
+        damageManager.DealDamageEvent += TakeDamage;
         modeSwitcher.Get().OnEnterTurnBased += RegisterInTurnManager;
         modeSwitcher.Get().OnEnterRealTime += ExitTurnBased;
     }
@@ -152,17 +162,24 @@ public class WorldAgent : MonoBehaviour
     private void ExitTurnBased(TurnManager _)
     {
         InterruptCommandQueue();
+        if (reviveAfterCombat && dead)
+        {
+            float autoReviveAmount = localStats.initHitPoints * reviveHitPointPortion;
+            ResourceManager rm = agentManager.Get().resourceManager;
+            ReviveCommand reviveCommand = new ReviveCommand(this, this, damageManager, rm, autoReviveAmount, 0f, 0f);
+            OverwriteQueue(reviveCommand, true);
+        }
     }
 
-    public void QueueCommand(Command command)
+    public void QueueCommand(Command command, bool bypassDead = false)
     {
-        QueueCommands(new Command[] { command });
+        QueueCommands(new Command[] { command }, bypassDead);
     }
 
-    public void QueueCommands(Command[] commands)
+    public void QueueCommands(Command[] commands, bool bypassDead = false)
     {
         if (lockDuringQueueExecution && currentExecutingCommandCoroutine != null) return;
-        if (dead) return;
+        if (!bypassDead && dead) return;
         commandPacketSizes.Push(commands.Length);
         foreach (Command command in commands)
         {
@@ -172,19 +189,19 @@ public class WorldAgent : MonoBehaviour
         CommandQueueUpdated?.Invoke(this, commandQueue, null);
     }
 
-    public void OverwriteQueue(Command command)
+    public void OverwriteQueue(Command command, bool bypassDead = false)
     {
         if (lockDuringQueueExecution && currentExecutingCommandCoroutine != null) return;
         InterruptCommandQueue();
-        QueueCommand(command);
+        QueueCommand(command, bypassDead);
         StartCoroutine(ExecuteCommandQueue());
     }
 
-    public void OverwriteQueue(Command[] commands)
+    public void OverwriteQueue(Command[] commands, bool bypassDead = false)
     {
         if (lockDuringQueueExecution && currentExecutingCommandCoroutine != null) return;
         InterruptCommandQueue();
-        QueueCommands(commands);
+        QueueCommands(commands, bypassDead);
         StartCoroutine(ExecuteCommandQueue());
     }
 
@@ -274,29 +291,29 @@ public class WorldAgent : MonoBehaviour
                 }
             }
         }
+        OnActivate?.Invoke();
     }
 
     public void Die()
     {
-        // todo: emit event here so agent manager can check if all players are dead
-        Debug.Log($"Agent {name} has died");
         Dehighlight();
         InterruptCommandQueue();
         dead = true;
         animator.SetTrigger("Die");
         navMeshAgent.enabled = false;
+        OnDeath?.Invoke();
     }
 
-    public void Revive(float damage)
+    public void Revive()
     {
+        if (!dead) return;
         dead = false;
-        animator.SetTrigger("Revive");
         navMeshAgent.enabled = true;
+        OnRevive?.Invoke();
     }
 
     public void Highlight()
     {
-        if (dead) return;
         if (indicatorFocusTransform) indicator.Get().GetIndicator(indicatorFocusTransform);
         else indicator.Get().GetIndicator(transform);
     }
@@ -315,11 +332,7 @@ public class WorldAgent : MonoBehaviour
 
     private void TakeDamage(float damage, WorldAgent target)
     {
-        if (dead && damage < 0)
-        {
-            Revive(damage);
-            return;
-        }
+        if (dead) return;
 
         //currently functions, would be cool if we implemented resistances or elemental damage or something
         if (target != this) return;
