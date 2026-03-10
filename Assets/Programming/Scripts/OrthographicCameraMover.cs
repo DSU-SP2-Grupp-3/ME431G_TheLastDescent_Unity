@@ -1,6 +1,8 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.TextCore.Text;
+
 [RequireComponent(typeof(Camera))]
 public class OrthographicCameraMover : Service<OrthographicCameraMover>
 {
@@ -32,6 +34,8 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
     public float FreeDistanceCap;
     public Transform freeMoveFocus;
     private AgentManager am;
+    private Transform savedCharacter;
+
     private void Awake()
     {
         Register();
@@ -42,17 +46,21 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
 
     private void Start()
     {
+        savedCharacter = targetGameObject;
         InputManager im = new Locator<InputManager>().Get();
         am = new Locator<AgentManager>().Get();
         im.OnScrollUp += ZoomIn;
         im.OnScrollDown += ZoomOut;
         im.OnRightClick += OnRightClick;
         im.OnRightHold += OnRightHold;
+        im.OnRightUp += OnRightClickDropped;
     }
+    
     private void OnRightClick()
     {
         Mouse.current.WarpCursorPosition(new Vector2(Screen.width/2,Screen.height/2));
         freeMoveFocus.position = targetGameObject.position;
+        savedCharacter = targetGameObject;
         targetGameObject = freeMoveFocus;
     }
     private void OnRightHold()
@@ -73,6 +81,11 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
         }
     }
 
+    private void OnRightClickDropped()
+    {
+        targetGameObject = savedCharacter;
+    }
+
     public void SetCameraTarget(Transform target)
     {
         targetGameObject = target;
@@ -80,22 +93,25 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
 
     private void LateUpdate()
     {
-        if (modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased)
+        if (targetGameObject)
         {
-            rangeIndicator.transform.position = targetGameObject.transform.position;
-        }
-        else
-        {
-            rangeIndicator.transform.position = new Vector3(0, -100, 0);
-        }
-        Vector3 targetPosition = targetGameObject.position + offset;
-        transform.position = Vector3.Lerp(transform.position, targetPosition, smoothing * Time.deltaTime * 100f);
+            if (modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased)
+            {
+                rangeIndicator.transform.position = targetGameObject.transform.position;
+            }
+            else
+            {
+                rangeIndicator.transform.position = new Vector3(0, -100, 0);
+            }
+            Vector3 targetPosition = targetGameObject.position + offset;
+            transform.position = Vector3.Lerp(transform.position, targetPosition, smoothing * Time.deltaTime * 100f);
 
-        thisCamera.orthographicSize = Mathf.Lerp(
-            thisCamera.orthographicSize,
-            targetZoomSize,
-            zoomSmoothing * Time.deltaTime * 100f
-        );
+            thisCamera.orthographicSize = Mathf.Lerp(
+                thisCamera.orthographicSize,
+                targetZoomSize,
+                zoomSmoothing * Time.deltaTime * 100f
+            );
+        }
     }
 
     private void ZoomIn()
