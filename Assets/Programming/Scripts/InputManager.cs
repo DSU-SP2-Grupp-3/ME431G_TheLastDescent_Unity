@@ -33,6 +33,17 @@ public class InputManager : Service<InputManager>
     private const float holdDelay = 0.15f;
     private float lastStartHold;
 
+    private bool killFlag;
+    public bool KillFlag()
+    {
+        if (killFlag)
+        {
+            killFlag = false;
+            return true;
+        }
+        return false;
+    }
+
     private void Awake()
     {
         Register();
@@ -107,6 +118,11 @@ public class InputManager : Service<InputManager>
     }
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            killFlag = !killFlag;
+        }
+
         if (Input.mouseScrollDelta.y > 0)
         {
             OnScrollUp?.Invoke();
