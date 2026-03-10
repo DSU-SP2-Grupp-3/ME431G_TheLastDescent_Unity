@@ -18,6 +18,8 @@ public class PlayerUI : MonoBehaviour
     [SerializeField]
     private GameObject statsContext;
 
+    [SerializeField] private SettingsStorage storedSettings;
+
     private float maxHP;
     private float maxAP;
 
@@ -39,6 +41,10 @@ public class PlayerUI : MonoBehaviour
         player.localStats.hitPoints.Changed += HitPointsChanged;
         player.localStats.actionPoints.Changed += ActionPointsChanged;
         player.localStats.temperature.Changed += TemperatureChanged;
+        
+        storedSettings.PlayerHpColorEvent += UpdateColors;
+        storedSettings.PlayerApColorEvent += UpdateColors;
+        storedSettings.PlayerHeatColorEvent += UpdateColors;
 
         maxHP = player.localStats.initHitPoints;
         maxAP = player.localStats.initActionPoints;
@@ -102,5 +108,12 @@ public class PlayerUI : MonoBehaviour
     private void TemperatureChanged(float changed)
     {
         temperatureImage.fillAmount = changed;
+    }
+
+    private void UpdateColors()
+    {
+        hitPointsImage.color = storedSettings.PlayerHpColor;
+        actionPointsImage.color = storedSettings.PlayerApColor;
+        temperatureImage.color = storedSettings.PlayerHeatColor;
     }
 }
