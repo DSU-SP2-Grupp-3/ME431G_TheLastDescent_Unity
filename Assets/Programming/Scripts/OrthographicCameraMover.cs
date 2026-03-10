@@ -1,5 +1,6 @@
-﻿using UnityEngine;
-
+﻿using UnityEditor;
+using UnityEngine;
+using UnityEngine.InputSystem;
 [RequireComponent(typeof(Camera))]
 public class OrthographicCameraMover : Service<OrthographicCameraMover>
 {
@@ -27,7 +28,10 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
 
     public GameObject rangeIndicator;
     private Locator<ModeSwitcher> modeSwitcher;
-
+    public float FreeMoveSpeed;
+    public float FreeDistanceCap;
+    public Transform freeMoveFocus;
+    private AgentManager am;
     private void Awake()
     {
         Register();
@@ -39,8 +43,34 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
     private void Start()
     {
         InputManager im = new Locator<InputManager>().Get();
+        am = new Locator<AgentManager>().Get();
         im.OnScrollUp += ZoomIn;
         im.OnScrollDown += ZoomOut;
+        im.OnRightClick += OnRightClick;
+        im.OnRightHold += OnRightHold;
+    }
+    private void OnRightClick()
+    {
+        Mouse.current.WarpCursorPosition(new Vector2(Screen.width/2,Screen.height/2));
+        freeMoveFocus.position = targetGameObject.position;
+        targetGameObject = freeMoveFocus;
+    }
+    private void OnRightHold()
+    {
+        Vector2 mousePos = (Vector2)Input.mousePosition - new Vector2(Screen.width/2,Screen.height/2);
+        mousePos = new Vector2(mousePos.x/Screen.width*0.5f,mousePos.y/Screen.height*0.5f);
+        Vector2 cameraForce = mousePos * FreeMoveSpeed;
+
+        Transform cam = Camera.main.transform;
+
+        Vector3 move = new Vector3(0.5f, 0, -0.5f) * cameraForce.x + new Vector3(0.5f, 0, 0.5f) * cameraForce.y;
+
+        freeMoveFocus.position += move * FreeMoveSpeed;
+        var player = am.GetSelectedPlayer();
+        if(Vector2.Distance(new Vector2(player.transform.position.x, player.transform.position.z), new Vector2(freeMoveFocus.position.x, freeMoveFocus.position.z)) >= FreeDistanceCap)
+        {
+            freeMoveFocus.position = player.transform.position + (freeMoveFocus.position - player.transform.position).normalized * FreeDistanceCap;
+        }
     }
 
     public void SetCameraTarget(Transform target)

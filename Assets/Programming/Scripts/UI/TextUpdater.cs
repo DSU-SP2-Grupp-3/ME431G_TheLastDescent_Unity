@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TextUpdater : MonoBehaviour
 {
+    [SerializeField] private SettingsStorage storedSettings;
     [SerializeField] private TMP_Text textComponent;
     [SerializeField] private RectTransform rectTransform;
     [SerializeField] [Min(0)] private float fadeRate;
@@ -12,7 +13,6 @@ public class TextUpdater : MonoBehaviour
 
     private void Start()
     {
-        textComponent.color = Color.yellow;
         transform.position = Camera.main.WorldToScreenPoint(Target);
     }
 
@@ -31,14 +31,7 @@ public class TextUpdater : MonoBehaviour
 
     public void SetText(float number)
     {
-        if (number > 0)
-        {
-            textComponent.color = Color.red;
-        }
-        else
-        {
-            textComponent.color = Color.green;
-        }
+        textComponent.color = number > 0 ? storedSettings.DamageColor : storedSettings.HealColor;
         textComponent.text = $"{MathF.Abs(number):0,0} DMG";
     }
 }

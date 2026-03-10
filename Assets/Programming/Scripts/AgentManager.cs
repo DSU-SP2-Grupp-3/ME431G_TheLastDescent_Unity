@@ -54,9 +54,9 @@ public class AgentManager : Service<AgentManager>
     {
         InputManager im = inputManager.Get();
         im.OnHover += PreviewCommand;
-        im.OnRightClick += ProcessRightClick;
-        im.OnHold += ProcessHold;
-        im.OnLeftClick += () => currentClickAbility = null;
+        im.OnLeftClick += ProcessRightClick;
+        im.OnLeftHold += ProcessHold;
+        im.OnRightClick += () => currentClickAbility = null;
         modeSwitcher.Get().OnEnterTurnBased += (_) => allPlayersSelected = false;
     }
 
@@ -261,7 +261,7 @@ public class AgentManager : Service<AgentManager>
 
     public List<WorldAgent> GetPlayerAgents() => players;
     public List<WorldAgent> GetAllAgents() => allAgents;
-
+    public WorldAgent GetSelectedPlayer() => selectedPlayer;
     public List<Vector3> GetPlayerPositions()
     {
         return players.Select(w => w.transform.position).ToList();
