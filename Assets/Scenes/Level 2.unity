@@ -13333,7 +13333,6 @@ Transform:
   - {fileID: 1888836661}
   - {fileID: 1994554027}
   - {fileID: 962971541}
-  - {fileID: 1070755762}
   m_Father: {fileID: 328461816}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &349659520
@@ -18842,6 +18841,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultSelected: 0
   lockDuringQueueExecution: 0
+  reviveAfterCombat: 0
+  reviveHitPointPortion: 0
   team: 0
   animator: {fileID: 0}
   navMeshAgent: {fileID: 0}
@@ -23482,6 +23483,7 @@ Transform:
   - {fileID: 730473834}
   - {fileID: 1364161360}
   - {fileID: 1551212857}
+  - {fileID: 1070755762}
   m_Father: {fileID: 1765415886}
   m_LocalEulerAnglesHint: {x: 0, y: 30, z: 0}
 --- !u!1 &651617368
@@ -29582,6 +29584,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultSelected: 0
   lockDuringQueueExecution: 0
+  reviveAfterCombat: 0
+  reviveHitPointPortion: 0
   team: 0
   animator: {fileID: 0}
   navMeshAgent: {fileID: 0}
@@ -32742,6 +32746,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultSelected: 0
   lockDuringQueueExecution: 0
+  reviveAfterCombat: 0
+  reviveHitPointPortion: 0
   team: 0
   animator: {fileID: 0}
   navMeshAgent: {fileID: 0}
@@ -34893,7 +34899,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 349426647}
+    m_TransformParent: {fileID: 648787028}
     m_Modifications:
     - target: {fileID: 2224139825504244276, guid: 1e6cc8cfdfea82b4091e2c1e2fb77946, type: 3}
       propertyPath: m_Name
@@ -34901,19 +34907,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6244260452407143535, guid: 1e6cc8cfdfea82b4091e2c1e2fb77946, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 87.5
+      value: 0.72163296
       objectReference: {fileID: 0}
     - target: {fileID: 6244260452407143535, guid: 1e6cc8cfdfea82b4091e2c1e2fb77946, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.5
+      value: 0.49
       objectReference: {fileID: 0}
     - target: {fileID: 6244260452407143535, guid: 1e6cc8cfdfea82b4091e2c1e2fb77946, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 124
+      value: 22.240479
       objectReference: {fileID: 0}
     - target: {fileID: 6244260452407143535, guid: 1e6cc8cfdfea82b4091e2c1e2fb77946, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.9659258
       objectReference: {fileID: 0}
     - target: {fileID: 6244260452407143535, guid: 1e6cc8cfdfea82b4091e2c1e2fb77946, type: 3}
       propertyPath: m_LocalRotation.x
@@ -34921,7 +34927,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6244260452407143535, guid: 1e6cc8cfdfea82b4091e2c1e2fb77946, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: -0.2588191
       objectReference: {fileID: 0}
     - target: {fileID: 6244260452407143535, guid: 1e6cc8cfdfea82b4091e2c1e2fb77946, type: 3}
       propertyPath: m_LocalRotation.z
@@ -38074,6 +38080,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultSelected: 0
   lockDuringQueueExecution: 0
+  reviveAfterCombat: 0
+  reviveHitPointPortion: 0
   team: 0
   animator: {fileID: 0}
   navMeshAgent: {fileID: 0}
@@ -39635,6 +39643,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultSelected: 0
   lockDuringQueueExecution: 0
+  reviveAfterCombat: 0
+  reviveHitPointPortion: 0
   team: 0
   animator: {fileID: 0}
   navMeshAgent: {fileID: 0}
@@ -41506,6 +41516,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultSelected: 0
   lockDuringQueueExecution: 0
+  reviveAfterCombat: 0
+  reviveHitPointPortion: 0
   team: 0
   animator: {fileID: 0}
   navMeshAgent: {fileID: 0}
@@ -44807,6 +44819,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultSelected: 0
   lockDuringQueueExecution: 0
+  reviveAfterCombat: 0
+  reviveHitPointPortion: 0
   team: 0
   animator: {fileID: 0}
   navMeshAgent: {fileID: 0}
@@ -46495,6 +46509,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultSelected: 0
   lockDuringQueueExecution: 0
+  reviveAfterCombat: 0
+  reviveHitPointPortion: 0
   team: 0
   animator: {fileID: 0}
   navMeshAgent: {fileID: 0}
@@ -65238,6 +65254,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultSelected: 0
   lockDuringQueueExecution: 0
+  reviveAfterCombat: 0
+  reviveHitPointPortion: 0
   team: 0
   animator: {fileID: 0}
   navMeshAgent: {fileID: 0}
