@@ -15,9 +15,10 @@ public class InputManager : Service<InputManager>
     /// <summary>
     /// Triggers when the left mouse button is clicked
     /// </summary>
-    public event Action OnRightClick;
     public event Action OnLeftClick;
-    public event Action OnHold;
+    public event Action OnRightClick;
+    public event Action OnLeftHold;
+    public event Action OnRightHold;
     public event Action OnScrollUp;
     public event Action OnScrollDown;
 
@@ -31,6 +32,17 @@ public class InputManager : Service<InputManager>
 
     private const float holdDelay = 0.15f;
     private float lastStartHold;
+
+    private bool killFlag;
+    public bool KillFlag()
+    {
+        if (killFlag)
+        {
+            killFlag = false;
+            return true;
+        }
+        return false;
+    }
 
     private void Awake()
     {
@@ -106,6 +118,11 @@ public class InputManager : Service<InputManager>
     }
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            killFlag = !killFlag;
+        }
+
         if (Input.mouseScrollDelta.y > 0)
         {
             OnScrollUp?.Invoke();
@@ -117,17 +134,22 @@ public class InputManager : Service<InputManager>
 
         if (Input.GetMouseButtonDown(0))
         {
-            OnRightClick?.Invoke();
+            OnLeftClick?.Invoke();
             lastStartHold = Time.time;
         }
         if (Input.GetMouseButtonDown(1))
         {
-            OnLeftClick?.Invoke();
+            OnRightClick?.Invoke();
         }
 
         if (Input.GetMouseButton(0))
         {
-            if (lastStartHold + holdDelay < Time.time) OnHold?.Invoke();
+            if (lastStartHold + holdDelay < Time.time) OnLeftHold?.Invoke();
+        }
+        
+        if (Input.GetMouseButton(1))
+        {
+            if (lastStartHold + holdDelay < Time.time) OnRightHold?.Invoke();
         }
     }
 
