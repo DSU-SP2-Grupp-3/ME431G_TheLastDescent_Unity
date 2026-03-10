@@ -15,6 +15,7 @@ public class WorldAgent : MonoBehaviour
     public event Action<WorldAgent, Queue<Command>, Command> CommandQueueUpdated;
     public event Action OnDeath;
     public event Action OnRevive;
+    public event Action OnActivate;
 
     public enum Team
     {
@@ -290,6 +291,7 @@ public class WorldAgent : MonoBehaviour
                 }
             }
         }
+        OnActivate?.Invoke();
     }
 
     public void Die()

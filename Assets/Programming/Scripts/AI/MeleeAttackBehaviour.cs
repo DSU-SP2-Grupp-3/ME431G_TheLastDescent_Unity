@@ -34,7 +34,7 @@ public class MeleeAttackBehaviour : BehaviourDefinition
         BehaviourCommands commands = new();
 
         List<WorldAgent> targets = agentManager.GetFilteredAgents((w => w.team == teamToAttack)).ToList();
-        WorldAgent closestTarget = GetNearestAgent(aiAgent.transform.position, targets);
+        WorldAgent closestTarget = AI.GetNearestAgent(aiAgent.transform.position, targets);
 
         //sets the ais world navMeshAgent to a new path
         NavMeshPath path = new();
