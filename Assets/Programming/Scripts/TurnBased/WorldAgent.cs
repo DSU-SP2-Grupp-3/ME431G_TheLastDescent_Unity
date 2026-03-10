@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 public class WorldAgent : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class WorldAgent : MonoBehaviour
     public event Action OnDeath;
     public event Action OnRevive;
     public event Action OnActivate;
+    public event Action<DebuffLevel> OnDebuffApplied;
+    public event Action<DebuffLevel> OnDebuffRemoved;
 
     public enum Team
     {
@@ -61,6 +64,11 @@ public class WorldAgent : MonoBehaviour
         }
     }
 
+    [SerializeField, Tooltip("The levels off debuffs to be applied, make sure they are in descending order, " +
+                             "meaning the first debuff received is the first element in the list")]
+    private DebuffLevel[] debuffLevels;
+    private int currentDebuffLevel;
+    
     private DamageManager damageManager;
 
     public int actorID;
@@ -120,6 +128,8 @@ public class WorldAgent : MonoBehaviour
         AgentManager am = agentManager.Get();
         am.RegisterAgent(this);
         damageManager = am.damageManager;
+
+        if (localStats && team == Team.Player) localStats.temperature.Changed += UpdateDebuffLevel;
 
         //subscribe TakeDamage to the DamageManager of the PlayerManager
         damageManager.DealDamageEvent += TakeDamage;
@@ -347,6 +357,43 @@ public class WorldAgent : MonoBehaviour
         }
     }
 
+    private void UpdateDebuffLevel(float temperature)
+    {
+        int previousLevel = currentDebuffLevel;
+
+        bool broke = false;
+        for (int i = 0; i < debuffLevels.Length; i++)
+        {
+            if (debuffLevels[i].whileUnder <= temperature)
+            {
+                currentDebuffLevel = i;
+                broke = true;
+                break;
+            }
+        }
+        if (!broke) currentDebuffLevel = debuffLevels.Length;
+        
+        int difference = currentDebuffLevel - previousLevel;
+
+        if (difference > 0) // debuffs should be applied in forward order
+        {
+            for (int i = previousLevel; i < currentDebuffLevel; i++)
+            {
+                debuffLevels[i].debuff.Apply(this);
+                OnDebuffApplied?.Invoke(debuffLevels[i]);
+            }
+        } 
+        else if (difference < 0) // debuffs should be removed in reverse order
+        {
+            for (int i = previousLevel - 1; i >= currentDebuffLevel; i--)
+            {
+                debuffLevels[i].debuff.Remove(this);
+                OnDebuffRemoved?.Invoke(debuffLevels[i]);
+            }
+        }
+        // if difference is zero debuff level has not changed
+    }
+
     public Vector3 GetLastMoveCommandToPosition()
     {
         IEnumerable<IMoveCommand> moveCommandsInQueue = commandQueue
@@ -377,5 +424,15 @@ public class WorldAgent : MonoBehaviour
     public void TriggerAnimationEvent(string id)
     {
         AnimationEventTriggered?.Invoke(id, gameObject);
+    }
+    
+    
+    [Serializable]
+    public class DebuffLevel
+    {
+        [Range(0f, 1f), Tooltip("The temperature under which the debuff should apply")]
+        public float whileUnder;
+        [Tooltip("The debuff to apply")]
+        public Debuff debuff;
     }
 }

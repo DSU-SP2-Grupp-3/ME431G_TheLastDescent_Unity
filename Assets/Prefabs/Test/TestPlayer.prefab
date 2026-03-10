@@ -226,7 +226,11 @@ MonoBehaviour:
   indicatorFocusTransform: {fileID: 0}
   stats: {fileID: 11400000, guid: 781734abf7c8bcf4095b28600dd9534d, type: 2}
   equippedWeapon: {fileID: 11400000, guid: a975a668248ddab4fb8254746403b0c6, type: 2}
-  damageManager: {fileID: 11400000, guid: 8bf77c0c527a44d4297df7af4e954cc4, type: 2}
+  debuffLevels:
+  - whileUnder: 0.5
+    debuff: {fileID: 11400000, guid: effd54745d2014b4c8c1a95cb31874dc, type: 2}
+  - whileUnder: 0.2
+    debuff: {fileID: 11400000, guid: 21785c990ad47484d90c664709a20a06, type: 2}
   actorID: 0
 --- !u!54 &3797529464980948739
 Rigidbody:

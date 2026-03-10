@@ -8,19 +8,27 @@ public class AgentStats : ScriptableObject
     public float
         initHitPoints,
         initActionPoints,
-        initMovement,
-        initMovementCostModifier = 1f,
-        initDamageModifier = 1f,
-        initTemperatureLoss = 0.01f;
+        initMovement;
+    
+    public float movement { get; private set; }
+    
+    public Watcher<float> 
+        hitPoints,
+        actionPoints,
+        temperature;
+    
+    [SerializeField, Tooltip("The initial modifiers to use for this stat")]
+    private AgentStatModifiers modifiers;
 
-    public Watcher<float> hitPoints;
-    public Watcher<float> actionPoints;
-    public Watcher<float> temperature;
+    public float movementCostModifier => modifiers.movementCostModifier;
+    public float receivedDamageModifier => modifiers.receivedDamageModifier;
+    public float temperatureLoss => modifiers.tempertureLoss;
 
-    public float movement { get; set; }
-    public float movementCostModifier { get; set; }
-    public float damageModifier { get; set; }
-
+    public void OverrideModifiers(AgentStatModifiers newModifiers)
+    {
+        modifiers = newModifiers;
+    }
+    
     public AgentStats Clone()
     {
         AgentStats clone = ScriptableObject.CreateInstance<AgentStats>();
@@ -28,16 +36,14 @@ public class AgentStats : ScriptableObject
         clone.initHitPoints = initHitPoints;
         clone.initActionPoints = initActionPoints;
         clone.initMovement = initMovement;
-        clone.initMovementCostModifier = initMovementCostModifier;
-        clone.initDamageModifier = initDamageModifier;
-        clone.initTemperatureLoss = initTemperatureLoss;
-
+        clone.movement = initMovement;
+        
         clone.hitPoints = new Watcher<float>(initHitPoints, Clamp(0f, initHitPoints));
         clone.actionPoints = new Watcher<float>(initActionPoints, Clamp(0f, initActionPoints));
         clone.temperature = new Watcher<float>(1f, Clamp(0f, 1f));
-        clone.movement = initMovement;
-        clone.movementCostModifier = initMovementCostModifier;
-        clone.damageModifier = initDamageModifier;
+
+        if (modifiers) clone.modifiers = modifiers;
+        else clone.modifiers = ScriptableObject.CreateInstance<AgentStatModifiers>();
 
         if (new Locator<RoundClock>().TryGet(out RoundClock roundClock))
         {
@@ -73,6 +79,6 @@ public class AgentStats : ScriptableObject
 
     private void LoseTemperature(int round)
     {
-        temperature.value -= initTemperatureLoss;
+        temperature.value -= temperatureLoss;
     }
 }
