@@ -25,6 +25,7 @@ public class AI : MonoBehaviour
         playerNavMeshes = new();
         agentManager = new();
         roundClock.Get().RoundProgressed += RoundUpdate;
+        agent.OnActivate += LookAtNearestTarget;
     }
 
     private void RoundUpdate(int round)
@@ -68,6 +69,31 @@ public class AI : MonoBehaviour
         Debug.Assert(agent.queueEmpty);
         Command[] commands = behaviourDefinition.GetActiveBehaviourCommands(agent, parameters).GetCommands();
         agent.QueueCommands(commands);
+    }
+
+    public void LookAtNearestTarget()
+    {
+        List<WorldAgent> targets = agentManager.Get().GetPlayerAgents();
+        WorldAgent closestTarget = GetNearestAgent(agent.transform.position, targets);
+
+        LookCommand lookCommand = new LookCommand(agent, closestTarget);
+        agent.OverwriteQueue(lookCommand);
+    }
+
+    public static WorldAgent GetNearestAgent(Vector3 fromPosition, List<WorldAgent> candidates)
+    {
+        float shortestSqrDistance = float.MaxValue;
+        WorldAgent shortest = null;
+        foreach (WorldAgent candidate in candidates)
+        {
+            float sqrMagnitude = (fromPosition - candidate.transform.position).sqrMagnitude;
+            if (sqrMagnitude < shortestSqrDistance && candidate.localStats.hitPoints > 0)
+            {
+                shortestSqrDistance = sqrMagnitude;
+                shortest = candidate;
+            }
+        }
+        return shortest;
     }
 
     [Serializable]

@@ -9,21 +9,7 @@ public abstract class BehaviourDefinition : ScriptableObject
     public abstract BehaviourCommands GetIdleBehaviourCommands(WorldAgent aiAgent, AI.AIParameters parameters);
     public abstract BehaviourCommands GetActiveBehaviourCommands(WorldAgent aiAgent, AI.AIParameters parameters);
 
-    protected WorldAgent GetNearestAgent(Vector3 fromPosition, List<WorldAgent> candidates)
-    {
-        float shortestSqrDistance = float.MaxValue;
-        WorldAgent shortest = null;
-        foreach (WorldAgent candidate in candidates)
-        {
-            float sqrMagnitude = (fromPosition - candidate.transform.position).sqrMagnitude;
-            if (sqrMagnitude < shortestSqrDistance && candidate.localStats.hitPoints > 0)
-            {
-                shortestSqrDistance = sqrMagnitude;
-                shortest = candidate;
-            }
-        }
-        return shortest;
-    }
+
 
     protected NavMeshPath GetPathToNearestPosition(NavMeshAgent agent, List<Vector3> positions)
     {
