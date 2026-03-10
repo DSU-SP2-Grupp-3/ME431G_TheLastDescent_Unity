@@ -18,7 +18,7 @@ public abstract class Command
     }
 
     public Status status { get; set; }
-    public WorldAgent invokingAgent { get; protected set; }
+    protected WorldAgent invokingAgent;
     protected AudioManager audioManager;
     public abstract float apCost { get; }
     public abstract float resourceCost { get; }
@@ -46,5 +46,10 @@ public abstract class Command
         // https://discussions.unity.com/t/wait-until-an-animation-is-finished/699955/6
         yield return new WaitForSeconds(0.1f); // -se: wait short time for animator to enter correct animation
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
+    }
+
+    public void ChangeInvoker(WorldAgent newInvoker)
+    {
+        invokingAgent = newInvoker;
     }
 }

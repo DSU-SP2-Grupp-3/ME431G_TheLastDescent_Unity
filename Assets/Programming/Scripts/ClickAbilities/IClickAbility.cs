@@ -1,4 +1,4 @@
 ﻿public interface IClickAbility
 {
-    public ClickAbility GetAbility();
+    public ResourceManager.ClickAbility GetAbility();
 }

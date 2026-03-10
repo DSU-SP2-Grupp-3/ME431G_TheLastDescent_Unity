@@ -13,7 +13,7 @@ public class Visualizer : MonoBehaviour
     private LineRenderer previewLineRenderer;
 
     [SerializeField]
-    private TMP_Text packageAPDisplay, hintDisplay;
+    private TMP_Text packageAPDisplay;
 
     private Dictionary<WorldAgent, VisualizeTools> agentVisualizeTools;
     private Dictionary<WorldAgent, Command> currentlyExecutingCommands;
@@ -93,9 +93,9 @@ public class Visualizer : MonoBehaviour
         packageAPDisplay.rectTransform.anchoredPosition = Vector2.zero;
 
         // calculate bools
+        bool canQueue = commandPackage.CanQueueCommands();
         bool enoughResouces = resourceManager.CanQueuePackage(commandPackage);
         bool realTime = modeSwitcher.Get().mode == RoundClock.ProgressMode.RealTime;
-        bool canQueue = commandPackage.CanQueueCommands() || realTime;
         float packageApCost = commandPackage.TotalPackageCommandCost();
         float packageResourceCost = resourceManager.TotalCommandCollectionResourceCost(commandPackage.commands);
 
@@ -105,12 +105,10 @@ public class Visualizer : MonoBehaviour
         else Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
         packageAPDisplay.text = "";
 
-        if (commandPackage.hint != null) hintDisplay.text = commandPackage.hint;
-        else hintDisplay.text = "";
-
         if (turnManager.Get().executingTurn) return;
 
         HighlightAgents(commandPackage.highlights, realTime);
+
 
         if (!canQueue || !enoughResouces) packageAPDisplay.color = Color.red;
 
@@ -125,7 +123,7 @@ public class Visualizer : MonoBehaviour
 
         if (commandPackage.empty) return;
 
-        if ((realTime || commandPackage.clickOnAgentOnly) && commandPackage.type != "click") return;
+        if (realTime || commandPackage.clickOnAgentOnly) return;
 
         foreach (Command command in commandPackage.commands)
         {

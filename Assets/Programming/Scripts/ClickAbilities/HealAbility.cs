@@ -9,40 +9,17 @@ public class HealAbility : ScriptableObject, IClickAbility
     public DamageManager damageManager;
     public ResourceManager resourceManager;
 
-    public ClickAbility GetAbility()
+    public ResourceManager.ClickAbility GetAbility()
     {
-        ClickAbility clickAbility = new ClickAbility(healAPCost, healResourceCost, "Heal", "NoHeal");
-
-        // click healer
-        clickAbility.AddClickAction(
-            (info, ability) =>
-            {
-                info.GetAgent(out WorldAgent validAgent, LayerMask.NameToLayer("Player"));
-                HealCommand healCommand = new HealCommand(
-                    validAgent,
-                    damageManager,
-                    resourceManager,
-                    healAmount,
-                    healAPCost,
-                    healResourceCost
-                );
-                ability.commands.Clear();
-                ability.commands.Add(healCommand);
-                ability.queueingAgent = validAgent;
-            },
-            (info, ability) =>
-            {
-                if (info.GetAgent(out WorldAgent agent, LayerMask.NameToLayer("Player")))
-                {
-                    bool can = !agent.dead && agent.localStats.hitPoints < agent.localStats.initHitPoints;
-                    if (can) ability.AddAffectedAgent(agent);
-                    return can;
-                }
-                else return false;
-            },
-            "Target: alive and damaged party member"
+        HealCommand healCommand = new HealCommand(
+            null,
+            damageManager,
+            resourceManager,
+            healAmount,
+            healAPCost,
+            healResourceCost
         );
 
-        return clickAbility;
+        return new ResourceManager.ClickAbility(healCommand, "Heal", "NoHeal");
     }
 }

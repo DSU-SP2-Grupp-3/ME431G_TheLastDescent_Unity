@@ -15,11 +15,6 @@ public class DestructivePopup : MonoBehaviour
         damageManager.DealDamageEvent += SpawnPop;
     }
 
-    private void OnDestroy()
-    {
-        damageManager.DealDamageEvent -= SpawnPop;
-    }
-
     public void SpawnPop(float popUpText, WorldAgent worldAgent)
     {
         temporaryGameObject = Instantiate(popPrefab, transform.position, Quaternion.identity, transform);

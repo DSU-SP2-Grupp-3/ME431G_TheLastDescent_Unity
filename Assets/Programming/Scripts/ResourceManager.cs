@@ -53,6 +53,27 @@ public class ResourceManager : ScriptableObject
         return Mathf.Max(value, 0f);
     }
 
+    public class ClickAbility
+    {
+        public readonly string validCursorPath;
+        public readonly string invalidCursorPath;
+        public readonly Command[] commands;
+
+        public ClickAbility(Command[] commands, string validCursorPath, string invalidCursorPath)
+        {
+            this.commands = commands;
+            this.validCursorPath = validCursorPath;
+            this.invalidCursorPath = invalidCursorPath;
+        }
+
+        public ClickAbility(Command command, string validCursorPath, string invalidCursorPath)
+        {
+            this.commands = new Command[] { command };
+            this.validCursorPath = validCursorPath;
+            this.invalidCursorPath = invalidCursorPath;
+        }
+    }
+
     public bool CanQueuePackage(CommandManager.CommandPackage package)
     {
         float queuedTotal = queuedResourceCommands.value.Select(c => c.resourceCost).Sum();
@@ -75,4 +96,3 @@ public class ResourceManager : ScriptableObject
         return collectedResources < totalQueued;
     }
 }
-

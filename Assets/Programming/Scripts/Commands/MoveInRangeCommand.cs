@@ -37,8 +37,6 @@ public class MoveInRangeCommand : Command, IMoveCommand
     private const int trimSampleResoltion = 5;
     private const int findCompletePathIterations = 10;
 
-    private WorldAgent lineOfSightTarget;
-
     public Vector3 ToPosition() => toPosition;
 
     public MoveInRangeCommand(Vector3 toPosition, float range, WorldAgent invokingAgent) :
@@ -80,7 +78,7 @@ public class MoveInRangeCommand : Command, IMoveCommand
         float interrupt = Time.time + interruptTime;
         invokingAgent.AnimationEventTriggered += CaptureStepEvent;
 
-        yield return new WaitUntil(ArrivedOrInterrupted(interrupt));
+        yield return new WaitUntil(WaitUntilArrivedOrInterrupted(interrupt));
 
         invokingAgent.AnimationEventTriggered -= CaptureStepEvent;
         invokingAgent.animator.SetTrigger("StopMoving");
@@ -96,16 +94,11 @@ public class MoveInRangeCommand : Command, IMoveCommand
         }
     }
 
-    private Func<bool> ArrivedOrInterrupted(float interrupt)
+    private Func<bool> WaitUntilArrivedOrInterrupted(float interrupt)
     {
         return () =>
         {
-            if (lineOfSightTarget)
-            {
-                if (invokingAgent.navMeshAgent.Raycast(toPosition, out NavMeshHit hit)) return false;
-                if (invokingAgent.navMeshAgent.remainingDistance < range) return true;
-            }
-            else if (invokingAgent.navMeshAgent.remainingDistance < playEndAnimationDistance) return true;
+            if (invokingAgent.navMeshAgent.remainingDistance < playEndAnimationDistance) return true;
             else if (Time.time > interrupt)
             {
                 status = Status.Failed;
@@ -113,11 +106,6 @@ public class MoveInRangeCommand : Command, IMoveCommand
             }
             return false;
         };
-    }
-
-    public void SetLineOfSightTarget(WorldAgent target)
-    {
-        lineOfSightTarget = target;
     }
 
     public override void VisualizeInQueue(Visualizer visualizer)
