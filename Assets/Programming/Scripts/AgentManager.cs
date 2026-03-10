@@ -12,11 +12,15 @@ public class AgentManager : Service<AgentManager>
 
     public UnityEvent NotEnoughAP;
     public UnityEvent NotEnouchResources;
+    public UnityEvent InvalidTarget;
+    public UnityEvent EnterSpectator;
 
     private List<WorldAgent> players;
     private List<WorldAgent> allAgents;
-    private Locator<OrthographicCameraMover> cameraMover;
 
+    private int numberOfAlivePlayers;
+
+    private Locator<OrthographicCameraMover> cameraMover;
     private Locator<InputManager> inputManager;
     private Locator<ModeSwitcher> modeSwitcher;
     private Locator<TurnManager> turnManager;
@@ -30,7 +34,7 @@ public class AgentManager : Service<AgentManager>
     private bool allPlayersSelected;
 
     private CommandManager.CommandPackage currentCommandPackage;
-    private ResourceManager.ClickAbility currentClickAbility;
+    private ClickAbility currentClickAbility;
     private WorldAgent portraitAgent;
 
     private bool agentInputActive = true;
@@ -50,31 +54,30 @@ public class AgentManager : Service<AgentManager>
     {
         InputManager im = inputManager.Get();
         im.OnHover += PreviewCommand;
-        im.OnRightClick += ProcessRightClick;
-        im.OnHold += ProcessHold;
-        im.OnLeftClick += () => currentClickAbility = null;
+        im.OnLeftClick += ProcessRightClick;
+        im.OnLeftHold += ProcessHold;
+        im.OnRightClick += () => currentClickAbility = null;
         modeSwitcher.Get().OnEnterTurnBased += (_) => allPlayersSelected = false;
     }
 
     private void PreviewCommand(RaycastHit hit, bool didHit)
     {
-        if (!agentInputActive) return;
+        if (!agentInputActive || selectedPlayer.dead)
+        {
+            currentCommandPackage = CommandManager.EmptyPackage();
+            PreviewUpdated?.Invoke(currentCommandPackage);
+            return;
+        }
+
         if (currentClickAbility != null)
         {
-            if (didHit && hit.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
+            if (portraitAgent)
             {
-                WorldAgent hoveredAgent = hit.collider.GetComponentInParent<WorldAgent>();
-                currentCommandPackage = CommandManager.GetSelectPlayerPackage(hoveredAgent, currentClickAbility);
+                currentCommandPackage = CommandManager.GetClickAbilityPackage(
+                    hit, didHit, portraitAgent, currentClickAbility
+                );
             }
-            else if (portraitAgent)
-            {
-                currentCommandPackage = CommandManager.GetSelectPlayerPackage(portraitAgent, currentClickAbility);
-            }
-            else
-            {
-                currentCommandPackage = CommandManager.OnlyCommands(currentClickAbility.commands);
-                currentCommandPackage.SetCursor(currentClickAbility.invalidCursorPath);
-            }
+            else currentCommandPackage = CommandManager.GetClickAbilityPackage(hit, didHit, null, currentClickAbility);
 
             PreviewUpdated?.Invoke(currentCommandPackage);
             return;
@@ -91,10 +94,7 @@ public class AgentManager : Service<AgentManager>
         currentCommandPackage = (LayerMask.LayerToName(go.layer)) switch
         {
             "Interactable" => CommandManager.GetInteractionPackage(selectedPlayer, go),
-            "Player" => CommandManager.GetSelectPlayerPackage(
-                go.GetComponentInParent<WorldAgent>(),
-                null
-            ),
+            "Player" => CommandManager.GetSelectPlayerPackage(go.GetComponentInParent<WorldAgent>()),
             "Ground" => CommandManager.GetMovePackage(selectedPlayer, hit.point),
             "Enemy" => CommandManager.GetAttackEnemyPackage(
                 selectedPlayer,
@@ -111,6 +111,14 @@ public class AgentManager : Service<AgentManager>
     {
         if (!agentInputActive) return;
         if (currentCommandPackage.empty) return;
+        else if (currentCommandPackage.type == "click")
+        {
+            if (!currentClickAbility.valid) InvalidTarget?.Invoke();
+
+            // if this is not the final click of the click ability then return and wait for future clicks
+            if (!currentClickAbility.Click()) return;
+            currentCommandPackage = CommandManager.GetFinalizedClickAbilityPackage(currentClickAbility);
+        }
         else if (currentCommandPackage.type == "select") SelectPlayer(currentCommandPackage.agent);
         if (currentCommandPackage.commands.Count > 0) QueueCurrentPackage();
     }
@@ -156,12 +164,38 @@ public class AgentManager : Service<AgentManager>
         }
     }
 
+    private void UpdateNumberOfAlivePlayers(int number)
+    {
+        numberOfAlivePlayers += number;
+        if (numberOfAlivePlayers <= 0)
+        {
+            new Locator<Modal>().Get().Prompt(
+                "Everyone has died.\nReturn to the main menu?",
+                () => { new Locator<SceneChanger>().Get().GoToScene("MainMenu"); },
+                () => { EnterSpectator?.Invoke(); }
+            );
+        }
+    }
+
+    private void SelectAlivePlayer()
+    {
+        List<WorldAgent> remainingPlayers =
+            GetFilteredAgents(
+                a => { return !a.dead && a.team == WorldAgent.Team.Player; }
+            ).ToList();
+        if (remainingPlayers.Any())
+        {
+            SelectPlayer(remainingPlayers.First());
+        }
+    }
+
     public void SetAgentInputActive(bool active)
     {
         agentInputActive = active;
+        currentClickAbility = null;
     }
 
-    public void SetClickAbility(ResourceManager.ClickAbility clickAbility)
+    public void SetClickAbility(ClickAbility clickAbility)
     {
         currentClickAbility = clickAbility;
     }
@@ -178,6 +212,9 @@ public class AgentManager : Service<AgentManager>
         if (agent.team == WorldAgent.Team.Player)
         {
             players.Add(agent);
+            UpdateNumberOfAlivePlayers(1);
+            agent.OnDeath += () => UpdateNumberOfAlivePlayers(-1);
+            agent.OnRevive += () => UpdateNumberOfAlivePlayers(1);
             if (!selectedPlayer && agent.defaultSelected)
             {
                 SelectPlayer(agent);
@@ -189,11 +226,21 @@ public class AgentManager : Service<AgentManager>
     public void SelectPlayer(WorldAgent playerAgent)
     {
         allPlayersSelected = false;
+
         if (players.Contains(playerAgent) && !playerAgent.dead)
         {
+            if (selectedPlayer) selectedPlayer.OnDeath -= SelectAlivePlayer;
             selectedPlayer = playerAgent;
+            selectedPlayer.OnDeath += SelectAlivePlayer;
             cameraMover.Get().SetCameraTarget(selectedPlayer.cameraFocusTransform);
         }
+
+#if UNITY_EDITOR
+        if (inputManager.Get().KillFlag())
+        {
+            damageManager.DealDamageEvent(10000, playerAgent);
+        }
+#endif
     }
 
     public void SelectAllPlayers()
@@ -214,7 +261,7 @@ public class AgentManager : Service<AgentManager>
 
     public List<WorldAgent> GetPlayerAgents() => players;
     public List<WorldAgent> GetAllAgents() => allAgents;
-
+    public WorldAgent GetSelectedPlayer() => selectedPlayer;
     public List<Vector3> GetPlayerPositions()
     {
         return players.Select(w => w.transform.position).ToList();

@@ -1001,6 +1001,7 @@ GameObject:
   - component: {fileID: 7914486867947387036}
   - component: {fileID: 4775600415163604268}
   - component: {fileID: 4440872546472428221}
+  - component: {fileID: 6855329275437435488}
   m_Layer: 0
   m_Name: "B\xE4nk"
   m_TagString: Untagged
@@ -1114,6 +1115,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!208 &6855329275437435488
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4823117212199205531}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 5.015, y: 0.5, z: 2.53}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 4.5, y: 0, z: 2}
+  m_TimeToStationary: 0.5
 --- !u!1 &6367032385703352521
 GameObject:
   m_ObjectHideFlags: 0
