@@ -1288,87 +1288,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1167961624}
   m_SourcePrefab: {fileID: 100100000, guid: e5b04e820c5e6344fb250dce6090da40, type: 3}
---- !u!1001 &28007718
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 561011416928956595, guid: e3f7981901c92644a9521e7163722353, type: 3}
-      propertyPath: m_Name
-      value: OrthographicCamera
-      objectReference: {fileID: 0}
-    - target: {fileID: 1765712303541710386, guid: e3f7981901c92644a9521e7163722353, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -7.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1765712303541710386, guid: e3f7981901c92644a9521e7163722353, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 17.74
-      objectReference: {fileID: 0}
-    - target: {fileID: 1765712303541710386, guid: e3f7981901c92644a9521e7163722353, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -115.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1765712303541710386, guid: e3f7981901c92644a9521e7163722353, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.8535535
-      objectReference: {fileID: 0}
-    - target: {fileID: 1765712303541710386, guid: e3f7981901c92644a9521e7163722353, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0.35355338
-      objectReference: {fileID: 0}
-    - target: {fileID: 1765712303541710386, guid: e3f7981901c92644a9521e7163722353, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.35355338
-      objectReference: {fileID: 0}
-    - target: {fileID: 1765712303541710386, guid: e3f7981901c92644a9521e7163722353, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0.1464466
-      objectReference: {fileID: 0}
-    - target: {fileID: 1765712303541710386, guid: e3f7981901c92644a9521e7163722353, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 45
-      objectReference: {fileID: 0}
-    - target: {fileID: 1765712303541710386, guid: e3f7981901c92644a9521e7163722353, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 45
-      objectReference: {fileID: 0}
-    - target: {fileID: 1765712303541710386, guid: e3f7981901c92644a9521e7163722353, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7764927085769874792, guid: e3f7981901c92644a9521e7163722353, type: 3}
-      propertyPath: m_ClearFlags
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7764927085769874792, guid: e3f7981901c92644a9521e7163722353, type: 3}
-      propertyPath: m_BackGroundColor.b
-      value: 0.10062885
-      objectReference: {fileID: 0}
-    - target: {fileID: 7764927085769874792, guid: e3f7981901c92644a9521e7163722353, type: 3}
-      propertyPath: m_BackGroundColor.g
-      value: 0.050314415
-      objectReference: {fileID: 0}
-    - target: {fileID: 7764927085769874792, guid: e3f7981901c92644a9521e7163722353, type: 3}
-      propertyPath: m_BackGroundColor.r
-      value: 0.062893026
-      objectReference: {fileID: 0}
-    - target: {fileID: 9050601945226733761, guid: e3f7981901c92644a9521e7163722353, type: 3}
-      propertyPath: smoothing
-      value: 0.455
-      objectReference: {fileID: 0}
-    - target: {fileID: 9050601945226733761, guid: e3f7981901c92644a9521e7163722353, type: 3}
-      propertyPath: rangeIndicator
-      value: 
-      objectReference: {fileID: 919132149155446097, guid: 3ab76817f9b11244292ac8c1ff772cac, type: 3}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: e3f7981901c92644a9521e7163722353, type: 3}
 --- !u!1 &32619053
 GameObject:
   m_ObjectHideFlags: 0
@@ -19084,7 +19003,7 @@ MonoBehaviour:
   lockDuringQueueExecution: 0
   reviveAfterCombat: 0
   reviveHitPointPortion: 0
-  team: 0
+  team: 4
   animator: {fileID: 0}
   navMeshAgent: {fileID: 0}
   cameraFocusTransform: {fileID: 0}
@@ -29861,7 +29780,7 @@ MonoBehaviour:
   lockDuringQueueExecution: 0
   reviveAfterCombat: 0
   reviveHitPointPortion: 0
-  team: 0
+  team: 4
   animator: {fileID: 0}
   navMeshAgent: {fileID: 0}
   cameraFocusTransform: {fileID: 0}
@@ -33167,7 +33086,7 @@ MonoBehaviour:
   lockDuringQueueExecution: 0
   reviveAfterCombat: 0
   reviveHitPointPortion: 0
-  team: 0
+  team: 4
   animator: {fileID: 0}
   navMeshAgent: {fileID: 0}
   cameraFocusTransform: {fileID: 0}
@@ -34033,6 +33952,67 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1018911062}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &1019054199
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 448353355173073440, guid: baedbcdb376436745807e889df6a0493, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 448353355173073440, guid: baedbcdb376436745807e889df6a0493, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 448353355173073440, guid: baedbcdb376436745807e889df6a0493, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 448353355173073440, guid: baedbcdb376436745807e889df6a0493, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 448353355173073440, guid: baedbcdb376436745807e889df6a0493, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 448353355173073440, guid: baedbcdb376436745807e889df6a0493, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 448353355173073440, guid: baedbcdb376436745807e889df6a0493, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 448353355173073440, guid: baedbcdb376436745807e889df6a0493, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 448353355173073440, guid: baedbcdb376436745807e889df6a0493, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 448353355173073440, guid: baedbcdb376436745807e889df6a0493, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3916758309589091097, guid: baedbcdb376436745807e889df6a0493, type: 3}
+      propertyPath: targetGameObject
+      value: 
+      objectReference: {fileID: 1482456811}
+    - target: {fileID: 6710020581294654175, guid: baedbcdb376436745807e889df6a0493, type: 3}
+      propertyPath: m_Name
+      value: CameraObjects
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: baedbcdb376436745807e889df6a0493, type: 3}
 --- !u!1 &1019323875
 GameObject:
   m_ObjectHideFlags: 0
@@ -38501,7 +38481,7 @@ MonoBehaviour:
   lockDuringQueueExecution: 0
   reviveAfterCombat: 0
   reviveHitPointPortion: 0
-  team: 0
+  team: 4
   animator: {fileID: 0}
   navMeshAgent: {fileID: 0}
   cameraFocusTransform: {fileID: 0}
@@ -40064,7 +40044,7 @@ MonoBehaviour:
   lockDuringQueueExecution: 0
   reviveAfterCombat: 0
   reviveHitPointPortion: 0
-  team: 0
+  team: 4
   animator: {fileID: 0}
   navMeshAgent: {fileID: 0}
   cameraFocusTransform: {fileID: 0}
@@ -41942,7 +41922,7 @@ MonoBehaviour:
   lockDuringQueueExecution: 0
   reviveAfterCombat: 0
   reviveHitPointPortion: 0
-  team: 0
+  team: 4
   animator: {fileID: 0}
   navMeshAgent: {fileID: 0}
   cameraFocusTransform: {fileID: 0}
@@ -45245,7 +45225,7 @@ MonoBehaviour:
   lockDuringQueueExecution: 0
   reviveAfterCombat: 0
   reviveHitPointPortion: 0
-  team: 0
+  team: 4
   animator: {fileID: 0}
   navMeshAgent: {fileID: 0}
   cameraFocusTransform: {fileID: 0}
@@ -46935,7 +46915,7 @@ MonoBehaviour:
   lockDuringQueueExecution: 0
   reviveAfterCombat: 0
   reviveHitPointPortion: 0
-  team: 0
+  team: 4
   animator: {fileID: 0}
   navMeshAgent: {fileID: 0}
   cameraFocusTransform: {fileID: 0}
@@ -48883,6 +48863,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1482009098}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1482456811 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7063804049366597543, guid: dc4a177e3619f9e478556fd10ef5b9df, type: 3}
+  m_PrefabInstance: {fileID: 255425647}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1483859060
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -65784,7 +65769,7 @@ MonoBehaviour:
   lockDuringQueueExecution: 0
   reviveAfterCombat: 0
   reviveHitPointPortion: 0
-  team: 0
+  team: 4
   animator: {fileID: 0}
   navMeshAgent: {fileID: 0}
   cameraFocusTransform: {fileID: 0}
@@ -69876,7 +69861,7 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 28007718}
+  - {fileID: 1019054199}
   - {fileID: 1161141227}
   - {fileID: 188902620}
   - {fileID: 1186780644}
