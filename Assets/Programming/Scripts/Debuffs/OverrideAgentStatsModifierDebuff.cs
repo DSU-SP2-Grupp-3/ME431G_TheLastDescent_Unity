@@ -7,16 +7,16 @@ public class OverrideAgentStatsModifierDebuff : Debuff
     private string debuffHint;
     [SerializeField, Tooltip("The modifiers to be used while the debuff is applied")]
     private AgentStatModifiers applied;
-    [SerializeField, Tooltip("The modifiers to return to when the debuff is removed")]
-    public AgentStatModifiers removed;
-
+    private AgentStatModifiers original;
+    
     public override string hint => debuffHint;
     public override void Apply(WorldAgent agent)
     {
+        original = agent.localStats.GetModifiersObject();
         agent.localStats.OverrideModifiers(applied);
     }
     public override void Remove(WorldAgent agent)
     {
-        agent.localStats.OverrideModifiers(removed);
+        agent.localStats.OverrideModifiers(original);
     }
 }

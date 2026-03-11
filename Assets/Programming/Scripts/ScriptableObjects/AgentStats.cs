@@ -24,6 +24,8 @@ public class AgentStats : ScriptableObject
     public float receivedDamageModifier => modifiers.receivedDamageModifier;
     public float temperatureLoss => modifiers.tempertureLoss;
 
+    public AgentStatModifiers GetModifiersObject() => modifiers;
+    
     public void OverrideModifiers(AgentStatModifiers newModifiers)
     {
         modifiers = newModifiers;
