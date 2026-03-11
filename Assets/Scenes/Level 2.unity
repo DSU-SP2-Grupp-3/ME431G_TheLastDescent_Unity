@@ -7843,6 +7843,10 @@ PrefabInstance:
       propertyPath: m_HorizontalAlignment
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 216523499519725703, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
+      propertyPath: OnFadeOut.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 473944916273301811, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
       propertyPath: m_fontSizeBase
       value: 80
@@ -8044,6 +8048,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
+--- !u!114 &188902621 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 216523499519725703, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
+  m_PrefabInstance: {fileID: 188902620}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 968d9a2cd02029c4a844a95f2c2075a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &194495461
 GameObject:
   m_ObjectHideFlags: 0
@@ -30305,7 +30320,7 @@ MonoBehaviour:
 --- !u!1 &857302846
 GameObject:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 8560959941985366002, guid: e5b04e820c5e6344fb250dce6090da40, type: 3}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
@@ -67415,6 +67430,38 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1117453497}
     m_Modifications:
+    - target: {fileID: 374434262354314250, guid: e5b04e820c5e6344fb250dce6090da40, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 374434262354314250, guid: e5b04e820c5e6344fb250dce6090da40, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[3].m_Mode
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 374434262354314250, guid: e5b04e820c5e6344fb250dce6090da40, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[3].m_Target
+      value: 
+      objectReference: {fileID: 188902621}
+    - target: {fileID: 374434262354314250, guid: e5b04e820c5e6344fb250dce6090da40, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[3].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 374434262354314250, guid: e5b04e820c5e6344fb250dce6090da40, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[3].m_MethodName
+      value: CallFade
+      objectReference: {fileID: 0}
+    - target: {fileID: 374434262354314250, guid: e5b04e820c5e6344fb250dce6090da40, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[3].m_TargetAssemblyTypeName
+      value: ScreenFade, Programming
+      objectReference: {fileID: 0}
+    - target: {fileID: 374434262354314250, guid: e5b04e820c5e6344fb250dce6090da40, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[3].m_Arguments.m_BoolArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 374434262354314250, guid: e5b04e820c5e6344fb250dce6090da40, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[3].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 2289045222565471163, guid: e5b04e820c5e6344fb250dce6090da40, type: 3}
       propertyPath: interactableAgent
       value: 
