@@ -428,11 +428,18 @@ public class WorldAgent : MonoBehaviour
     
     
     [Serializable]
-    public class DebuffLevel
+    public class DebuffLevel : IComparable<DebuffLevel>
     {
         [Range(0f, 1f), Tooltip("The temperature under which the debuff should apply")]
         public float whileUnder;
         [Tooltip("The debuff to apply")]
         public Debuff debuff;
+        
+        public int CompareTo(DebuffLevel level)
+        {
+            if (level == null) return 1;
+            // invert normal ascending float comparison
+            return whileUnder.CompareTo(level.whileUnder) * -1;
+        }
     }
 }
