@@ -6,6 +6,7 @@ public class DialogueCommand : Command
     private Locator<DialogueService> dialogueServiceLocator;
     private DialogueService dialogueService;
     private DialogueScriptable dialogueScriptable;
+    private InputManager inputManager;
     public DialogueCommand(DialogueScriptable dialogueScriptable, WorldAgent invokingAgent) : base(invokingAgent)
     {
         this.dialogueScriptable = dialogueScriptable;
@@ -13,11 +14,14 @@ public class DialogueCommand : Command
     }
     protected override IEnumerator Execute()
     {
+        inputManager = new Locator<InputManager>().Get();
         dialogueServiceLocator = new();
         if (dialogueServiceLocator.TryGet(out dialogueService))
         {
+            inputManager.enabled = false;
             yield return dialogueService.StartCoroutine(dialogueService.InitializeDialouge(dialogueScriptable.GetDialogues()));
             Debug.Log("Done");
+             inputManager.enabled = true;
         }
 
     }
