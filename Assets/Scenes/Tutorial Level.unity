@@ -14776,6 +14776,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3a16371a2293967408b894b7d08b5dbf, type: 3}
+--- !u!114 &312092277 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 216523499519725703, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
+  m_PrefabInstance: {fileID: 1044616999}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 968d9a2cd02029c4a844a95f2c2075a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &312150582
 GameObject:
   m_ObjectHideFlags: 0
@@ -18252,7 +18263,6 @@ GameObject:
   - component: {fileID: 391566920}
   - component: {fileID: 391566919}
   - component: {fileID: 391566918}
-  - component: {fileID: 391566924}
   m_Layer: 8
   m_Name: DialogueCommand
   m_TagString: Untagged
@@ -18302,17 +18312,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 391566924}
-        m_TargetAssemblyTypeName: SceneChanger, Programming
-        m_MethodName: GoToScene
-        m_Mode: 5
+      - m_Target: {fileID: 312092277}
+        m_TargetAssemblyTypeName: ScreenFade, Programming
+        m_MethodName: CallFade
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Level 2
-          m_BoolArgument: 1
+          m_StringArgument: 
+          m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &391566919
 MonoBehaviour:
@@ -18426,18 +18436,6 @@ MonoBehaviour:
   - {fileID: 391566920}
   - {fileID: 391566919}
   - {fileID: 391566918}
---- !u!114 &391566924
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 391566916}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a02aaedde0145b4dadefb132264916d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &391723054 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6587196839580912985, guid: b3d335c6e31d129439d0d918be2e15eb, type: 3}
@@ -61125,6 +61123,18 @@ MonoBehaviour:
   commandEvent:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 312092277}
+        m_TargetAssemblyTypeName: ScreenFade, Programming
+        m_MethodName: CallFade
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
       - m_Target: {fileID: 1212067783}
         m_TargetAssemblyTypeName: AudioEventCaller, Programming
         m_MethodName: SetValueAndPlay

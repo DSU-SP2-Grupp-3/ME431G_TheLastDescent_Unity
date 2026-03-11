@@ -8,7 +8,9 @@ public class ScreenFade : MonoBehaviour
     //-Ma. ok, I might have forgotten about animator.
     private Image image;
     public bool isOn;
-    public UnityEvent OnComplete;
+    public UnityEvent OnFadeIn;
+    public UnityEvent OnFadeOut;
+    public float fadeTime;
     void Awake()
     {
         image = gameObject.GetComponent<Image>();
@@ -38,8 +40,8 @@ public class ScreenFade : MonoBehaviour
     }
     private IEnumerator Fadein()
     {
-        float i = 3;
-        float time = 3;
+        float i = fadeTime;
+        float time = fadeTime;
         Color color = new();
         while (time > 0)
         {
@@ -47,16 +49,16 @@ public class ScreenFade : MonoBehaviour
             var currentFade = time / i;
             color.a = currentFade;
             image.color = color;
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.01f);
         }
 
         color.a = 0;
         image.color = color;
-        OnComplete?.Invoke();
+        OnFadeIn?.Invoke();
     }
     private IEnumerator FadeOut()
     {
-        float i = 3;
+        float i = fadeTime;
         float time = 0;
         Color color = new();
         while (time < i)
@@ -70,7 +72,7 @@ public class ScreenFade : MonoBehaviour
 
         color.a = 1;
         image.color = color;
-        OnComplete?.Invoke();
+        OnFadeOut?.Invoke();
     }
 
     
