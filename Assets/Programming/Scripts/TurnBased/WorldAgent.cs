@@ -227,7 +227,7 @@ public class WorldAgent : MonoBehaviour
         StartCoroutine(ExecuteCommandQueue());
     }
 
-    private void InterruptCommandQueue()
+    public void InterruptCommandQueue()
     {
         currentlyExecutingCommand?.Break();
         currentlyExecutingCommand = null;

@@ -5,7 +5,9 @@ using UnityEngine.SceneManagement;
 public class MainMenuBehavior : MonoBehaviour
 {
     public Animator ani;
-    public string SceneName;
+    public string NewSceneName;
+    public string ContinueSceneName;
+
     void Update()
     {
         if(Input.anyKey && !ani.GetBool("isPressingAnyButton"))
@@ -15,16 +17,15 @@ public class MainMenuBehavior : MonoBehaviour
     }
     public void Continue()
     {
-        Debug.Log(SceneName);
-        SceneManager.LoadScene(SceneName);
+        SceneManager.LoadScene(ContinueSceneName);
     }
     public void NewGame()
     {
-        SceneManager.LoadScene(SceneName);
+        SceneManager.LoadScene(NewSceneName);
     }
     public void Load()
     {
-        SceneManager.LoadScene(SceneName);
+        SceneManager.LoadScene(ContinueSceneName);
     }
     public void Settings()
     {
