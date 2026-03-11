@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class MoveInRangeCommandWrapper : CommandWrapper
 {
+    // todo: line of sight check object
+
     [SerializeField, Tooltip("Position relative to the game object that this component is attached to")]
     private Vector3 relativePosition;
 

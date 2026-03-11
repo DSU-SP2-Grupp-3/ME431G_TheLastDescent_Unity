@@ -135,6 +135,7 @@ public class PlayerUI : MonoBehaviour
 
     private void UpdateDebuffHints()
     {
+        // todo: does not remove hints when losing debuff
         WorldAgent.DebuffLevel[] array = debuffLevels.ToArray();
         Array.Sort(array);
         debuffHints.text = "";
