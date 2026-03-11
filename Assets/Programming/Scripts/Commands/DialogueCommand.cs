@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DialogueCommand : Command
 {
@@ -15,13 +16,16 @@ public class DialogueCommand : Command
     protected override IEnumerator Execute()
     {
         inputManager = new Locator<InputManager>().Get();
+        Button turnBasedButton = new Locator<ToggleTurnBasedButton>().Get().GetComponent<Button>();
         dialogueServiceLocator = new();
         if (dialogueServiceLocator.TryGet(out dialogueService))
         {
+            if (turnBasedButton) turnBasedButton.interactable = false;
             inputManager.enabled = false;
             yield return dialogueService.StartCoroutine(dialogueService.InitializeDialouge(dialogueScriptable.GetDialogues()));
             Debug.Log("Done");
             inputManager.enabled = true;
+            if (turnBasedButton) turnBasedButton.interactable = true;
         }
 
     }
