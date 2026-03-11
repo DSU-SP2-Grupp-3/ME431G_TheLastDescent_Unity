@@ -148,6 +148,15 @@ public class AudioManager : Service<AudioManager>
 
     #region PlayerHandler
 
+    public bool IsPlaying(EventReference eventReference)
+    {
+        if (TryGet(eventReference, out EventPlayer player))
+        {
+            return player.IsFinished();
+        }
+        return false;
+
+    }
 
     public void RemovePlayer(EventPlayer eventPlayer)
     {
@@ -188,5 +197,11 @@ public class AudioManager : Service<AudioManager>
         result = audioBanks.FirstOrDefault(p => p.eventName == eventNameC);
         if (result == null) result = Resources.Load<EventScriptable>(eventName);
         return result != null;
+    }
+    public bool TryGet(EventReference eventReference, out EventPlayer result)
+    {
+        bool boolean = PersistentPlayers.TryGetValue(eventReference.Guid, out EventPlayer player);
+        result = player;
+        return boolean;
     }
 }
