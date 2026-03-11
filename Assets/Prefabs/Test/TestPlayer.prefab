@@ -218,7 +218,7 @@ MonoBehaviour:
   defaultSelected: 1
   lockDuringQueueExecution: 0
   reviveAfterCombat: 1
-  reviveHitPointPortion: 0.1
+  reviveHitPointPortion: 0.2
   team: 0
   animator: {fileID: 3872888211663564274}
   navMeshAgent: {fileID: 7076631293186839885}
@@ -227,12 +227,12 @@ MonoBehaviour:
   stats: {fileID: 11400000, guid: 781734abf7c8bcf4095b28600dd9534d, type: 2}
   equippedWeapon: {fileID: 11400000, guid: 348a213d45b60cb458c923f4613638d8, type: 2}
   debuffLevels:
-  - whileUnder: 0.5
-    debuff: {fileID: 11400000, guid: effd54745d2014b4c8c1a95cb31874dc, type: 2}
-  - whileUnder: 0.2
-    debuff: {fileID: 11400000, guid: 21785c990ad47484d90c664709a20a06, type: 2}
-  - whileUnder: 0.05
-    debuff: {fileID: 11400000, guid: fb760f4ed3c123d47bf58bccadcee27e, type: 2}
+  - whileUnder: 0.75
+    debuff: {fileID: 11400000, guid: b6c1ea0a80e8eb64cb077fc672627307, type: 2}
+  - whileUnder: 0.6
+    debuff: {fileID: 11400000, guid: fe79952fd066e864b9978b859be3f50f, type: 2}
+  - whileUnder: 0.35
+    debuff: {fileID: 11400000, guid: 440fef0c73723c04ea9ced964007b5c2, type: 2}
   actorID: 0
 --- !u!54 &3797529464980948739
 Rigidbody:
