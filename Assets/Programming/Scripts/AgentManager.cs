@@ -148,7 +148,7 @@ public class AgentManager : Service<AgentManager>
 
         foreach (Command command in currentCommandPackage.commands)
         {
-            if (command.resourceCost != 0) resourceManager.QueueResource(command);
+            resourceManager.QueueResource(command);
         }
 
         // move other characters if select all is active
