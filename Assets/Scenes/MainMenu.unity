@@ -1053,10 +1053,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1463860120}
-        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
-        m_MethodName: Play
-        m_Mode: 5
+      - m_Target: {fileID: 1491669971}
+        m_TargetAssemblyTypeName: SettingsManager, Programming
+        m_MethodName: Open
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1321,11 +1321,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e9bd46eff8e5f61449b2e1ca3b7d1a08, type: 3}
---- !u!95 &1463860120 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 3790802440504964969, guid: e9bd46eff8e5f61449b2e1ca3b7d1a08, type: 3}
-  m_PrefabInstance: {fileID: 1463860119}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1486312231 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2313968034536364332, guid: a8178c6a026681f42a30ea31262b94e7, type: 3}
@@ -1347,6 +1342,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4383047612285556555, guid: e9bd46eff8e5f61449b2e1ca3b7d1a08, type: 3}
   m_PrefabInstance: {fileID: 1463860119}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1491669971 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3630836972452850752, guid: e9bd46eff8e5f61449b2e1ca3b7d1a08, type: 3}
+  m_PrefabInstance: {fileID: 1463860119}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27d9bda517def6844887291afe954402, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1580129071
 GameObject:
   m_ObjectHideFlags: 0
