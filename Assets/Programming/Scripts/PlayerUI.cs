@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,7 +13,7 @@ public class PlayerUI : MonoBehaviour
     [SerializeField]
     private Button button;
     [SerializeField]
-    private TMP_Text hitPointsText, actionPointsText;
+    private TMP_Text hitPointsText, actionPointsText, debuffHints;
     [SerializeField]
     private Image hitPointsImage, actionPointsImage, temperatureImage;
 
@@ -27,11 +29,19 @@ public class PlayerUI : MonoBehaviour
 
     private Locator<ModeSwitcher> modeSwitcher;
 
+    private HashSet<WorldAgent.DebuffLevel> debuffLevels;
+
     private void Awake()
     {
         agentManager = new Locator<AgentManager>();
 
         modeSwitcher = new Locator<ModeSwitcher>();
+
+        debuffLevels = new();
+        debuffHints.text = "";
+        
+        player.OnDebuffApplied += AddDebuff;
+        player.OnDebuffRemoved -= RemoveDebuff;
     }
 
     private void Start()
@@ -45,6 +55,7 @@ public class PlayerUI : MonoBehaviour
         storedSettings.PlayerHpColorEvent += UpdateColors;
         storedSettings.PlayerApColorEvent += UpdateColors;
         storedSettings.PlayerHeatColorEvent += UpdateColors;
+        // todo: add color event for debuff hints
 
         maxHP = player.localStats.initHitPoints;
         maxAP = player.localStats.initActionPoints;
@@ -110,6 +121,29 @@ public class PlayerUI : MonoBehaviour
         temperatureImage.fillAmount = changed;
     }
 
+    private void AddDebuff(WorldAgent.DebuffLevel debuffLevel)
+    {
+        debuffLevels.Add(debuffLevel);
+        UpdateDebuffHints();
+    }
+
+    private void RemoveDebuff(WorldAgent.DebuffLevel debuffLevel)
+    {
+        debuffLevels.Remove(debuffLevel);
+        UpdateDebuffHints();
+    }
+
+    private void UpdateDebuffHints()
+    {
+        WorldAgent.DebuffLevel[] array = debuffLevels.ToArray();
+        Array.Sort(array);
+        debuffHints.text = "";
+        foreach (WorldAgent.DebuffLevel debuffLevel in array)
+        {
+            debuffHints.text += $"{debuffLevel.debuff.hint}\n";
+        }
+    }
+    
     private void UpdateColors()
     {
         hitPointsImage.color = storedSettings.PlayerHpColor;

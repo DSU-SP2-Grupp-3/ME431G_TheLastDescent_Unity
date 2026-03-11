@@ -119,7 +119,7 @@ public class InputManager : Service<InputManager>
         return raycastAll;
     }
 
-    private bool rightMouseHasBeenDown = false;
+    // private bool rightMouseHasBeenDown = false;
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.K))
