@@ -21,7 +21,7 @@ public class DialogueCommand : Command
             inputManager.enabled = false;
             yield return dialogueService.StartCoroutine(dialogueService.InitializeDialouge(dialogueScriptable.GetDialogues()));
             Debug.Log("Done");
-             inputManager.enabled = true;
+            inputManager.enabled = true;
         }
 
     }
