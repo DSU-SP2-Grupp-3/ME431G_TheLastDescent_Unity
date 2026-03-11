@@ -11,6 +11,8 @@ public class ResourceManager : ScriptableObject
 
     public void PayResource(Command command)
     {
+        // zero cost commands are not queued so must be ignored here
+        if (command.resourceCost == 0f) return;
         if (queuedResourceCommands.value.Contains(command))
         {
             queuedResourceCommands.value.Remove(command);
@@ -25,6 +27,7 @@ public class ResourceManager : ScriptableObject
 
     public void QueueResource(Command command)
     {
+        if (command.resourceCost == 0) return;
         queuedResourceCommands.value.Add(command);
         queuedResourceCommands.MarkChanged();
     }

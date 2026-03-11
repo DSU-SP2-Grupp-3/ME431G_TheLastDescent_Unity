@@ -250,7 +250,7 @@ public class WorldAgent : MonoBehaviour
             {
                 Command command = commandArray[i];
                 shortenedQueue.Enqueue(command);
-                if (command.resourceCost != 0) resourceManager.QueueResource(command);
+                resourceManager.QueueResource(command);
                 if (localStats) localStats.actionPoints.value -= command.apCost;
             }
             commandQueue = shortenedQueue;
