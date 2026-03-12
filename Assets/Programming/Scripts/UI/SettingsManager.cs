@@ -16,6 +16,7 @@ public class SettingsManager : Service<SettingsManager>
     public Slider DialogueSlider;
     
     [SerializeField] private Material pathMaterial;
+    [SerializeField] private Material indicatorMaterial;
 
     public void Open() { open?.Invoke(); }
     public void Close() { close?.Invoke();}
@@ -33,12 +34,24 @@ public class SettingsManager : Service<SettingsManager>
         MusicSlider.value = storedSettings.musicVolume;
         AmbienceSlider.value = storedSettings.ambienceVolume;
         DialogueSlider.value = storedSettings.dialogueVolume;
+        
+        storedSettings.PathColorEvent += UpdatePathColor;
+        storedSettings.IndicatorColorEvent += UpdateIndicatorColor;
     }
 
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape)) { if (transform.position.y < -10) { Open(); } else { Close(); } }
+    }
+
+    private void UpdatePathColor()
+    {
         pathMaterial.color = storedSettings.PathColor;
+    }
+
+    private void UpdateIndicatorColor()
+    {
+        indicatorMaterial.color = storedSettings.IndicatorColor;
     }
 }
 
