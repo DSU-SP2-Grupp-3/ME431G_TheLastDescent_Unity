@@ -8,9 +8,14 @@ public class ResourceManager : ScriptableObject
 {
     public Watcher<float> collectedResources;
     public Watcher<List<Command>> queuedResourceCommands;
+    public HashSet<GameObject> collectedResourceObjects;
 
-    public void PayResource(Command command)
+    public void PayResource(Command command, GameObject resourceObject = null)
     {
+        // if this resource has already been picked up don't get it's resources again. 
+        // abilities that use resources pass null
+        if (resourceObject && collectedResourceObjects.Contains(resourceObject)) return;
+        
         // zero cost commands are not queued so must be ignored here
         if (command.resourceCost == 0f) return;
         if (queuedResourceCommands.value.Contains(command))
@@ -18,6 +23,7 @@ public class ResourceManager : ScriptableObject
             queuedResourceCommands.value.Remove(command);
             queuedResourceCommands.MarkChanged();
             collectedResources.value -= command.resourceCost;
+            if (resourceObject) collectedResourceObjects.Add(resourceObject);
         }
         else
         {
@@ -49,6 +55,7 @@ public class ResourceManager : ScriptableObject
         collectedResources = new(0, GreaterThanZero);
         queuedResourceCommands = new();
         queuedResourceCommands.MarkChanged();
+        collectedResourceObjects = new();
     }
 
     private float GreaterThanZero(float value)

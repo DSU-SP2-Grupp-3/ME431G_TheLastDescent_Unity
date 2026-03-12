@@ -25,6 +25,8 @@ public class AgentManager : Service<AgentManager>
     private Locator<ModeSwitcher> modeSwitcher;
     private Locator<TurnManager> turnManager;
 
+    public RoundClock.ProgressMode mode => modeSwitcher.Get().mode;
+
     private WorldAgent selectedPlayer;
     private WorldAgent defaultPlayer;
 

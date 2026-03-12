@@ -425,7 +425,11 @@ public class WorldAgent : MonoBehaviour
     {
         AnimationEventTriggered?.Invoke(id, gameObject);
     }
-    
+
+    public IEnumerable<GameObject> ResourceObjectsInQueue()
+    {
+        return commandQueue.Where(c => c is GetResourceCommand).Select(r => (r as GetResourceCommand).resourceObject);
+    }
     
     [Serializable]
     public class DebuffLevel : IComparable<DebuffLevel>
