@@ -25,6 +25,8 @@ public class AgentManager : Service<AgentManager>
     private Locator<ModeSwitcher> modeSwitcher;
     private Locator<TurnManager> turnManager;
 
+    public RoundClock.ProgressMode mode => modeSwitcher.Get().mode;
+
     private WorldAgent selectedPlayer;
     private WorldAgent defaultPlayer;
 
@@ -170,9 +172,9 @@ public class AgentManager : Service<AgentManager>
         if (numberOfAlivePlayers <= 0)
         {
             new Locator<Modal>().Get().Prompt(
-                "Everyone has died.\nReturn to the main menu?",
-                () => { new Locator<SceneChanger>().Get().GoToScene("MainMenu"); },
-                () => { EnterSpectator?.Invoke(); }
+                "Everyone has died.\nDo you wish to try again?",
+                () => { new Locator<SceneChanger>().Get().GoToScene("Tutorial Level"); },
+                () => { new Locator<SceneChanger>().Get().GoToScene("MainMenu"); }
             );
         }
     }

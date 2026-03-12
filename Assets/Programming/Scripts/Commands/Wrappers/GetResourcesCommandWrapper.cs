@@ -10,6 +10,6 @@ public class GetResourcesCommandWrapper : CommandWrapper
     /// <inheritdoc />
     public override Command UnwrapCommand(WorldAgent agent)
     {
-        return new GetResourceCommand(agent, resourceManager, resourceAmount);
+        return new GetResourceCommand(agent, resourceManager, resourceAmount, gameObject);
     }
 }

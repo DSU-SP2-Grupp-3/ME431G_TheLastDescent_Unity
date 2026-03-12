@@ -87,6 +87,7 @@ public static class CommandManager
         if (clickAbility.CanClick(hit, agent))
         {
             package.SetCursor(clickAbility.validCursorPath);
+            package.MarkValid();
         }
         else
         {
@@ -179,6 +180,7 @@ public static class CommandManager
     {
         public string hint { get; private set; }
         public string type { get; private set; }
+        public bool valid { get; private set; }
         public CursorInfo cursorInfo { get; private set; }
         public readonly WorldAgent agent;
         public readonly Dictionary<WorldAgent, bool> highlights;
@@ -235,12 +237,17 @@ public static class CommandManager
         {
             this.hint = hint;
         }
-
+        
         public void SetCursor(string resourcePath)
         {
             cursorInfo = Resources.Load<CursorInfo>($"Cursors/{resourcePath}");
         }
 
+        public void MarkValid()
+        {
+            valid = true;
+        }
+        
         public bool QueueCommands(RoundClock.ProgressMode mode)
         {
 
@@ -265,7 +272,8 @@ public static class CommandManager
             foreach (Command command in commands)
             {
                 queueCost += command.apCost;
-                if (!agent) return false;
+                if (!agent && valid) return true;
+                else if (!agent) return false;
                 if (agent.TotalCommandQueueCost() + queueCost > agent.localStats.initActionPoints) return false;
             }
             return true;

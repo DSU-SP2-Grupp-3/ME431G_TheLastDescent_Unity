@@ -47,6 +47,7 @@ public class Interactable : MonoBehaviour
         {
             return new InvokeActionCommand(playerAgent, () =>
             {
+                if (!interactableAgent.gameObject.activeInHierarchy) return;
                 interactableAgent.QueueCommands(interactableAgentCommands);
                 interactableAgent.ForceStartCommandQueueExecution();
             });
