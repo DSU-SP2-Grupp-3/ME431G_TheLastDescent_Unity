@@ -49,7 +49,7 @@ public class ScreenFade : MonoBehaviour
             var currentFade = time / i;
             color.a = currentFade;
             image.color = color;
-            yield return new WaitForSeconds(0.01f);
+            yield return null;
         }
 
         color.a = 0;
@@ -67,7 +67,7 @@ public class ScreenFade : MonoBehaviour
             var currentFade = time / i;
             color.a = currentFade;
             image.color = color;
-            yield return new WaitForSeconds(0.01f);
+            yield return null;
         }
 
         color.a = 1;
