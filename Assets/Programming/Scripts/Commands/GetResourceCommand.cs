@@ -38,7 +38,6 @@ public class GetResourceCommand : Command
 
     protected override IEnumerator Execute()
     {
-        // todo: can click multiple times on one resource to get a bunch of resources
         manager.PayResource(this, resourceObject);
         return null;
     }

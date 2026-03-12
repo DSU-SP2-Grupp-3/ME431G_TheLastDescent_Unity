@@ -23,7 +23,11 @@ public class ResourceManager : ScriptableObject
             queuedResourceCommands.value.Remove(command);
             queuedResourceCommands.MarkChanged();
             collectedResources.value -= command.resourceCost;
-            if (resourceObject) collectedResourceObjects.Add(resourceObject);
+            if (resourceObject)
+            {
+                collectedResourceObjects.Add(resourceObject);
+                resourceObject.gameObject.SetActive(false);
+            }
         }
         else
         {

@@ -6,7 +6,6 @@ using UnityEngine.AI;
 
 public class MoveCommand : Command, IMoveCommand
 {
-    // todo: calculate ap costs via Command.cost and prevent adding commands that would exceed ap cost in turn based
     public override float apCost
     {
         get
