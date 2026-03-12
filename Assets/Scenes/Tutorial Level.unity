@@ -31271,34 +31271,23 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b3d335c6e31d129439d0d918be2e15eb, type: 3}
---- !u!1 &605556973 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3427061958597539996, guid: 0f123977ee723bf40b5c3d46180c89bf, type: 3}
+--- !u!114 &605556974 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5206720949236737546, guid: 0f123977ee723bf40b5c3d46180c89bf, type: 3}
   m_PrefabInstance: {fileID: 705466215}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &605556974
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 605556973}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c5cf33947962a334b8938d6a1db502bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ParamName: LocationMUSIC
-  eventScriptable: {fileID: 11400000, guid: 324bcb606c2f5dd4daee2e3bc5284b9f, type: 2}
-  randTracks: 000000000100000002000000
-  min: 30
-  max: 80
 --- !u!114 &605556975 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8951907812052039266, guid: 0f123977ee723bf40b5c3d46180c89bf, type: 3}
   m_PrefabInstance: {fileID: 705466215}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 605556973}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48cc78417f8ded94a9147b015bbf43da, type: 3}
@@ -36565,18 +36554,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: AudioManager
       objectReference: {fileID: 0}
-    - target: {fileID: 3427061958597539996, guid: 0f123977ee723bf40b5c3d46180c89bf, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 5408515296962631908, guid: 0f123977ee723bf40b5c3d46180c89bf, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3427061958597539996, guid: 0f123977ee723bf40b5c3d46180c89bf, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 605556974}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0f123977ee723bf40b5c3d46180c89bf, type: 3}
 --- !u!1001 &706398993
 PrefabInstance:
@@ -53405,6 +53386,14 @@ PrefabInstance:
     - target: {fileID: 3034397200069105374, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3236223146473153483, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
+      propertyPath: unityEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 605556975}
+    - target: {fileID: 3236223146473153483, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
+      propertyPath: unityEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PlayAudioEvent
       objectReference: {fileID: 0}
     - target: {fileID: 3575951970234186291, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
       propertyPath: player
