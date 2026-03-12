@@ -24,6 +24,8 @@ public class InputManager : Service<InputManager>
     public event Action OnScrollUp;
     public event Action OnScrollDown;
 
+    public event Action OnIKeyPressed;
+
     [SerializeField]
     private LayerMask clickableLayers;
     [SerializeField] private LayerMask[] layerPriority;
@@ -125,6 +127,11 @@ public class InputManager : Service<InputManager>
         if (Input.GetKeyDown(KeyCode.K))
         {
             killFlag = !killFlag;
+        }
+
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            OnIKeyPressed?.Invoke();
         }
 
         if (Input.mouseScrollDelta.y > 0)
