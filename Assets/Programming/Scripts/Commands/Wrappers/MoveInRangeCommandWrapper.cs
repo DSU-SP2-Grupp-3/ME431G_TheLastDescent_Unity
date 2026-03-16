@@ -8,8 +8,14 @@ public class MoveInRangeCommandWrapper : CommandWrapper
     [SerializeField, Tooltip("The range within which the character should move")]
     private float range;
 
+    [SerializeField, Tooltip("The target agent with which line of sight must be achieved before stopping, " +
+                             "leave empty if no such target is required.")]
+    private WorldAgent lineOfSightTarget;
+    
     public override Command UnwrapCommand(WorldAgent agent)
     {
-        return new MoveInRangeCommand(transform.position + relativePosition, range, agent);
+        MoveInRangeCommand inRangeCommand = new MoveInRangeCommand(transform.position + relativePosition, range, agent);
+        if (lineOfSightTarget) inRangeCommand.SetLineOfSightTarget(lineOfSightTarget);
+        return inRangeCommand;
     }
 }

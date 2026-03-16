@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,38 +13,49 @@ public class PlayerUI : MonoBehaviour
     [SerializeField]
     private Button button;
     [SerializeField]
-    private TMP_Text hitPointsText, actionPointsText;
+    private TMP_Text hitPointsText, actionPointsText, debuffHints;
     [SerializeField]
     private Image hitPointsImage, actionPointsImage, temperatureImage;
 
     [SerializeField]
     private GameObject statsContext;
 
+    [SerializeField] private SettingsStorage storedSettings;
+
     private float maxHP;
     private float maxAP;
 
-    private Locator<AgentManager> locatorAgentManager;
-    private AgentManager agentManager;
+    private Locator<AgentManager> agentManager;
 
-    private Locator<ModeSwitcher> modeSwitcherLocator;
+    private Locator<ModeSwitcher> modeSwitcher;
+
+    private HashSet<WorldAgent.DebuffLevel> debuffLevels;
 
     private void Awake()
     {
-        locatorAgentManager = new Locator<AgentManager>();
-        
+        agentManager = new Locator<AgentManager>();
 
-        modeSwitcherLocator = new Locator<ModeSwitcher>();
+        modeSwitcher = new Locator<ModeSwitcher>();
+
+        debuffLevels = new();
+        debuffHints.text = "";
+        
+        player.OnDebuffApplied += AddDebuff;
+        player.OnDebuffRemoved += RemoveDebuff;
     }
 
     private void Start()
     {
-        agentManager = locatorAgentManager.Get();
-
         SetStatsVisbility(false);
 
         player.localStats.hitPoints.Changed += HitPointsChanged;
         player.localStats.actionPoints.Changed += ActionPointsChanged;
         player.localStats.temperature.Changed += TemperatureChanged;
+        
+        storedSettings.PlayerHpColorEvent += UpdateColors;
+        storedSettings.PlayerApColorEvent += UpdateColors;
+        storedSettings.PlayerHeatColorEvent += UpdateColors;
+        // todo: add color event for debuff hints
 
         maxHP = player.localStats.initHitPoints;
         maxAP = player.localStats.initActionPoints;
@@ -53,23 +66,24 @@ public class PlayerUI : MonoBehaviour
 
     public void ClickedOnPlayer()
     {
-        agentManager.SelectPlayer(player);
+        agentManager.Get().SelectPlayer(player);
     }
 
     public void SetStatsVisbility(bool show)
     {
-        if (!show && modeSwitcherLocator.Get().mode == RoundClock.ProgressMode.TurnBased) statsContext.SetActive(true);
+        if (modeSwitcher == null) return;
+        if (!show && modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased) statsContext.SetActive(true);
         else statsContext.SetActive(show);
     }
 
     public void OnHoverEnter()
     {
-        agentManager.SetPortraitAgent(player);
+        agentManager.Get().SetPortraitAgent(player);
     }
 
     public void OnHoverExit()
     {
-        agentManager.SetPortraitAgent(null);
+        agentManager.Get().SetPortraitAgent(null);
     }
 
     private void HitPointsChanged(float changed)
@@ -105,5 +119,35 @@ public class PlayerUI : MonoBehaviour
     private void TemperatureChanged(float changed)
     {
         temperatureImage.fillAmount = changed;
+    }
+
+    private void AddDebuff(WorldAgent.DebuffLevel debuffLevel)
+    {
+        debuffLevels.Add(debuffLevel);
+        UpdateDebuffHints();
+    }
+
+    private void RemoveDebuff(WorldAgent.DebuffLevel debuffLevel)
+    {
+        debuffLevels.Remove(debuffLevel);
+        UpdateDebuffHints();
+    }
+
+    private void UpdateDebuffHints()
+    {
+        WorldAgent.DebuffLevel[] array = debuffLevels.ToArray();
+        Array.Sort(array);
+        debuffHints.text = "";
+        foreach (WorldAgent.DebuffLevel debuffLevel in array)
+        {
+            debuffHints.text += $"{debuffLevel.debuff.hint}\n";
+        }
+    }
+    
+    private void UpdateColors()
+    {
+        hitPointsImage.color = storedSettings.PlayerHpColor;
+        actionPointsImage.color = storedSettings.PlayerApColor;
+        temperatureImage.color = storedSettings.PlayerHeatColor;
     }
 }

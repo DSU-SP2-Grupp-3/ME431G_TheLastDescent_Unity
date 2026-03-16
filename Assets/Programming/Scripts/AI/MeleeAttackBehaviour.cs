@@ -34,8 +34,8 @@ public class MeleeAttackBehaviour : BehaviourDefinition
         BehaviourCommands commands = new();
 
         List<WorldAgent> targets = agentManager.GetFilteredAgents((w => w.team == teamToAttack)).ToList();
-        WorldAgent closestTarget = GetNearestAgent(aiAgent.transform.position, targets);
-
+        WorldAgent closestTarget = AI.GetNearestAgent(aiAgent.transform.position, targets);
+        
         //sets the ais world navMeshAgent to a new path
         NavMeshPath path = new();
         aiAgent.navMeshAgent.CalculatePath(closestTarget.transform.position, path);
@@ -56,13 +56,13 @@ public class MeleeAttackBehaviour : BehaviourDefinition
                 aiAgent.weaponStats.attackRange,
                 aiAgent
             );
+            aiMovement.SetLineOfSightTarget(closestTarget);
             commands.AddCommand(aiMovement);
-
-            // if the path does not need to be trimmed then we attack the player as well
 
             LookCommand lookCommand = new LookCommand(aiAgent, closestTarget);
             commands.AddCommand(lookCommand);
-
+            
+            // if the path does not need to be trimmed then we attack the player as well
             AttackCommand attackPlayerCommand = new AttackCommand(
                 aiAgent, closestTarget, agentManager.damageManager,
                 aiAgent.weaponStats.attackCost, "EnemyAttack"
@@ -71,6 +71,10 @@ public class MeleeAttackBehaviour : BehaviourDefinition
         }
         else
         {
+            LookCommand lookCommand = new LookCommand(aiAgent, closestTarget);
+            commands.AddCommand(lookCommand);
+            
+            if (path.corners.Length == 0) return commands;
             MoveCommand aiMovement = new MoveCommand(path, aiAgent);
             commands.AddCommand(aiMovement);
         }

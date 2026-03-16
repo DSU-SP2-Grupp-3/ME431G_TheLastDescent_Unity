@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 public class WorldAgent : MonoBehaviour
 {
@@ -13,6 +14,11 @@ public class WorldAgent : MonoBehaviour
     public event Action<string, GameObject> AnimationEventTriggered;
     public event Action<WorldAgent> ForcedEnterTurnBased;
     public event Action<WorldAgent, Queue<Command>, Command> CommandQueueUpdated;
+    public event Action OnDeath;
+    public event Action OnRevive;
+    public event Action OnActivate;
+    public event Action<DebuffLevel> OnDebuffApplied;
+    public event Action<DebuffLevel> OnDebuffRemoved;
 
     public enum Team
     {
@@ -27,6 +33,10 @@ public class WorldAgent : MonoBehaviour
     public bool defaultSelected;
     [Tooltip("If true, prevent queueing commands while the command queue is being executed")]
     public bool lockDuringQueueExecution;
+    [Tooltip("If true this agent will revive if dead after exiting turn based and all enemies are dead")]
+    public bool reviveAfterCombat;
+    [Range(0f, 1f), Tooltip("The portion of hp restored when revived automatically after combat")]
+    public float reviveHitPointPortion;
 
     public Team team;
     [Header("References")]
@@ -53,6 +63,13 @@ public class WorldAgent : MonoBehaviour
             }
         }
     }
+
+    [SerializeField, Tooltip("The levels off debuffs to be applied, make sure they are in descending order, " +
+                             "meaning the first debuff received is the first element in the list")]
+    private DebuffLevel[] debuffLevels;
+    private int currentDebuffLevel;
+    
+    private DamageManager damageManager;
 
     public int actorID;
     /// True if this agent should enter into the turn order when turn based mode is activated
@@ -110,9 +127,12 @@ public class WorldAgent : MonoBehaviour
     {
         AgentManager am = agentManager.Get();
         am.RegisterAgent(this);
+        damageManager = am.damageManager;
+
+        if (localStats && team == Team.Player) localStats.temperature.Changed += UpdateDebuffLevel;
 
         //subscribe TakeDamage to the DamageManager of the PlayerManager
-        am.damageManager.DealDamageEvent += TakeDamage;
+        damageManager.DealDamageEvent += TakeDamage;
         modeSwitcher.Get().OnEnterTurnBased += RegisterInTurnManager;
         modeSwitcher.Get().OnEnterRealTime += ExitTurnBased;
     }
@@ -152,17 +172,24 @@ public class WorldAgent : MonoBehaviour
     private void ExitTurnBased(TurnManager _)
     {
         InterruptCommandQueue();
+        if (reviveAfterCombat && dead)
+        {
+            float autoReviveAmount = localStats.initHitPoints * reviveHitPointPortion;
+            ResourceManager rm = agentManager.Get().resourceManager;
+            ReviveCommand reviveCommand = new ReviveCommand(this, this, damageManager, rm, autoReviveAmount, 0f, 0f);
+            OverwriteQueue(reviveCommand, true);
+        }
     }
 
-    public void QueueCommand(Command command)
+    public void QueueCommand(Command command, bool bypassDead = false)
     {
-        QueueCommands(new Command[] { command });
+        QueueCommands(new Command[] { command }, bypassDead);
     }
 
-    public void QueueCommands(Command[] commands)
+    public void QueueCommands(Command[] commands, bool bypassDead = false)
     {
         if (lockDuringQueueExecution && currentExecutingCommandCoroutine != null) return;
-        if (dead) return;
+        if (!bypassDead && dead) return;
         commandPacketSizes.Push(commands.Length);
         foreach (Command command in commands)
         {
@@ -172,19 +199,19 @@ public class WorldAgent : MonoBehaviour
         CommandQueueUpdated?.Invoke(this, commandQueue, null);
     }
 
-    public void OverwriteQueue(Command command)
+    public void OverwriteQueue(Command command, bool bypassDead = false)
     {
         if (lockDuringQueueExecution && currentExecutingCommandCoroutine != null) return;
         InterruptCommandQueue();
-        QueueCommand(command);
+        QueueCommand(command, bypassDead);
         StartCoroutine(ExecuteCommandQueue());
     }
 
-    public void OverwriteQueue(Command[] commands)
+    public void OverwriteQueue(Command[] commands, bool bypassDead = false)
     {
         if (lockDuringQueueExecution && currentExecutingCommandCoroutine != null) return;
         InterruptCommandQueue();
-        QueueCommands(commands);
+        QueueCommands(commands, bypassDead);
         StartCoroutine(ExecuteCommandQueue());
     }
 
@@ -200,7 +227,7 @@ public class WorldAgent : MonoBehaviour
         StartCoroutine(ExecuteCommandQueue());
     }
 
-    private void InterruptCommandQueue()
+    public void InterruptCommandQueue()
     {
         currentlyExecutingCommand?.Break();
         currentlyExecutingCommand = null;
@@ -223,7 +250,7 @@ public class WorldAgent : MonoBehaviour
             {
                 Command command = commandArray[i];
                 shortenedQueue.Enqueue(command);
-                if (command.resourceCost != 0) resourceManager.QueueResource(command);
+                resourceManager.QueueResource(command);
                 if (localStats) localStats.actionPoints.value -= command.apCost;
             }
             commandQueue = shortenedQueue;
@@ -274,29 +301,29 @@ public class WorldAgent : MonoBehaviour
                 }
             }
         }
+        OnActivate?.Invoke();
     }
 
     public void Die()
     {
-        // todo: emit event here so agent manager can check if all players are dead
-        Debug.Log($"Agent {name} has died");
         Dehighlight();
         InterruptCommandQueue();
         dead = true;
         animator.SetTrigger("Die");
         navMeshAgent.enabled = false;
+        OnDeath?.Invoke();
     }
 
-    public void Revive(float damage)
+    public void Revive()
     {
+        if (!dead) return;
         dead = false;
-        animator.SetTrigger("Revive");
         navMeshAgent.enabled = true;
+        OnRevive?.Invoke();
     }
 
     public void Highlight()
     {
-        if (dead) return;
         if (indicatorFocusTransform) indicator.Get().GetIndicator(indicatorFocusTransform);
         else indicator.Get().GetIndicator(transform);
     }
@@ -315,11 +342,7 @@ public class WorldAgent : MonoBehaviour
 
     private void TakeDamage(float damage, WorldAgent target)
     {
-        if (dead && damage < 0)
-        {
-            Revive(damage);
-            return;
-        }
+        if (dead) return;
 
         //currently functions, would be cool if we implemented resistances or elemental damage or something
         if (target != this) return;
@@ -332,6 +355,43 @@ public class WorldAgent : MonoBehaviour
         {
             Die();
         }
+    }
+
+    private void UpdateDebuffLevel(float temperature)
+    {
+        int previousLevel = currentDebuffLevel;
+
+        bool broke = false;
+        for (int i = 0; i < debuffLevels.Length; i++)
+        {
+            if (debuffLevels[i].whileUnder <= temperature)
+            {
+                currentDebuffLevel = i;
+                broke = true;
+                break;
+            }
+        }
+        if (!broke) currentDebuffLevel = debuffLevels.Length;
+        
+        int difference = currentDebuffLevel - previousLevel;
+
+        if (difference > 0) // debuffs should be applied in forward order
+        {
+            for (int i = previousLevel; i < currentDebuffLevel; i++)
+            {
+                debuffLevels[i].debuff.Apply(this);
+                OnDebuffApplied?.Invoke(debuffLevels[i]);
+            }
+        } 
+        else if (difference < 0) // debuffs should be removed in reverse order
+        {
+            for (int i = previousLevel - 1; i >= currentDebuffLevel; i--)
+            {
+                debuffLevels[i].debuff.Remove(this);
+                OnDebuffRemoved?.Invoke(debuffLevels[i]);
+            }
+        }
+        // if difference is zero debuff level has not changed
     }
 
     public Vector3 GetLastMoveCommandToPosition()
@@ -364,5 +424,26 @@ public class WorldAgent : MonoBehaviour
     public void TriggerAnimationEvent(string id)
     {
         AnimationEventTriggered?.Invoke(id, gameObject);
+    }
+
+    public IEnumerable<GameObject> ResourceObjectsInQueue()
+    {
+        return commandQueue.Where(c => c is GetResourceCommand).Select(r => (r as GetResourceCommand).resourceObject);
+    }
+    
+    [Serializable]
+    public class DebuffLevel : IComparable<DebuffLevel>
+    {
+        [Range(0f, 1f), Tooltip("The temperature under which the debuff should apply")]
+        public float whileUnder;
+        [Tooltip("The debuff to apply")]
+        public Debuff debuff;
+        
+        public int CompareTo(DebuffLevel level)
+        {
+            if (level == null) return 1;
+            // invert normal ascending float comparison
+            return whileUnder.CompareTo(level.whileUnder) * -1;
+        }
     }
 }

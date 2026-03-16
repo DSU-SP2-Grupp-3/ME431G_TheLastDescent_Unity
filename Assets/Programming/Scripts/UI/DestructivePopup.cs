@@ -8,11 +8,16 @@ public class DestructivePopup : MonoBehaviour
     public GameObject popPrefab;
     private GameObject temporaryGameObject;
     private TextUpdater temporaryTextUpdater;
-    [SerializeField] DamageManager damageManager;
+    [SerializeField] private DamageManager damageManager;
 
     private void Start()
     {
         damageManager.DealDamageEvent += SpawnPop;
+    }
+
+    private void OnDestroy()
+    {
+        damageManager.DealDamageEvent -= SpawnPop;
     }
 
     public void SpawnPop(float popUpText, WorldAgent worldAgent)

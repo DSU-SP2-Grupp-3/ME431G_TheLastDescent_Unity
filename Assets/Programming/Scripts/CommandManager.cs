@@ -67,20 +67,56 @@ public static class CommandManager
         return interactionPackage;
     }
 
-    public static CommandPackage GetSelectPlayerPackage(WorldAgent agent, ResourceManager.ClickAbility clickAbility)
+    public static CommandPackage GetSelectPlayerPackage(WorldAgent agent)
     {
         CommandPackage package = new CommandPackage(agent);
         package.SetHighlight(agent, true);
         package.SetType("select");
 
-        if (clickAbility != null)
+        return package;
+    }
+
+    public static CommandPackage GetClickAbilityPackage(RaycastHit hit,
+                                                        bool didHit,
+                                                        WorldAgent agent,
+                                                        ClickAbility clickAbility)
+    {
+        CommandPackage package = new CommandPackage(clickAbility.queueingAgent);
+        package.SetType("click");
+
+        if (clickAbility.CanClick(hit, agent))
         {
             package.SetCursor(clickAbility.validCursorPath);
-            foreach (Command command in clickAbility.commands)
-            {
-                command.ChangeInvoker(agent);
-                package.AddCommand(command);
-            }
+            package.MarkValid();
+        }
+        else
+        {
+            package.SetCursor(clickAbility.invalidCursorPath);
+        }
+
+        foreach (Command command in clickAbility.commands)
+        {
+            package.AddCommand(command);
+        }
+
+        foreach (WorldAgent affectedAgent in clickAbility.GetAffectedAgents())
+        {
+            package.SetHighlight(affectedAgent, true);
+        }
+
+        package.SetHint(clickAbility.GetHint());
+
+        return package;
+    }
+
+    public static CommandPackage GetFinalizedClickAbilityPackage(ClickAbility clickAbility)
+    {
+        CommandPackage package = new CommandPackage(clickAbility.queueingAgent);
+        package.SetType("click");
+
+        foreach (Command command in clickAbility.commands)
+        {
+            package.AddCommand(command);
         }
 
         return package;
@@ -142,7 +178,9 @@ public static class CommandManager
 
     public class CommandPackage
     {
+        public string hint { get; private set; }
         public string type { get; private set; }
+        public bool valid { get; private set; }
         public CursorInfo cursorInfo { get; private set; }
         public readonly WorldAgent agent;
         public readonly Dictionary<WorldAgent, bool> highlights;
@@ -150,12 +188,12 @@ public static class CommandManager
         public readonly bool empty;
         public readonly bool clickOnAgentOnly;
 
-        public CommandPackage()
+        public CommandPackage(bool empty = true)
         {
             this.agent = null;
             this.commands = new();
             highlights = new Dictionary<WorldAgent, bool>();
-            empty = true;
+            this.empty = empty;
         }
 
         public CommandPackage(WorldAgent agent)
@@ -195,13 +233,24 @@ public static class CommandManager
             this.type = type;
         }
 
+        public void SetHint(string hint)
+        {
+            this.hint = hint;
+        }
+        
         public void SetCursor(string resourcePath)
         {
             cursorInfo = Resources.Load<CursorInfo>($"Cursors/{resourcePath}");
         }
 
+        public void MarkValid()
+        {
+            valid = true;
+        }
+        
         public bool QueueCommands(RoundClock.ProgressMode mode)
         {
+
             switch (mode)
             {
                 case RoundClock.ProgressMode.TurnBased:
@@ -223,7 +272,8 @@ public static class CommandManager
             foreach (Command command in commands)
             {
                 queueCost += command.apCost;
-                if (!agent) return false;
+                if (!agent && valid) return true;
+                else if (!agent) return false;
                 if (agent.TotalCommandQueueCost() + queueCost > agent.localStats.initActionPoints) return false;
             }
             return true;

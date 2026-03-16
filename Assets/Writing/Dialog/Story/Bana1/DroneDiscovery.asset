@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79a9b0d3c10b22a4a84c5418b36511d6, type: 3}
+  m_Name: DroneDiscovery
+  m_EditorClassIdentifier: 
+  dialogues:
+  - name: Leaifa
+    portrait: {fileID: 21300000, guid: 9d7b3aba127390f4092ce7e668c7114b, type: 3}
+    sentences:
+    - Shit! Drone incoming!
+  - name: Rautia
+    portrait: {fileID: 21300000, guid: aa28b24cb0c23874d91590d7d9051a37, type: 3}
+    sentences:
+    - 'Woah, I have not seen one up and running this close before. '
+    - They are going to keep charging at us with their big saws!
+  - name: Denali
+    portrait: {fileID: 21300000, guid: 37666a48d1d431849a0bbda42fd7b28e, type: 3}
+    sentences:
+    - "Let\u2019s take it down."
+    - Rautia, you attack from range.
+    - Leaifa, you attack them up close with me.
+  - name: Tutorial
+    portrait: {fileID: -583743315, guid: 9eb1f13c449026d43b777a12a3cc6f75, type: 3}
+    sentences:
+    - 'Combat is turnbased.
+
+      Select each character and choose their actions.'
+    - 'Choose selected characters'' actions by: left clicking on the ground to move,
+      or on an enemy to attack.'
+    - Press the Ready button to execute your turn.
+    - Characters can only do so much each turn!

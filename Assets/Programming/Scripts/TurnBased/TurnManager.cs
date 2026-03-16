@@ -23,6 +23,7 @@ public class TurnManager : Service<TurnManager>
     private Locator<AgentManager> agentManager;
     private Locator<ModeSwitcher> modeSwitcher;
     private Locator<Modal> modalLocator;
+    private Locator<InputManager> inputManager;
 
     [SerializeField]
     private ResourceManager resourceManager;
@@ -39,6 +40,12 @@ public class TurnManager : Service<TurnManager>
         agentManager = new();
         modeSwitcher = new();
         modalLocator = new();
+        inputManager = new();
+    }
+
+    private void Start()
+    {
+        inputManager.Get().OnIKeyPressed += GlobalInterrupt;
     }
 
     public void Ready()
@@ -64,10 +71,15 @@ public class TurnManager : Service<TurnManager>
         cycle = StartCoroutine(TurnCycle());
     }
 
-    public void Deactivate()
+    public void Deactivate(bool dontClearGroups = false)
     {
         if (cycle != null) StopCoroutine(cycle);
-        groups.Clear();
+        if (!dontClearGroups) groups.Clear();
+        else
+        {
+            turnManagerEvents.FinishExecutingTurn?.Invoke();
+        }
+        executingTurn = false;
     }
 
     public void RegisterAgentInGroup(int team, WorldAgent agent)
@@ -151,6 +163,16 @@ public class TurnManager : Service<TurnManager>
                 modeSwitcher.Get().TryEnterRealTime(true);
             }
         }
+    }
+
+    private void GlobalInterrupt()
+    {
+        foreach (WorldAgent agent in agentManager.Get().GetAllAgents())
+        {
+            agent.InterruptCommandQueue();
+        }
+        Deactivate(true);
+        Activate();
     }
 
     // https://www.reddit.com/r/Unity3D/comments/11imces/wait_for_all_coroutines_to_finish/

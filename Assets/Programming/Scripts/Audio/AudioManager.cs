@@ -148,6 +148,17 @@ public class AudioManager : Service<AudioManager>
 
     #region PlayerHandler
 
+    public bool IsPlaying(EventReference eventReference)
+    {
+        UnityEngine.Debug.Log("Tried");
+        if (TryGet(eventReference, out EventPlayer player))
+        {
+            UnityEngine.Debug.Log(player.IsFinished());
+            return !player.IsFinished();
+        }
+        return true;
+
+    }
 
     public void RemovePlayer(EventPlayer eventPlayer)
     {
@@ -188,5 +199,11 @@ public class AudioManager : Service<AudioManager>
         result = audioBanks.FirstOrDefault(p => p.eventName == eventNameC);
         if (result == null) result = Resources.Load<EventScriptable>(eventName);
         return result != null;
+    }
+    public bool TryGet(EventReference eventReference, out EventPlayer result)
+    {
+        bool boolean = PersistentPlayers.TryGetValue(eventReference.Guid, out EventPlayer player);
+        result = player;
+        return boolean;
     }
 }

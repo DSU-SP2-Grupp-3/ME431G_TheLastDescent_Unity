@@ -13,7 +13,7 @@ public class Visualizer : MonoBehaviour
     private LineRenderer previewLineRenderer;
 
     [SerializeField]
-    private TMP_Text packageAPDisplay;
+    private TMP_Text packageAPDisplay, hintDisplay;
 
     private Dictionary<WorldAgent, VisualizeTools> agentVisualizeTools;
     private Dictionary<WorldAgent, Command> currentlyExecutingCommands;
@@ -27,6 +27,8 @@ public class Visualizer : MonoBehaviour
 
     [SerializeField]
     private ResourceManager resourceManager;
+
+    [SerializeField] private SettingsStorage storedSettings;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -45,7 +47,7 @@ public class Visualizer : MonoBehaviour
     private void Update()
     {
         // todo: tweak here so we can choose what agents to visualize and when
-
+        
         foreach (Command command in currentlyExecutingCommands.Values)
         {
             command.VisualizeExecution(this);
@@ -91,9 +93,9 @@ public class Visualizer : MonoBehaviour
         packageAPDisplay.rectTransform.anchoredPosition = Vector2.zero;
 
         // calculate bools
-        bool canQueue = commandPackage.CanQueueCommands();
         bool enoughResouces = resourceManager.CanQueuePackage(commandPackage);
         bool realTime = modeSwitcher.Get().mode == RoundClock.ProgressMode.RealTime;
+        bool canQueue = commandPackage.CanQueueCommands() || realTime;
         float packageApCost = commandPackage.TotalPackageCommandCost();
         float packageResourceCost = resourceManager.TotalCommandCollectionResourceCost(commandPackage.commands);
 
@@ -103,10 +105,12 @@ public class Visualizer : MonoBehaviour
         else Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
         packageAPDisplay.text = "";
 
+        if (commandPackage.hint != null) hintDisplay.text = commandPackage.hint;
+        else hintDisplay.text = "";
+
         if (turnManager.Get().executingTurn) return;
 
         HighlightAgents(commandPackage.highlights, realTime);
-
 
         if (!canQueue || !enoughResouces) packageAPDisplay.color = Color.red;
 
@@ -121,7 +125,7 @@ public class Visualizer : MonoBehaviour
 
         if (commandPackage.empty) return;
 
-        if (realTime || commandPackage.clickOnAgentOnly) return;
+        if ((realTime || commandPackage.clickOnAgentOnly) && commandPackage.type != "click") return;
 
         foreach (Command command in commandPackage.commands)
         {

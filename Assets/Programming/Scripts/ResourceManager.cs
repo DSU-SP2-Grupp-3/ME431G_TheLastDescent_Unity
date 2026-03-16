@@ -8,14 +8,26 @@ public class ResourceManager : ScriptableObject
 {
     public Watcher<float> collectedResources;
     public Watcher<List<Command>> queuedResourceCommands;
+    public HashSet<GameObject> collectedResourceObjects;
 
-    public void PayResource(Command command)
+    public void PayResource(Command command, GameObject resourceObject = null)
     {
+        // if this resource has already been picked up don't get it's resources again. 
+        // abilities that use resources pass null
+        if (resourceObject && collectedResourceObjects.Contains(resourceObject)) return;
+        
+        // zero cost commands are not queued so must be ignored here
+        if (command.resourceCost == 0f) return;
         if (queuedResourceCommands.value.Contains(command))
         {
             queuedResourceCommands.value.Remove(command);
             queuedResourceCommands.MarkChanged();
             collectedResources.value -= command.resourceCost;
+            if (resourceObject)
+            {
+                collectedResourceObjects.Add(resourceObject);
+                resourceObject.gameObject.SetActive(false);
+            }
         }
         else
         {
@@ -25,6 +37,7 @@ public class ResourceManager : ScriptableObject
 
     public void QueueResource(Command command)
     {
+        if (command.resourceCost == 0) return;
         queuedResourceCommands.value.Add(command);
         queuedResourceCommands.MarkChanged();
     }
@@ -46,32 +59,12 @@ public class ResourceManager : ScriptableObject
         collectedResources = new(0, GreaterThanZero);
         queuedResourceCommands = new();
         queuedResourceCommands.MarkChanged();
+        collectedResourceObjects = new();
     }
 
     private float GreaterThanZero(float value)
     {
         return Mathf.Max(value, 0f);
-    }
-
-    public class ClickAbility
-    {
-        public readonly string validCursorPath;
-        public readonly string invalidCursorPath;
-        public readonly Command[] commands;
-
-        public ClickAbility(Command[] commands, string validCursorPath, string invalidCursorPath)
-        {
-            this.commands = commands;
-            this.validCursorPath = validCursorPath;
-            this.invalidCursorPath = invalidCursorPath;
-        }
-
-        public ClickAbility(Command command, string validCursorPath, string invalidCursorPath)
-        {
-            this.commands = new Command[] { command };
-            this.validCursorPath = validCursorPath;
-            this.invalidCursorPath = invalidCursorPath;
-        }
     }
 
     public bool CanQueuePackage(CommandManager.CommandPackage package)
@@ -96,3 +89,4 @@ public class ResourceManager : ScriptableObject
         return collectedResources < totalQueued;
     }
 }
+
