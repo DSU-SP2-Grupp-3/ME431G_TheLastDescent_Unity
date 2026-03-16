@@ -28,7 +28,8 @@ public class GetResourceCommand : Command
         IEnumerable<GameObject> collection = invokingAgent.manager.mode switch
         {
             RoundClock.ProgressMode.RealTime => manager.collectedResourceObjects,
-            RoundClock.ProgressMode.TurnBased => invokingAgent.ResourceObjectsInQueue()
+            RoundClock.ProgressMode.TurnBased => invokingAgent.ResourceObjectsInQueue(),
+            _ => new List<GameObject>()
         };
 
         // if so set the amount of this command to 0 to prevent exploits when spamclicking a resource

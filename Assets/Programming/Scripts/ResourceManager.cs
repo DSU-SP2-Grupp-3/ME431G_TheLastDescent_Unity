@@ -88,5 +88,13 @@ public class ResourceManager : ScriptableObject
         float totalQueued = queuedResourceCommands.value.Select(c => c.resourceCost).Sum();
         return collectedResources < totalQueued;
     }
+
+    /// <summary>
+    /// Only to be used for debugging purposes, like in the cheater object
+    /// </summary>
+    public void DebugGetResource(float amount)
+    {
+        collectedResources.value += amount;
+    }
 }
 
