@@ -7,27 +7,20 @@ using UnityEngine;
 public class ResourceManager : ScriptableObject
 {
     public Watcher<float> collectedResources;
-    public Watcher<List<Command>> queuedResourceCommands;
-    public HashSet<GameObject> collectedResourceObjects;
+    public Watcher<List<Command>> queuedPayResourceCommands;
+    public Watcher<List<Resource>> queuedGetResources;
+    public HashSet<Resource> collectedResourceObjects;
 
-    public void PayResource(Command command, GameObject resourceObject = null)
+    public void PayResource(Command command)
     {
-        // if this resource has already been picked up don't get it's resources again. 
-        // abilities that use resources pass null
-        if (resourceObject && collectedResourceObjects.Contains(resourceObject)) return;
-        
         // zero cost commands are not queued so must be ignored here
-        if (command.resourceCost == 0f) return;
-        if (queuedResourceCommands.value.Contains(command))
+        if (!ValidCommand(command)) return;
+
+        if (queuedPayResourceCommands.value.Contains(command))
         {
-            queuedResourceCommands.value.Remove(command);
-            queuedResourceCommands.MarkChanged();
+            queuedPayResourceCommands.value.Remove(command);
+            queuedPayResourceCommands.MarkChanged();
             collectedResources.value -= command.resourceCost;
-            if (resourceObject)
-            {
-                collectedResourceObjects.Add(resourceObject);
-                resourceObject.gameObject.SetActive(false);
-            }
         }
         else
         {
@@ -35,30 +28,34 @@ public class ResourceManager : ScriptableObject
         }
     }
 
-    public void QueueResource(Command command)
+    public void GetResource(Resource resource) { }
+
+    public void QueuePayResource(Command command)
     {
-        if (command.resourceCost == 0) return;
-        queuedResourceCommands.value.Add(command);
-        queuedResourceCommands.MarkChanged();
+        if (!ValidCommand(command)) return;
+        queuedPayResourceCommands.value.Add(command);
+        queuedPayResourceCommands.MarkChanged();
     }
+
+    public void QueuedGetResource(Resource resource) { }
 
     public void RemoveCommands(IEnumerable<Command> commands)
     {
-        queuedResourceCommands.value.RemoveAll((c) => commands.Contains(c));
-        queuedResourceCommands.MarkChanged();
+        queuedPayResourceCommands.value.RemoveAll((c) => commands.Contains(c));
+        queuedPayResourceCommands.MarkChanged();
     }
 
     public void ResetResourceCommands()
     {
-        queuedResourceCommands.value.Clear();
-        queuedResourceCommands.MarkChanged();
+        queuedPayResourceCommands.value.Clear();
+        queuedPayResourceCommands.MarkChanged();
     }
 
     private void OnEnable()
     {
         collectedResources = new(0, GreaterThanZero);
-        queuedResourceCommands = new();
-        queuedResourceCommands.MarkChanged();
+        queuedPayResourceCommands = new();
+        queuedPayResourceCommands.MarkChanged();
         collectedResourceObjects = new();
     }
 
@@ -69,7 +66,7 @@ public class ResourceManager : ScriptableObject
 
     public bool CanQueuePackage(CommandManager.CommandPackage package)
     {
-        float queuedTotal = queuedResourceCommands.value.Select(c => c.resourceCost).Sum();
+        float queuedTotal = queuedPayResourceCommands.value.Select(c => c.resourceCost).Sum();
         return TotalCommandCollectionResourceCost(package.commands) <= collectedResources - queuedTotal;
     }
 
@@ -85,7 +82,7 @@ public class ResourceManager : ScriptableObject
 
     public bool InDeficit()
     {
-        float totalQueued = queuedResourceCommands.value.Select(c => c.resourceCost).Sum();
+        float totalQueued = queuedPayResourceCommands.value.Select(c => c.resourceCost).Sum();
         return collectedResources < totalQueued;
     }
 
@@ -96,5 +93,10 @@ public class ResourceManager : ScriptableObject
     {
         collectedResources.value += amount;
     }
-}
 
+    private bool ValidCommand(Command command)
+    {
+        Debug.Log($"res cost: {command.resourceCost} | status: {command.status}");
+        return command.resourceCost != 0f && command.status != Command.Status.Invalid;
+    }
+}

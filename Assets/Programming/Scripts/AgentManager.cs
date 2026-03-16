@@ -150,7 +150,7 @@ public class AgentManager : Service<AgentManager>
 
         foreach (Command command in currentCommandPackage.commands)
         {
-            resourceManager.QueueResource(command);
+            resourceManager.QueuePayResource(command);
         }
 
         // move other characters if select all is active

@@ -12,6 +12,7 @@ public abstract class Command
     public enum Status
     {
         Pending, // command has not been executed yet, but has been constructed
+        Invalid, // command has not executed but is not in a valid state to be executed
         Executing, // command is currently being executed
         Successful, // command has stopped executing and completed successfully
         Failed, // command has stopped executing and did not complete successfully
