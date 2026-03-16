@@ -55,6 +55,9 @@ public class PlayerUI : MonoBehaviour
         storedSettings.PlayerHpColorEvent += UpdateColors;
         storedSettings.PlayerApColorEvent += UpdateColors;
         storedSettings.PlayerHeatColorEvent += UpdateColors;
+        
+        UpdateColors();
+        
         // todo: add color event for debuff hints
 
         maxHP = player.localStats.initHitPoints;
