@@ -17,7 +17,7 @@ public class MusicRandomizer : MonoBehaviour
     }
     private IEnumerator TryToPlayMusic()
     {
-        //Does not work for some reason, will fix after speltest 2
+        //Does not work correctly for some reason, will fix after speltest 2
         while (true)
         {
             if (audioManager.IsPlaying(eventScriptable.eventReference))
