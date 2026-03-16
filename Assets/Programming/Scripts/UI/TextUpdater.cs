@@ -32,6 +32,14 @@ public class TextUpdater : MonoBehaviour
     public void SetText(float number)
     {
         textComponent.color = number > 0 ? storedSettings.DamageColor : storedSettings.HealColor;
-        textComponent.text = $"{MathF.Abs(number):0,0} DMG";
+        if (number < 0)
+        {
+            textComponent.text = $"{MathF.Abs(number):F0} HEAL";
+
+        }
+        else
+        {
+            textComponent.text = $"{MathF.Abs(number):F0} DMG";
+        }
     }
 }
