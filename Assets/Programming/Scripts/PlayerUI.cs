@@ -143,7 +143,7 @@ public class PlayerUI : MonoBehaviour
         debuffHints.text = "";
         foreach (WorldAgent.DebuffLevel debuffLevel in array)
         {
-            debuffHints.text += $"{debuffLevel.debuff.hint}\n";
+            debuffHints.text = $"{debuffLevel.debuff.hint}";
         }
     }
     
