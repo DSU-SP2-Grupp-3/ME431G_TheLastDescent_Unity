@@ -142,15 +142,10 @@ public class AgentManager : Service<AgentManager>
             NotEnouchResources?.Invoke();
             return;
         }
-        if (!currentCommandPackage.QueueCommands(modeSwitcher.Get().mode))
+        if (!currentCommandPackage.QueueCommands(modeSwitcher.Get().mode, resourceManager))
         {
             NotEnoughAP?.Invoke();
             return;
-        }
-
-        foreach (Command command in currentCommandPackage.commands)
-        {
-            resourceManager.QueueResource(command);
         }
 
         // move other characters if select all is active
