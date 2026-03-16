@@ -27,6 +27,8 @@ public class DialogueService : Service<DialogueService>
     public bool isDone;
     public UnityEvent unityEvent;
 
+    private bool turbo = false;
+
     private void Awake()
     {
         Register();
@@ -103,15 +105,15 @@ public class DialogueService : Service<DialogueService>
             unityEvent.Invoke();
             WrittenSentence += letters.Dequeue();
             textField.text = WrittenSentence;
-            yield return new WaitForSeconds(0.04f);
+            yield return turbo ? null : new WaitForSeconds(0.04f);
         }
     }
     public IEnumerator OnMouseClick()
     {
-        yield return new WaitForSeconds(0.01f);
+        yield return turbo ? null : new WaitForSeconds(0.01f);
         while (true)
         {
-            if (Input.GetMouseButtonDown(1))
+            if (Input.GetMouseButtonDown(1) || turbo)
             {
                 skipping = true;
                 yield break;
@@ -123,5 +125,10 @@ public class DialogueService : Service<DialogueService>
     private void EndDialogue()
     {
         //-Ma. Ran dialogue
+    }
+
+    public void Turbo(bool value)
+    {
+        turbo = value;
     }
 }
