@@ -55,6 +55,9 @@ public class PlayerUI : MonoBehaviour
         storedSettings.PlayerHpColorEvent += UpdateColors;
         storedSettings.PlayerApColorEvent += UpdateColors;
         storedSettings.PlayerHeatColorEvent += UpdateColors;
+        
+        UpdateColors();
+        
         // todo: add color event for debuff hints
 
         maxHP = player.localStats.initHitPoints;
@@ -140,7 +143,7 @@ public class PlayerUI : MonoBehaviour
         debuffHints.text = "";
         foreach (WorldAgent.DebuffLevel debuffLevel in array)
         {
-            debuffHints.text += $"{debuffLevel.debuff.hint}\n";
+            debuffHints.text = $"{debuffLevel.debuff.hint}";
         }
     }
     

@@ -135,6 +135,8 @@ public class WorldAgent : MonoBehaviour
         damageManager.DealDamageEvent += TakeDamage;
         modeSwitcher.Get().OnEnterTurnBased += RegisterInTurnManager;
         modeSwitcher.Get().OnEnterRealTime += ExitTurnBased;
+        
+        UpdateDebuffLevel(localStats.temperature);
     }
 
     private void RegisterInTurnManager(TurnManager turnManager)
