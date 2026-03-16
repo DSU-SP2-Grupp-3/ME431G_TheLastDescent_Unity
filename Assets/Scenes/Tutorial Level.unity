@@ -2931,6 +2931,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 605556975}
+        m_TargetAssemblyTypeName: AudioManager, Programming
+        m_MethodName: PlayAudioEvent
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
+          m_ObjectArgumentAssemblyTypeName: EventScriptable, Programming
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &95144792
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18267,13 +18279,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
-        m_MethodName: set_enabled
-        m_Mode: 6
+      - m_Target: {fileID: 605556975}
+        m_TargetAssemblyTypeName: AudioManager, Programming
+        m_MethodName: PlayAudioEvent
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
+          m_ObjectArgumentAssemblyTypeName: EventScriptable, Programming
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -23470,6 +23482,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 605556975}
+        m_TargetAssemblyTypeName: AudioManager, Programming
+        m_MethodName: PlayAudioEvent
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
+          m_ObjectArgumentAssemblyTypeName: EventScriptable, Programming
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -32600,6 +32624,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 605556975}
+        m_TargetAssemblyTypeName: AudioManager, Programming
+        m_MethodName: PlayAudioEvent
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
+          m_ObjectArgumentAssemblyTypeName: EventScriptable, Programming
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &623386286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35196,6 +35232,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 605556975}
+        m_TargetAssemblyTypeName: AudioManager, Programming
+        m_MethodName: PlayAudioEvent
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
+          m_ObjectArgumentAssemblyTypeName: EventScriptable, Programming
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -53174,13 +53222,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
-        m_MethodName: set_enabled
-        m_Mode: 6
+      - m_Target: {fileID: 605556975}
+        m_TargetAssemblyTypeName: AudioManager, Programming
+        m_MethodName: PlayAudioEvent
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
+          m_ObjectArgumentAssemblyTypeName: EventScriptable, Programming
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -54945,6 +54993,30 @@ PrefabInstance:
       propertyPath: dialogueScriptable
       value: 
       objectReference: {fileID: 11400000, guid: 9961bf20179ddb24ba6eaf7e9459f830, type: 2}
+    - target: {fileID: 4614449267950748650, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4614449267950748650, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[2].m_Target
+      value: 
+      objectReference: {fileID: 605556975}
+    - target: {fileID: 4614449267950748650, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: PlayAudioEvent
+      objectReference: {fileID: 0}
+    - target: {fileID: 4614449267950748650, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
+      value: AudioManager, Programming
+      objectReference: {fileID: 0}
+    - target: {fileID: 4614449267950748650, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
+    - target: {fileID: 4614449267950748650, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: EventScriptable, Programming
+      objectReference: {fileID: 0}
     - target: {fileID: 5928798746086493191, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
       propertyPath: dialogueScriptable
       value: 
@@ -54953,6 +55025,30 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 40f1735509856724398c74cafefee577, type: 2}
+    - target: {fileID: 8357840942616597930, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8357840942616597930, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[2].m_Target
+      value: 
+      objectReference: {fileID: 605556975}
+    - target: {fileID: 8357840942616597930, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: PlayAudioEvent
+      objectReference: {fileID: 0}
+    - target: {fileID: 8357840942616597930, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
+      value: AudioManager, Programming
+      objectReference: {fileID: 0}
+    - target: {fileID: 8357840942616597930, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
+    - target: {fileID: 8357840942616597930, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: EventScriptable, Programming
+      objectReference: {fileID: 0}
     - target: {fileID: 8367181169031751602, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
       propertyPath: m_Name
       value: ElectionPoster
@@ -58643,13 +58739,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
-        m_MethodName: set_enabled
-        m_Mode: 6
+      - m_Target: {fileID: 605556975}
+        m_TargetAssemblyTypeName: AudioManager, Programming
+        m_MethodName: PlayAudioEvent
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
+          m_ObjectArgumentAssemblyTypeName: EventScriptable, Programming
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -60927,6 +61023,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 605556975}
+        m_TargetAssemblyTypeName: AudioManager, Programming
+        m_MethodName: PlayAudioEvent
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
+          m_ObjectArgumentAssemblyTypeName: EventScriptable, Programming
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -70732,6 +70840,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 605556975}
+        m_TargetAssemblyTypeName: AudioManager, Programming
+        m_MethodName: PlayAudioEvent
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
+          m_ObjectArgumentAssemblyTypeName: EventScriptable, Programming
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -83490,13 +83610,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
-        m_MethodName: set_enabled
-        m_Mode: 6
+      - m_Target: {fileID: 605556975}
+        m_TargetAssemblyTypeName: AudioManager, Programming
+        m_MethodName: PlayAudioEvent
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
+          m_ObjectArgumentAssemblyTypeName: EventScriptable, Programming
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -84590,6 +84710,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 605556975}
+        m_TargetAssemblyTypeName: AudioManager, Programming
+        m_MethodName: PlayAudioEvent
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
+          m_ObjectArgumentAssemblyTypeName: EventScriptable, Programming
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -92754,13 +92886,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
-        m_MethodName: set_enabled
-        m_Mode: 6
+      - m_Target: {fileID: 605556975}
+        m_TargetAssemblyTypeName: AudioManager, Programming
+        m_MethodName: PlayAudioEvent
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
+          m_ObjectArgumentAssemblyTypeName: EventScriptable, Programming
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -111241,6 +111373,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4614449267950748650, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4614449267950748650, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[2].m_Target
+      value: 
+      objectReference: {fileID: 605556975}
+    - target: {fileID: 4614449267950748650, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: PlayAudioEvent
+      objectReference: {fileID: 0}
+    - target: {fileID: 4614449267950748650, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
+      value: AudioManager, Programming
+      objectReference: {fileID: 0}
+    - target: {fileID: 4614449267950748650, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
+    - target: {fileID: 4614449267950748650, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: EventScriptable, Programming
+      objectReference: {fileID: 0}
     - target: {fileID: 7673682007198553280, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -111250,9 +111406,41 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 811328381}
     - target: {fileID: 8357840942616597930, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8357840942616597930, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[3].m_Mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8357840942616597930, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
       propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[2].m_Target
       value: 
       objectReference: {fileID: 811328381}
+    - target: {fileID: 8357840942616597930, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[3].m_Target
+      value: 
+      objectReference: {fileID: 605556975}
+    - target: {fileID: 8357840942616597930, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[3].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8357840942616597930, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[3].m_MethodName
+      value: PlayAudioEvent
+      objectReference: {fileID: 0}
+    - target: {fileID: 8357840942616597930, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[3].m_TargetAssemblyTypeName
+      value: AudioManager, Programming
+      objectReference: {fileID: 0}
+    - target: {fileID: 8357840942616597930, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[3].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
+    - target: {fileID: 8357840942616597930, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
+      propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[3].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: EventScriptable, Programming
+      objectReference: {fileID: 0}
     - target: {fileID: 8367181169031751602, guid: ed9d27740fa176e42bfe04eeafea24ba, type: 3}
       propertyPath: m_Name
       value: NeoHabo
