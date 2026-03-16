@@ -43,17 +43,17 @@ public class AudioEventCaller : MonoBehaviour
         {
             if (eventMono != null)
             {
-                if (locatedService.TryGet(eventPlayerName, out _))locatedService.PlayAudioEvent(eventMono);
+                if (!locatedService.TryGet(eventPlayerName, out _))locatedService.PlayAudioEvent(eventMono);
                 locatedService.RunInstanceModification(eventMono, ParameterName, value);
             }
             else if (eventScriptable != null)
             {
-                if (locatedService.TryGet(eventPlayerName, out _))locatedService.PlayAudioEvent(eventScriptable);
+                if (!locatedService.TryGet(eventPlayerName, out _))locatedService.PlayAudioEvent(eventScriptable);
                 locatedService.RunInstanceModification(eventScriptable, ParameterName, value);
             }
             else
             {
-                if (locatedService.TryGet(eventPlayerName, out _))locatedService.PlayAudioEvent(eventPlayerName);
+                if (!locatedService.TryGet(eventPlayerName, out _))locatedService.PlayAudioEvent(eventPlayerName);
                 locatedService.RunInstanceModification(eventPlayerName, ParameterName, value);
             }
         }

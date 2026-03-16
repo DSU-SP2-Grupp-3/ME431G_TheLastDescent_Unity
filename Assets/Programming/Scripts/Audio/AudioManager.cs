@@ -112,7 +112,7 @@ public class AudioManager : Service<AudioManager>
 
     public void RunInstanceModification(EventScriptable eventScriptable, string paramName, float value)
     {
-        PersistentPlayers.TryGetValue(eventScriptable.eventReference.Guid, out EventPlayer player);
+        if(PersistentPlayers.TryGetValue(eventScriptable.eventReference.Guid, out EventPlayer player))
         player.RunInstanceModification(paramName, value);
     }
     public void RunInstanceModification(EventMono eventMono, string paramName, float value)
