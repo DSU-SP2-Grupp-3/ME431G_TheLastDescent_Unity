@@ -111,6 +111,7 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
                 targetZoomSize,
                 zoomSmoothing * Time.deltaTime * 100f
             );
+            freeMoveFocus.position = targetGameObject.position;
         }
     }
 

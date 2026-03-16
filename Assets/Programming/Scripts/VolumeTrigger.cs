@@ -7,9 +7,10 @@ public class VolumeTrigger : MonoBehaviour
     public UnityEvent TriggerExit;
     public UnityEvent TriggerStay;
 
-    public void OnTriggerEnter(Collider _)
+    public void OnTriggerEnter(Collider collider)
     {
         TriggerEnter?.Invoke();
+        Debug.Log(collider.gameObject.name);
     }
 
     public void OnTriggerExit(Collider _)
