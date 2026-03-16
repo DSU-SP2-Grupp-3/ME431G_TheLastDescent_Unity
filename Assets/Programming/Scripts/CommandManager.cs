@@ -52,6 +52,7 @@ public static class CommandManager
         }
 
         if (!AllMoveCommandsPossible(result.invokingAgentCommands)) return EmptyPackage();
+        if (InvalidCommandInCollection(result.invokingAgentCommands)) return EmptyPackage();
 
         TrimUnnecessaryMoveCommands(ref result.invokingAgentCommands);
         CommandPackage interactionPackage = new CommandPackage(agent, result.invokingAgentCommands);
@@ -161,6 +162,11 @@ public static class CommandManager
                 .Any();
     }
 
+    public static bool InvalidCommandInCollection(IEnumerable<Command> commands)
+    {
+        return commands.Any(c => c.status == Command.Status.Invalid);
+    }
+
     public static void TrimUnnecessaryMoveCommands(ref Command[] commands)
     {
         Command[] trimmed = commands
@@ -175,6 +181,7 @@ public static class CommandManager
                             .ToArray();
         commands = trimmed;
     }
+    
 
     public class CommandPackage
     {

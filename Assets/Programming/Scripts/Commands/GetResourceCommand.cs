@@ -22,16 +22,12 @@ public class GetResourceCommand : Command
         this.manager = manager;
         this.resource = resource;
 
-        // check if the object has been queued in turn based and already collected in realtime
-        IEnumerable<Resource> collection = invokingAgent.manager.mode switch
-        {
-            RoundClock.ProgressMode.RealTime => manager.collectedResourceObjects,
-            RoundClock.ProgressMode.TurnBased => invokingAgent.ResourceObjectsInQueue(),
-            _ => new List<Resource>()
-        };
+        // check if the object has been queued or already collected
+        bool collectedOrQueued = 
+            manager.collectedResourceObjects.Union(invokingAgent.ResourceObjectsInQueue()).Contains(resource);
 
-        // if so set the amount of this command to 0 to prevent exploits when spamclicking a resource
-        if (collection.Contains(resource))
+        // if so, set status to invalid to prevent queueing
+        if (collectedOrQueued)
         {
             status = Status.Invalid;
         }

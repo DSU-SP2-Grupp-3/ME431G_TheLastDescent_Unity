@@ -36,7 +36,7 @@ public class ResourceManager : ScriptableObject
         queuedGetResources.value.Remove(resource);
         queuedGetResources.MarkChanged();
 
-        resource.gameObject.SetActive(false);
+        resource.Collect();
     }
 
     public void ProcessCommand(Command command)
@@ -62,7 +62,6 @@ public class ResourceManager : ScriptableObject
 
     private void QueueGetResource(Resource resource)
     {
-        Debug.Log(resource);
         if (queuedGetResources.value.Contains(resource) || collectedResourceObjects.Contains(resource)) return;
         queuedGetResources.value.Add(resource);
         queuedGetResources.MarkChanged();

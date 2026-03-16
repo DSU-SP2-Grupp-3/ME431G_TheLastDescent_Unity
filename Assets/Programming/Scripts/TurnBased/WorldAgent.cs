@@ -265,10 +265,6 @@ public class WorldAgent : MonoBehaviour
         commandPacketSizes.Clear();
         while (commandQueue.TryDequeue(out Command command))
         {
-            if (team == Team.Player)
-            {
-                Debug.Log(command.GetType());
-            }
             CommandQueueUpdated?.Invoke(this, commandQueue, command);
             currentlyExecutingCommand = command;
             currentExecutingCommandCoroutine = StartCoroutine(command.ExecuteCommand());
