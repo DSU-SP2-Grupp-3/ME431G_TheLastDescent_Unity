@@ -133,7 +133,6 @@ public class ResourceManager : ScriptableObject
 
     private bool ValidCommand(Command command)
     {
-        Debug.Log($"res cost: {command.resourceCost} | status: {command.status}");
         return command.resourceCost != 0f && command.status != Command.Status.Invalid;
     }
 }

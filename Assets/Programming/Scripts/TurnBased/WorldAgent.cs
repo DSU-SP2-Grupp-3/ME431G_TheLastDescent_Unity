@@ -129,14 +129,16 @@ public class WorldAgent : MonoBehaviour
         am.RegisterAgent(this);
         damageManager = am.damageManager;
 
-        if (localStats && team == Team.Player) localStats.temperature.Changed += UpdateDebuffLevel;
+        if (localStats && team == Team.Player)
+        {
+            localStats.temperature.Changed += UpdateDebuffLevel;
+            UpdateDebuffLevel(localStats.temperature);
+        }
 
         //subscribe TakeDamage to the DamageManager of the PlayerManager
         damageManager.DealDamageEvent += TakeDamage;
         modeSwitcher.Get().OnEnterTurnBased += RegisterInTurnManager;
         modeSwitcher.Get().OnEnterRealTime += ExitTurnBased;
-        
-        UpdateDebuffLevel(localStats.temperature);
     }
 
     private void RegisterInTurnManager(TurnManager turnManager)
@@ -437,7 +439,7 @@ public class WorldAgent : MonoBehaviour
     [Serializable]
     public class DebuffLevel : IComparable<DebuffLevel>
     {
-        [Range(0f, 1f), Tooltip("The temperature under which the debuff should apply")]
+        [Range(0f, 1.1f), Tooltip("The temperature under which the debuff should apply")]
         public float whileUnder;
         [Tooltip("The debuff to apply")]
         public Debuff debuff;

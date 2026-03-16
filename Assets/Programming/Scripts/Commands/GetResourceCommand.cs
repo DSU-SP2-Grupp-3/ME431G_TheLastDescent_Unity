@@ -35,7 +35,6 @@ public class GetResourceCommand : Command
 
     protected override IEnumerator Execute()
     {
-        Debug.Log("execute");
         manager.GetResource(resource);
         return null;
     }
