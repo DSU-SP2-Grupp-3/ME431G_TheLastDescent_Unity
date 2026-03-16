@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GetResourceCommand : Command
 {
-    public override float apCost { get; }
+    public override float apCost => 0f;
     public override float resourceCost => 0f;
 
     private float amount => resource.amount;
@@ -33,12 +33,13 @@ public class GetResourceCommand : Command
         // if so set the amount of this command to 0 to prevent exploits when spamclicking a resource
         if (collection.Contains(resource))
         {
-            // this.amount = 0f;
+            status = Status.Invalid;
         }
     }
 
     protected override IEnumerator Execute()
     {
+        Debug.Log("execute");
         manager.GetResource(resource);
         return null;
     }

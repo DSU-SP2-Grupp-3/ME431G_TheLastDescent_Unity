@@ -54,13 +54,11 @@ public class MoveInRangeCommand : Command, IMoveCommand
             if (!FindCompletePath(fromPosition, toPosition, ref agentPath))
             {
                 possible = false;
-                // status = Status.Invalid;
                 return;
             }
         }
         float lackingDistance = Vector3.Distance(agentPath.corners.Last(), toPosition);
         possible = agentPath.status != NavMeshPathStatus.PathInvalid || lackingDistance > range;
-        // if (possible) status = Status.Invalid;
 
         if (possible)
         {

@@ -23,6 +23,7 @@ public class LookCommand : Command
         Quaternion startRotation = invokingAgent.transform.rotation;
         Quaternion targetRotation = LookAt();
 
+        if (LookAt() == startRotation) yield break;
 
         while (t < duration)
         {

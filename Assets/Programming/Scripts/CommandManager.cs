@@ -248,17 +248,22 @@ public static class CommandManager
             valid = true;
         }
         
-        public bool QueueCommands(RoundClock.ProgressMode mode)
+        public bool QueueCommands(RoundClock.ProgressMode mode, ResourceManager resourceManager)
         {
 
             switch (mode)
             {
                 case RoundClock.ProgressMode.TurnBased:
                     if (!CanQueueCommands()) return false;
-                    else agent.QueueCommands(commands.ToArray());
+                    else
+                    {
+                        resourceManager.ProcessCommands(commands);
+                        agent.QueueCommands(commands.Where(c => c.status != Command.Status.Invalid).ToArray());
+                    }
                     break;
                 case RoundClock.ProgressMode.RealTime:
-                    agent.OverwriteQueue(commands.ToArray());
+                    resourceManager.ProcessCommands(commands);
+                    agent.OverwriteQueue(commands.Where(c => c.status != Command.Status.Invalid).ToArray());
                     break;
             }
             return true;

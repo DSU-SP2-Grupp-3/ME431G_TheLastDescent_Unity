@@ -193,8 +193,6 @@ public class WorldAgent : MonoBehaviour
         commandPacketSizes.Push(commands.Length);
         foreach (Command command in commands)
         {
-            Debug.Log(command.status);
-            if (command.status == Command.Status.Invalid) continue;
             commandQueue.Enqueue(command);
             if (localStats) localStats.actionPoints.value -= command.apCost;
         }
@@ -237,6 +235,7 @@ public class WorldAgent : MonoBehaviour
         agentManager.Get().resourceManager.RemoveCommands(commandQueue);
         commandQueue.Clear();
         commandPacketSizes.Clear();
+        if (localStats) localStats.actionPoints.value = localStats.initActionPoints;
         CommandQueueUpdated?.Invoke(this, commandQueue, null);
     }
 
@@ -252,7 +251,7 @@ public class WorldAgent : MonoBehaviour
             {
                 Command command = commandArray[i];
                 shortenedQueue.Enqueue(command);
-                resourceManager.QueuePayResource(command);
+                resourceManager.ProcessCommand(command);
                 if (localStats) localStats.actionPoints.value -= command.apCost;
             }
             commandQueue = shortenedQueue;
@@ -266,6 +265,10 @@ public class WorldAgent : MonoBehaviour
         commandPacketSizes.Clear();
         while (commandQueue.TryDequeue(out Command command))
         {
+            if (team == Team.Player)
+            {
+                Debug.Log(command.GetType());
+            }
             CommandQueueUpdated?.Invoke(this, commandQueue, command);
             currentlyExecutingCommand = command;
             currentExecutingCommandCoroutine = StartCoroutine(command.ExecuteCommand());

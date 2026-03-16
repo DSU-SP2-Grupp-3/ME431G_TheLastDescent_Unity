@@ -28,21 +28,57 @@ public class ResourceManager : ScriptableObject
         }
     }
 
-    public void GetResource(Resource resource) { }
+    public void GetResource(Resource resource)
+    {
+        if (collectedResourceObjects.Contains(resource) || !queuedGetResources.value.Contains(resource)) return;
+        collectedResources.value += resource.amount;
+        collectedResourceObjects.Add(resource);
+        queuedGetResources.value.Remove(resource);
+        queuedGetResources.MarkChanged();
 
-    public void QueuePayResource(Command command)
+        resource.gameObject.SetActive(false);
+    }
+
+    public void ProcessCommand(Command command)
+    {
+        if (command is GetResourceCommand getResourceCommand) QueueGetResource(getResourceCommand.resource);
+        else if (command.resourceCost > 0f) QueuePayResource(command);
+    }
+
+    public void ProcessCommands(IEnumerable<Command> commands)
+    {
+        foreach (Command command in commands)
+        {
+            ProcessCommand(command);
+        }
+    }
+    
+    private void QueuePayResource(Command command)
     {
         if (!ValidCommand(command)) return;
         queuedPayResourceCommands.value.Add(command);
         queuedPayResourceCommands.MarkChanged();
     }
 
-    public void QueuedGetResource(Resource resource) { }
-
+    private void QueueGetResource(Resource resource)
+    {
+        Debug.Log(resource);
+        if (queuedGetResources.value.Contains(resource) || collectedResourceObjects.Contains(resource)) return;
+        queuedGetResources.value.Add(resource);
+        queuedGetResources.MarkChanged();
+    }
+    
     public void RemoveCommands(IEnumerable<Command> commands)
     {
         queuedPayResourceCommands.value.RemoveAll((c) => commands.Contains(c));
         queuedPayResourceCommands.MarkChanged();
+
+        IEnumerable<Resource> getResources = commands
+            .Where(c => c is GetResourceCommand)
+            .Select(c => (c as GetResourceCommand).resource);
+        
+        queuedGetResources.value.RemoveAll(r => getResources.Contains(r));
+        queuedGetResources.MarkChanged();
     }
 
     public void ResetResourceCommands()
@@ -56,6 +92,8 @@ public class ResourceManager : ScriptableObject
         collectedResources = new(0, GreaterThanZero);
         queuedPayResourceCommands = new();
         queuedPayResourceCommands.MarkChanged();
+        queuedGetResources = new();
+        queuedGetResources.MarkChanged();
         collectedResourceObjects = new();
     }
 

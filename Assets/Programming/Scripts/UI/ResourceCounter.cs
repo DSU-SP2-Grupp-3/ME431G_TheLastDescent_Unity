@@ -14,10 +14,15 @@ public class ResourceCounter : MonoBehaviour
     [SerializeField]
     private Color negativeColor = Color.red;
 
+    private float queuedGet;
+    private float queuedPay;
+    private float deltaQueue => queuedGet - queuedPay;
+    
     private void Awake()
     {
         resourceManager.collectedResources.Changed += OnResourcesChanged;
-        resourceManager.queuedPayResourceCommands.Changed += OnQueuedPayResourceCommandsChanged;
+        resourceManager.queuedPayResourceCommands.Changed += TotalQueuePayAmount;
+        resourceManager.queuedGetResources.Changed += TotalQueueGetAmount;
     }
 
     private void OnResourcesChanged(float amount)
@@ -25,24 +30,30 @@ public class ResourceCounter : MonoBehaviour
         counter.text = $"{amount:0.}";
     }
 
-    private void OnQueuedPayResourceCommandsChanged(List<Command> newQueue)
+    private void UpdateQueueAmount()
     {
-        float amount = TotalQueueAmount(newQueue);
-        if (amount == 0) queueCounter.text = "";
-        else if (amount < 0)
+        if (deltaQueue == 0) queueCounter.text = "";
+        else if (deltaQueue > 0)
         {
             queueCounter.color = positiveColor;
-            queueCounter.text = $"+{Mathf.Abs(amount):0}";
+            queueCounter.text = $"+{Mathf.Abs(deltaQueue):0}";
         }
         else
         {
             queueCounter.color = negativeColor;
-            queueCounter.text = $"-{amount:0}";
+            queueCounter.text = $"-{Mathf.Abs(deltaQueue):0}";
         }
     }
 
-    private float TotalQueueAmount(List<Command> queue)
+    private void TotalQueuePayAmount(List<Command> queue)
     {
-        return queue.Select(p => p.resourceCost).Sum();
+        queuedPay = queue.Select(p => p.resourceCost).Sum();
+        UpdateQueueAmount();
+    }
+
+    private void TotalQueueGetAmount(List<Resource> queue)
+    {
+        queuedGet = queue.Select(r => r.amount).Sum();
+        UpdateQueueAmount();
     }
 }
