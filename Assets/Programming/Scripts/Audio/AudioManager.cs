@@ -13,7 +13,6 @@ using UnityEngine;
 public class AudioManager : Service<AudioManager>
 {
     [SerializeField]
-    private List<EventScriptable> audioBanks = new();
     private Dictionary<GUID, EventPlayer> PersistentPlayers;
     private List<EventPlayer> OneShotPlayers = new();
     private readonly Queue<EventPlayer> removalQueue = new();
@@ -41,7 +40,7 @@ public class AudioManager : Service<AudioManager>
         }
         throw new Exception($"Null Reference error. name: {name} does not exist in the audiobank");
     }
-        public void PlayAudioEvent(string name, GameObject gameObject)
+    public void PlayAudioEvent(string name, GameObject gameObject)
     {
         name = name.ToLower().Trim();
         if (TryGet(name, out EventScriptable eventScriptable))
@@ -81,7 +80,7 @@ public class AudioManager : Service<AudioManager>
 
     private void PlayAudio(EventScriptable eventScriptable)
     {
-        if(eventScriptable.type == EventScriptable.Override.multi)
+        if (eventScriptable.type == EventScriptable.Override.multi)
         {
             CreatePlayer(eventScriptable, out EventPlayer tempEvent);
             tempEvent.PlayEvent();
@@ -131,6 +130,7 @@ public class AudioManager : Service<AudioManager>
     private void Update()
     {
         var finished = new List<EventPlayer>();
+        var persistentFinished = new List<GUID>();
         foreach (var player in OneShotPlayers)
         {
             if (player.IsFinished())
@@ -138,9 +138,21 @@ public class AudioManager : Service<AudioManager>
                 finished.Add(player);
             }
         }
-        foreach (EventPlayer eventPlayer in finished)
+        foreach (var kvp in PersistentPlayers)
         {
-            RemovePlayer(eventPlayer);
+            if (kvp.Value.IsFinished())
+            {
+                persistentFinished.Add(kvp.Key);
+            }
+        }
+        foreach (var player in finished)
+        {
+            RemovePlayer(player);
+        }
+
+        foreach (var guid in persistentFinished)
+        {
+            RemovePlayer(new EventReference { Guid = guid });
         }
 
     }
@@ -187,8 +199,7 @@ public class AudioManager : Service<AudioManager>
     public EventScriptable Get(string eventName)
     {
         string eventNameC = eventName.ToLower().Trim();
-        EventScriptable result = audioBanks.FirstOrDefault(p => p.eventName == eventNameC);
-        if (result == null) result = Resources.Load<EventScriptable>(eventName);
+        EventScriptable result = Resources.Load<EventScriptable>(eventName);
         return result;
     }
 
@@ -196,8 +207,7 @@ public class AudioManager : Service<AudioManager>
     public bool TryGet(string eventName, out EventScriptable result)
     {
         string eventNameC = eventName.ToLower().Trim();
-        result = audioBanks.FirstOrDefault(p => p.eventName == eventNameC);
-        if (result == null) result = Resources.Load<EventScriptable>(eventName);
+        result = Resources.Load<EventScriptable>(eventName);
         return result != null;
     }
     public bool TryGet(EventReference eventReference, out EventPlayer result)
