@@ -9,8 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d5033b47f234ea08d516eae6d08f12f, type: 3}
-  m_Name: DebuffCold2
+  m_Script: {fileID: 11500000, guid: b75fb1eb1536485faf4780b065047757, type: 3}
+  m_Name: BuffModifierWarm
   m_EditorClassIdentifier: 
-  debuffHint: Brittle (+50% damage taken)
-  applied: {fileID: 11400000, guid: 9aac3d8ffe856394d8a974f49ccf9eeb, type: 2}
+  movementCostModifier: 0.75
+  receivedDamageModifier: 0.75
+  tempertureLoss: 0.015
