@@ -35,6 +35,7 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
     public Transform freeMoveFocus;
     private AgentManager am;
     private Transform savedCharacter;
+    private Vector2 lastMousePosition;
 
     private void Awake()
     {
@@ -55,18 +56,24 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
         im.OnRightHold += OnRightHold;
         im.OnRightUp += OnRightClickDropped;
     }
-    
+
     private void OnRightClick()
     {
         //Mouse.current.WarpCursorPosition(new Vector2(Screen.width/2,Screen.height/2));
         freeMoveFocus.position = targetGameObject.position;
         savedCharacter = targetGameObject;
         targetGameObject = freeMoveFocus;
+
+        lastMousePosition = Input.mousePosition;
     }
     private void OnRightHold()
     {
-        Vector2 mousePos = (Vector2)Input.mousePosition - new Vector2(Screen.width/2,Screen.height/2);
-        mousePos = new Vector2(mousePos.x/Screen.width*0.5f,mousePos.y/Screen.height*0.5f);
+
+        Vector2 currentMousePosition = Input.mousePosition;
+        Vector2 delta = currentMousePosition - lastMousePosition;
+
+        Vector2 mousePos = (Vector2)Input.mousePosition - lastMousePosition;
+        mousePos = new Vector2(mousePos.x / Screen.width * 0.5f, mousePos.y / Screen.height * 0.5f);
         Vector2 cameraForce = mousePos * FreeMoveSpeed;
 
         Transform cam = Camera.main.transform;
@@ -75,7 +82,7 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
 
         freeMoveFocus.position += move * FreeMoveSpeed;
         var player = am.GetSelectedPlayer();
-        if(Vector2.Distance(new Vector2(player.transform.position.x, player.transform.position.z), new Vector2(freeMoveFocus.position.x, freeMoveFocus.position.z)) >= FreeDistanceCap)
+        if (Vector2.Distance(new Vector2(player.transform.position.x, player.transform.position.z), new Vector2(freeMoveFocus.position.x, freeMoveFocus.position.z)) >= FreeDistanceCap)
         {
             freeMoveFocus.position = player.transform.position + (freeMoveFocus.position - player.transform.position).normalized * FreeDistanceCap;
         }

@@ -11,7 +11,7 @@ public class DialogueService : Service<DialogueService>
     private Queue<Dialogue> dialogues = new();
 
     private Queue<string> Sentences = new();
-    private Queue<Char> letters = new();
+    private string sentence;
     string WrittenSentence = "";
     private Coroutine ClickCheck = null;
     private bool skipping;
@@ -74,28 +74,21 @@ public class DialogueService : Service<DialogueService>
 
         while (Sentences.Count > 0)
         {
-            string sentence = Sentences.Dequeue();
-
-            letters.Clear();
-            foreach (char letter in sentence)
-            {
-                letters.Enqueue(letter);
-            }
-
-            //-Ma. This sucks, but it works
+            sentence = Sentences.Dequeue();
+            if (sentence == "") break;
+            textField.text = sentence;
 
             skipping = false;
-            WrittenSentence = "";
             ClickCheck = StartCoroutine(OnMouseClick());
             yield return StartCoroutine(DisplayNextLetter());
-            textField.text = sentence;
+            textField.maxVisibleCharacters = sentence.Length;
             if (ClickCheck != null) StopCoroutine(ClickCheck);
             yield return ClickCheck = StartCoroutine(OnMouseClick());
         }
     }
     public IEnumerator DisplayNextLetter()
     {
-        while (letters.Count > 0)
+        for (int i = 0; i <= sentence.Length; i++)
         {
             if (skipping == true)
             {
@@ -103,8 +96,7 @@ public class DialogueService : Service<DialogueService>
                 yield break;
             }
             unityEvent.Invoke();
-            WrittenSentence += letters.Dequeue();
-            textField.text = WrittenSentence;
+            textField.maxVisibleCharacters = i;
             yield return turbo ? null : new WaitForSeconds(0.04f);
         }
     }
