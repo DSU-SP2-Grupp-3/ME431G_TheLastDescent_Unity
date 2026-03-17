@@ -33,8 +33,11 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
     public float FreeMoveSpeed;
     public float FreeDistanceCap;
     public Transform freeMoveFocus;
+    private Camera mainCamera;
     private AgentManager am;
     private Transform savedCharacter;
+
+    private Vector2 freeMoveInitialMousePosition;
 
     private void Awake()
     {
@@ -42,6 +45,7 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
         modeSwitcher = new();
         thisCamera = GetComponent<Camera>();
         targetZoomSize = thisCamera.orthographicSize;
+        mainCamera = Camera.main;
     }
 
     private void Start()
@@ -59,17 +63,20 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
     private void OnRightClick()
     {
         //Mouse.current.WarpCursorPosition(new Vector2(Screen.width/2,Screen.height/2));
+        freeMoveInitialMousePosition = Input.mousePosition;
+
         freeMoveFocus.position = targetGameObject.position;
         savedCharacter = targetGameObject;
         targetGameObject = freeMoveFocus;
     }
     private void OnRightHold()
     {
-        Vector2 mousePos = (Vector2)Input.mousePosition - new Vector2(Screen.width/2,Screen.height/2);
+        // Vector2 mousePos = (Vector2)Input.mousePosition - new Vector2(Screen.width/2,Screen.height/2);
+        Vector2 mousePos = (Vector2)Input.mousePosition - freeMoveInitialMousePosition;
         mousePos = new Vector2(mousePos.x/Screen.width*0.5f,mousePos.y/Screen.height*0.5f);
         Vector2 cameraForce = mousePos * FreeMoveSpeed;
 
-        Transform cam = Camera.main.transform;
+        Transform cam = mainCamera.transform;
 
         Vector3 move = new Vector3(0.5f, 0, -0.5f) * cameraForce.x + new Vector3(0.5f, 0, 0.5f) * cameraForce.y;
 

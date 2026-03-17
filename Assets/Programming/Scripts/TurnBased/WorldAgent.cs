@@ -175,7 +175,7 @@ public class WorldAgent : MonoBehaviour
 
     private void ExitTurnBased(TurnManager _)
     {
-        InterruptCommandQueue();
+        if (team != Team.Interactable) InterruptCommandQueue();
         if (reviveAfterCombat && dead)
         {
             float autoReviveAmount = localStats.initHitPoints * reviveHitPointPortion;
