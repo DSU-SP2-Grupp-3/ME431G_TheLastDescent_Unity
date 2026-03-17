@@ -36,6 +36,8 @@ public class DialogueService : Service<DialogueService>
     public IEnumerator InitializeDialouge(Dialogue[] dialogues)
     {
         ani.Play("DialogueStart");
+        
+        // todo: maybe don't clear dialogues here to prevent funky stuff if triggering two dialogues at the same time??
         this.dialogues.Clear();
         foreach (Dialogue dialogue in dialogues)
         {
