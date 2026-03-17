@@ -17,7 +17,6 @@ public class MusicRandomizer : MonoBehaviour
     }
     private IEnumerator TryToPlayMusic()
     {
-        //Does not work for some reason, will fix after speltest 2
         while (true)
         {
             if (audioManager.IsPlaying(eventScriptable.eventReference))
@@ -29,7 +28,7 @@ public class MusicRandomizer : MonoBehaviour
                 audioManager.PlayAudioEvent(eventScriptable);
                 audioManager.RunInstanceModification(eventScriptable, ParamName, Track);
             }
-            yield return new WaitForSeconds(120);
+            yield return new WaitForSeconds(15);
         }
     }
 }
