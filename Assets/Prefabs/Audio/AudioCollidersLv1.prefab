@@ -43,7 +43,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1604436001153951974}
   - component: {fileID: 7383026662425925506}
-  - component: {fileID: 6593362651730325992}
+  - component: {fileID: 1917557641424756053}
   - component: {fileID: 4843119954193626771}
   m_Layer: 0
   m_Name: GrottaAmb (1)
@@ -61,7 +61,7 @@ Transform:
   m_GameObject: {fileID: 1771321944497449069}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.38268343, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -77.3, y: 0, z: -87.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -88,7 +88,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 111.34018, y: 18.252071, z: 116.9939}
   m_Center: {x: -16.869017, y: 4.5996075, z: 37.01497}
---- !u!114 &6593362651730325992
+--- !u!114 &1917557641424756053
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -97,7 +97,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1771321944497449069}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 671cc307155caaa4f9872097f7fc2ca6, type: 3}
+  m_Script: {fileID: 11500000, guid: 3153bc0cb6b9aad43bb4c29c4e277be3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   TriggerEnter:
@@ -121,6 +121,9 @@ MonoBehaviour:
   TriggerStay:
     m_PersistentCalls:
       m_Calls: []
+  audiolayer:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!114 &4843119954193626771
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -137,9 +140,6 @@ MonoBehaviour:
   ParameterName: Parameter 1
   eventScriptable: {fileID: 11400000, guid: 48efc4c2b574ce943a8fdfefb3051c27, type: 2}
   eventMono: {fileID: 0}
-  unityEvent:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &8896696175234658909
 GameObject:
   m_ObjectHideFlags: 0
@@ -150,7 +150,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8082490672122356200}
   - component: {fileID: 4946637126572297297}
-  - component: {fileID: 4334319013383926752}
+  - component: {fileID: 783217618970443780}
   - component: {fileID: 4959815250011220542}
   m_Layer: 0
   m_Name: GrottaAmb
@@ -195,7 +195,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 111.34018, y: 18.252071, z: 116.9939}
   m_Center: {x: -16.869017, y: 4.5996075, z: 37.01497}
---- !u!114 &4334319013383926752
+--- !u!114 &783217618970443780
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -204,7 +204,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8896696175234658909}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 671cc307155caaa4f9872097f7fc2ca6, type: 3}
+  m_Script: {fileID: 11500000, guid: 3153bc0cb6b9aad43bb4c29c4e277be3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   TriggerEnter:
@@ -218,7 +218,7 @@ MonoBehaviour:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
-          m_FloatArgument: 1
+          m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
@@ -228,6 +228,9 @@ MonoBehaviour:
   TriggerStay:
     m_PersistentCalls:
       m_Calls: []
+  audiolayer:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!114 &4959815250011220542
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -244,6 +247,3 @@ MonoBehaviour:
   ParameterName: Parameter 1
   eventScriptable: {fileID: 11400000, guid: 48efc4c2b574ce943a8fdfefb3051c27, type: 2}
   eventMono: {fileID: 0}
-  unityEvent:
-    m_PersistentCalls:
-      m_Calls: []
