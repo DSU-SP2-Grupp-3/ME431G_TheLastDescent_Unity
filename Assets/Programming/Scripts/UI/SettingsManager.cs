@@ -20,8 +20,19 @@ public class SettingsManager : Service<SettingsManager>
     [SerializeField] private Material pathMaterial;
     [SerializeField] private Material indicatorMaterial;
 
-    public void Open() { open?.Invoke(); }
-    public void Close() { close?.Invoke();}
+    public void Open()
+    {
+        open?.Invoke(); 
+        Time.timeScale = 0f; 
+        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+    }
+
+    public void Close()
+    {
+        close?.Invoke(); 
+        Time.timeScale = 1f; 
+        
+    }
     public void MasterVol() { AudioSettings.Instance.masterVolume = MasterSlider.value; AudioSettings.Instance.UpdateVolumes(); AudioSettings.Instance.SetVolumes();}    
     public void SFXVol() { AudioSettings.Instance.effectVolume = SFXSlider.value; AudioSettings.Instance.UpdateVolumes(); AudioSettings.Instance.SetVolumes();}
     public void MusicVol() { AudioSettings.Instance.musicVolume = MusicSlider.value; AudioSettings.Instance.UpdateVolumes(); AudioSettings.Instance.SetVolumes();}
