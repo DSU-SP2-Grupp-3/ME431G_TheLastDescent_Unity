@@ -52,6 +52,7 @@ public static class CommandManager
         }
 
         if (!AllMoveCommandsPossible(result.invokingAgentCommands)) return EmptyPackage();
+        if (InvalidCommandInCollection(result.invokingAgentCommands)) return EmptyPackage();
 
         TrimUnnecessaryMoveCommands(ref result.invokingAgentCommands);
         CommandPackage interactionPackage = new CommandPackage(agent, result.invokingAgentCommands);
@@ -161,6 +162,11 @@ public static class CommandManager
                 .Any();
     }
 
+    public static bool InvalidCommandInCollection(IEnumerable<Command> commands)
+    {
+        return commands.Any(c => c.status == Command.Status.Invalid);
+    }
+
     public static void TrimUnnecessaryMoveCommands(ref Command[] commands)
     {
         Command[] trimmed = commands
@@ -175,6 +181,7 @@ public static class CommandManager
                             .ToArray();
         commands = trimmed;
     }
+    
 
     public class CommandPackage
     {
@@ -248,17 +255,22 @@ public static class CommandManager
             valid = true;
         }
         
-        public bool QueueCommands(RoundClock.ProgressMode mode)
+        public bool QueueCommands(RoundClock.ProgressMode mode, ResourceManager resourceManager)
         {
 
             switch (mode)
             {
                 case RoundClock.ProgressMode.TurnBased:
                     if (!CanQueueCommands()) return false;
-                    else agent.QueueCommands(commands.ToArray());
+                    else
+                    {
+                        resourceManager.ProcessCommands(commands);
+                        agent.QueueCommands(commands.Where(c => c.status != Command.Status.Invalid).ToArray());
+                    }
                     break;
                 case RoundClock.ProgressMode.RealTime:
-                    agent.OverwriteQueue(commands.ToArray());
+                    resourceManager.ProcessCommands(commands);
+                    agent.OverwriteQueue(commands.Where(c => c.status != Command.Status.Invalid).ToArray());
                     break;
             }
             return true;
