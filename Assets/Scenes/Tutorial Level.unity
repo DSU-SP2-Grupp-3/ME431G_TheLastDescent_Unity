@@ -593,6 +593,63 @@ MonoBehaviour:
   - {fileID: 318788372}
   - {fileID: 318788371}
   - {fileID: 318788370}
+--- !u!1001 &333945064
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 690518528880905423, guid: 053b737091bec4345b1e5b410a53ec2d, type: 3}
+      propertyPath: m_Name
+      value: AudioCollidersLv1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3540914354825592105, guid: 053b737091bec4345b1e5b410a53ec2d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -10.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3540914354825592105, guid: 053b737091bec4345b1e5b410a53ec2d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3540914354825592105, guid: 053b737091bec4345b1e5b410a53ec2d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -99.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3540914354825592105, guid: 053b737091bec4345b1e5b410a53ec2d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3540914354825592105, guid: 053b737091bec4345b1e5b410a53ec2d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3540914354825592105, guid: 053b737091bec4345b1e5b410a53ec2d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3540914354825592105, guid: 053b737091bec4345b1e5b410a53ec2d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3540914354825592105, guid: 053b737091bec4345b1e5b410a53ec2d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3540914354825592105, guid: 053b737091bec4345b1e5b410a53ec2d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3540914354825592105, guid: 053b737091bec4345b1e5b410a53ec2d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 053b737091bec4345b1e5b410a53ec2d, type: 3}
 --- !u!1 &335440081
 GameObject:
   m_ObjectHideFlags: 0
@@ -2245,6 +2302,17 @@ BoxCollider:
   m_CorrespondingSourceObject: {fileID: 6886603851643640008, guid: e5b04e820c5e6344fb250dce6090da40, type: 3}
   m_PrefabInstance: {fileID: 535268853}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &549986661 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8951907812052039266, guid: 0f123977ee723bf40b5c3d46180c89bf, type: 3}
+  m_PrefabInstance: {fileID: 705466215}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48cc78417f8ded94a9147b015bbf43da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &558968073 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3977792012957004367, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
@@ -2426,9 +2494,6 @@ MonoBehaviour:
   ParameterName: Parameter 1
   eventScriptable: {fileID: 11400000, guid: 48efc4c2b574ce943a8fdfefb3051c27, type: 2}
   eventMono: {fileID: 0}
-  unityEvent:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &596255649
 GameObject:
   m_ObjectHideFlags: 0
@@ -2479,9 +2544,6 @@ MonoBehaviour:
   ParameterName: Parameter 1
   eventScriptable: {fileID: 11400000, guid: 48efc4c2b574ce943a8fdfefb3051c27, type: 2}
   eventMono: {fileID: 0}
-  unityEvent:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &596255652
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3775,6 +3837,34 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3236223146473153483, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
+      propertyPath: unityEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3236223146473153483, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
+      propertyPath: unityEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3236223146473153483, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
+      propertyPath: unityEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 549986661}
+    - target: {fileID: 3236223146473153483, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
+      propertyPath: unityEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PlayAudioEvent
+      objectReference: {fileID: 0}
+    - target: {fileID: 3236223146473153483, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
+      propertyPath: unityEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: AudioManager, Programming
+      objectReference: {fileID: 0}
+    - target: {fileID: 3236223146473153483, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
+      propertyPath: unityEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 11400000, guid: 9104f0682f655a54e81a1df85a023753, type: 2}
+    - target: {fileID: 3236223146473153483, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
+      propertyPath: unityEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: EventScriptable, Programming
+      objectReference: {fileID: 0}
     - target: {fileID: 4005052351877550886, guid: 5e6061a3390326647aeb4d9b16d11e87, type: 3}
       propertyPath: player
       value: 
@@ -4699,9 +4789,6 @@ MonoBehaviour:
   ParameterName: Parameter 1
   eventScriptable: {fileID: 11400000, guid: 48efc4c2b574ce943a8fdfefb3051c27, type: 2}
   eventMono: {fileID: 0}
-  unityEvent:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1001 &1223478480
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6269,9 +6356,6 @@ MonoBehaviour:
   ParameterName: Parameter 1
   eventScriptable: {fileID: 11400000, guid: 48efc4c2b574ce943a8fdfefb3051c27, type: 2}
   eventMono: {fileID: 0}
-  unityEvent:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &1694805188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9168,5 +9252,6 @@ SceneRoots:
   - {fileID: 2283570251571743805}
   - {fileID: 1044616999}
   - {fileID: 705466215}
+  - {fileID: 333945064}
   - {fileID: 4101094449080838059}
   - {fileID: 1730912340}

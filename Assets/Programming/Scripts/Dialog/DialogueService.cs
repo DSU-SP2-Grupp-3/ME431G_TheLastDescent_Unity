@@ -88,9 +88,12 @@ public class DialogueService : Service<DialogueService>
 
             skipping = false;
             WrittenSentence = "";
+            textField.text = sentence;
+            textField.maxVisibleCharacters = 0;
             ClickCheck = StartCoroutine(OnMouseClick());
             yield return StartCoroutine(DisplayNextLetter());
-            textField.text = sentence;
+            WrittenSentence = sentence;
+            textField.maxVisibleCharacters = int.MaxValue;
             if (ClickCheck != null) StopCoroutine(ClickCheck);
             yield return ClickCheck = StartCoroutine(OnMouseClick());
         }
@@ -106,7 +109,7 @@ public class DialogueService : Service<DialogueService>
             }
             unityEvent.Invoke();
             WrittenSentence += letters.Dequeue();
-            textField.text = WrittenSentence;
+            textField.maxVisibleCharacters += 1;
             yield return turbo ? null : new WaitForSeconds(0.04f);
         }
     }

@@ -190,14 +190,12 @@ public class AgentManager : Service<AgentManager>
 
     public void LockAgentInputActive(object objectLock)
     {
-        Debug.Log($"lock: {objectLock.GetType()}");
         agentInputActive.Lock(objectLock);
         currentClickAbility = null;
     }
 
     public void UnlockAgentInputActive(object objectLock)
     {
-        Debug.Log($"unlock: {objectLock.GetType()}");
         agentInputActive.Unlock(objectLock);
     }
 
