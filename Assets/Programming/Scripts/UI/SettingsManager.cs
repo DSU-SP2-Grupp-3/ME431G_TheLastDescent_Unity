@@ -14,6 +14,8 @@ public class SettingsManager : Service<SettingsManager>
     public Slider MusicSlider;
     public Slider AmbienceSlider;
     public Slider DialogueSlider;
+
+    public Slider UIScaleSlider;
     
     [SerializeField] private Material pathMaterial;
     [SerializeField] private Material indicatorMaterial;
@@ -37,6 +39,13 @@ public class SettingsManager : Service<SettingsManager>
     public void AmbianceVol() { AudioSettings.Instance.ambienceVolume = AmbienceSlider.value; AudioSettings.Instance.UpdateVolumes(); AudioSettings.Instance.SetVolumes();}
     public void DialogVol() { AudioSettings.Instance.dialogueVolume = DialogueSlider.value; AudioSettings.Instance.UpdateVolumes(); AudioSettings.Instance.SetVolumes();}
 
+    public void SetUIScale()
+    {
+        // todo: slider don't work
+        storedSettings.UIScale = UIScaleSlider.value;
+        storedSettings.SetUIScale();
+    }
+    
     private void Start()
     {
         storedSettings.TriggerAll();
@@ -45,6 +54,8 @@ public class SettingsManager : Service<SettingsManager>
         MusicSlider.value = storedSettings.musicVolume;
         AmbienceSlider.value = storedSettings.ambienceVolume;
         DialogueSlider.value = storedSettings.dialogueVolume;
+
+        UIScaleSlider.value = storedSettings.UIScale;
         
         storedSettings.PathColorEvent += UpdatePathColor;
         storedSettings.IndicatorColorEvent += UpdateIndicatorColor;
