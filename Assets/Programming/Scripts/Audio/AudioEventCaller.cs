@@ -8,6 +8,25 @@ public class AudioEventCaller : MonoBehaviour
     public string ParameterName;
     public EventScriptable eventScriptable;
     public EventMono eventMono;
+    public void Play()
+    {
+        Locator<AudioManager> locator = new();
+        if (locator.TryGet(out AudioManager locatedService))
+        {
+            if (eventMono != null)
+            {
+                locatedService.PlayAudioEvent(eventMono);
+            }
+            else if (eventScriptable != null)
+            {
+                locatedService.PlayAudioEvent(eventScriptable);
+            }
+            else
+            {
+                locatedService.PlayAudioEvent(eventPlayerName);
+            }
+        }
+    }
 
     public void SetValueAndPlay(float value)
     {
