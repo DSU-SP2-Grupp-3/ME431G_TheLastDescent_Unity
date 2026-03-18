@@ -9,11 +9,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6244260452407143535}
-  - component: {fileID: 3840094354615226007}
+  - component: {fileID: 5417761104712582230}
   - component: {fileID: 1945054009305223155}
   - component: {fileID: 7765190789202659685}
   - component: {fileID: 6978570600712175299}
   - component: {fileID: 5702298990403853912}
+  - component: {fileID: 3840094354615226007}
   m_Layer: 8
   m_Name: ResourceInteractable1
   m_TagString: Untagged
@@ -38,7 +39,7 @@ Transform:
   - {fileID: 5433452459849785208}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3840094354615226007
+--- !u!114 &5417761104712582230
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -47,11 +48,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2224139825504244276}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 590f4f46cafb4fc4aa513a424d5452e0, type: 3}
+  m_Script: {fileID: 11500000, guid: 85f6b8e413cdf03468620b9dacf7dc70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resourceAmount: 1
-  resourceManager: {fileID: 11400000, guid: a55934158469adf489180ec33b476178, type: 2}
+  amount: 1
 --- !u!65 &1945054009305223155
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -130,6 +130,20 @@ MonoBehaviour:
   relativePosition: {x: 0, y: 0, z: 0}
   range: 1.5
   lineOfSightTarget: {fileID: 0}
+--- !u!114 &3840094354615226007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2224139825504244276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 590f4f46cafb4fc4aa513a424d5452e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resource: {fileID: 5417761104712582230}
+  resourceManager: {fileID: 11400000, guid: a55934158469adf489180ec33b476178, type: 2}
 --- !u!1 &8359022353059709296
 GameObject:
   m_ObjectHideFlags: 0

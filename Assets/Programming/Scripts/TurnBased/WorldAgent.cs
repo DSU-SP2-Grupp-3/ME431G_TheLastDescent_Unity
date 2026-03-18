@@ -68,7 +68,7 @@ public class WorldAgent : MonoBehaviour
                              "meaning the first debuff received is the first element in the list")]
     private DebuffLevel[] debuffLevels;
     private int currentDebuffLevel;
-    
+
     private DamageManager damageManager;
 
     public int actorID;
@@ -129,7 +129,11 @@ public class WorldAgent : MonoBehaviour
         am.RegisterAgent(this);
         damageManager = am.damageManager;
 
-        if (localStats && team == Team.Player) localStats.temperature.Changed += UpdateDebuffLevel;
+        if (localStats && team == Team.Player)
+        {
+            localStats.temperature.Changed += UpdateDebuffLevel;
+            UpdateDebuffLevel(localStats.temperature);
+        }
 
         //subscribe TakeDamage to the DamageManager of the PlayerManager
         damageManager.DealDamageEvent += TakeDamage;
@@ -171,7 +175,7 @@ public class WorldAgent : MonoBehaviour
 
     private void ExitTurnBased(TurnManager _)
     {
-        InterruptCommandQueue();
+        if (team != Team.Interactable) InterruptCommandQueue();
         if (reviveAfterCombat && dead)
         {
             float autoReviveAmount = localStats.initHitPoints * reviveHitPointPortion;
@@ -235,6 +239,7 @@ public class WorldAgent : MonoBehaviour
         agentManager.Get().resourceManager.RemoveCommands(commandQueue);
         commandQueue.Clear();
         commandPacketSizes.Clear();
+        if (localStats) localStats.actionPoints.value = localStats.initActionPoints;
         CommandQueueUpdated?.Invoke(this, commandQueue, null);
     }
 
@@ -250,7 +255,7 @@ public class WorldAgent : MonoBehaviour
             {
                 Command command = commandArray[i];
                 shortenedQueue.Enqueue(command);
-                resourceManager.QueueResource(command);
+                resourceManager.ProcessCommand(command);
                 if (localStats) localStats.actionPoints.value -= command.apCost;
             }
             commandQueue = shortenedQueue;
@@ -372,7 +377,7 @@ public class WorldAgent : MonoBehaviour
             }
         }
         if (!broke) currentDebuffLevel = debuffLevels.Length;
-        
+
         int difference = currentDebuffLevel - previousLevel;
 
         if (difference > 0) // debuffs should be applied in forward order
@@ -382,7 +387,7 @@ public class WorldAgent : MonoBehaviour
                 debuffLevels[i].debuff.Apply(this);
                 OnDebuffApplied?.Invoke(debuffLevels[i]);
             }
-        } 
+        }
         else if (difference < 0) // debuffs should be removed in reverse order
         {
             for (int i = previousLevel - 1; i >= currentDebuffLevel; i--)
@@ -426,19 +431,19 @@ public class WorldAgent : MonoBehaviour
         AnimationEventTriggered?.Invoke(id, gameObject);
     }
 
-    public IEnumerable<GameObject> ResourceObjectsInQueue()
+    public IEnumerable<Resource> ResourceObjectsInQueue()
     {
-        return commandQueue.Where(c => c is GetResourceCommand).Select(r => (r as GetResourceCommand).resourceObject);
+        return commandQueue.Where(c => c is GetResourceCommand).Select(r => (r as GetResourceCommand).resource);
     }
-    
+
     [Serializable]
     public class DebuffLevel : IComparable<DebuffLevel>
     {
-        [Range(0f, 1f), Tooltip("The temperature under which the debuff should apply")]
+        [Range(0f, 1.1f), Tooltip("The temperature under which the debuff should apply")]
         public float whileUnder;
         [Tooltip("The debuff to apply")]
         public Debuff debuff;
-        
+
         public int CompareTo(DebuffLevel level)
         {
             if (level == null) return 1;

@@ -27,6 +27,8 @@ public class DialogueService : Service<DialogueService>
     public bool isDone;
     public UnityEvent unityEvent;
 
+    private bool turbo = false;
+
     private void Awake()
     {
         Register();
@@ -34,6 +36,8 @@ public class DialogueService : Service<DialogueService>
     public IEnumerator InitializeDialouge(Dialogue[] dialogues)
     {
         ani.Play("DialogueStart");
+        
+        // todo: maybe don't clear dialogues here to prevent funky stuff if triggering two dialogues at the same time??
         this.dialogues.Clear();
         foreach (Dialogue dialogue in dialogues)
         {
@@ -84,9 +88,12 @@ public class DialogueService : Service<DialogueService>
 
             skipping = false;
             WrittenSentence = "";
+            textField.text = sentence;
+            textField.maxVisibleCharacters = 0;
             ClickCheck = StartCoroutine(OnMouseClick());
             yield return StartCoroutine(DisplayNextLetter());
-            textField.text = sentence;
+            WrittenSentence = sentence;
+            textField.maxVisibleCharacters = int.MaxValue;
             if (ClickCheck != null) StopCoroutine(ClickCheck);
             yield return ClickCheck = StartCoroutine(OnMouseClick());
         }
@@ -102,16 +109,16 @@ public class DialogueService : Service<DialogueService>
             }
             unityEvent.Invoke();
             WrittenSentence += letters.Dequeue();
-            textField.text = WrittenSentence;
-            yield return new WaitForSeconds(0.04f);
+            textField.maxVisibleCharacters += 1;
+            yield return turbo ? null : new WaitForSeconds(0.04f);
         }
     }
     public IEnumerator OnMouseClick()
     {
-        yield return new WaitForSeconds(0.01f);
+        yield return turbo ? null : new WaitForSeconds(0.01f);
         while (true)
         {
-            if (Input.GetMouseButtonDown(1))
+            if (Input.GetMouseButtonDown(1) || turbo)
             {
                 skipping = true;
                 yield break;
@@ -123,5 +130,10 @@ public class DialogueService : Service<DialogueService>
     private void EndDialogue()
     {
         //-Ma. Ran dialogue
+    }
+
+    public void Turbo(bool value)
+    {
+        turbo = value;
     }
 }

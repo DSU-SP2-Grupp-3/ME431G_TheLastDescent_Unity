@@ -7,15 +7,15 @@ public class DialogueCommand : Command
     private Locator<DialogueService> dialogueServiceLocator;
     private DialogueService dialogueService;
     private DialogueScriptable dialogueScriptable;
-    private InputManager inputManager;
+    private AgentManager agentManager;
     public DialogueCommand(DialogueScriptable dialogueScriptable, WorldAgent invokingAgent) : base(invokingAgent)
     {
         this.dialogueScriptable = dialogueScriptable;
     }
     protected override IEnumerator Execute()
     {
-        inputManager = new Locator<InputManager>().Get();
-        Button turnBasedButton = new Locator<ToggleTurnBasedButton>().Get().GetComponent<Button>();
+        agentManager = new Locator<AgentManager>().Get();
+        ToggleTurnBasedButton turnBasedButton = new Locator<ToggleTurnBasedButton>().Get();
         RoundClock roundClock = new Locator<RoundClock>().Get();
         bool dialoguePausedRoundClock = false;
 
@@ -23,18 +23,16 @@ public class DialogueCommand : Command
 
         if (dialogueServiceLocator.TryGet(out dialogueService))
         {
-            if (turnBasedButton) turnBasedButton.interactable = false;
             if (roundClock.currentMode == RoundClock.ProgressMode.RealTime)
             {
                 dialoguePausedRoundClock = true;
                 roundClock.EnterTurnBased();
             }
-            inputManager.enabled = false;
+
+            agentManager.LockAgentInputActive(this);
             yield return dialogueService.StartCoroutine(
                 dialogueService.InitializeDialouge(dialogueScriptable.GetDialogues()));
-            Debug.Log("Done");
-            inputManager.enabled = true;
-            if (turnBasedButton) turnBasedButton.interactable = true;
+            agentManager.UnlockAgentInputActive(this);
 
             if (dialoguePausedRoundClock)
             {

@@ -5,40 +5,37 @@ using UnityEngine;
 
 public class GetResourceCommand : Command
 {
-    public override float apCost { get; }
-    public override float resourceCost => -amount;
+    public override float apCost => 0f;
+    public override float resourceCost => 0f;
 
-    private float amount;
+    private float amount => resource.amount;
     private ResourceManager manager;
 
-    public GameObject resourceObject;
+    public Resource resource;
 
     public GetResourceCommand(
         WorldAgent invokingAgent,
         ResourceManager manager,
-        float amount,
-        GameObject resourceObject
+        Resource resource
     ) : base(invokingAgent)
     {
-        this.amount = amount;
         this.manager = manager;
-        this.resourceObject = resourceObject;
+        this.resource = resource;
 
-        // check if the object has been queued in turn based and already collected in realtime
-        IEnumerable<GameObject> collection = invokingAgent.manager.mode switch
+        // check if the object has been queued or already collected
+        bool collectedOrQueued = 
+            manager.collectedResourceObjects.Union(invokingAgent.ResourceObjectsInQueue()).Contains(resource);
+
+        // if so, set status to invalid to prevent queueing
+        if (collectedOrQueued)
         {
-            RoundClock.ProgressMode.RealTime => manager.collectedResourceObjects,
-            RoundClock.ProgressMode.TurnBased => invokingAgent.ResourceObjectsInQueue()
-        };
-
-        // if so set the amount of this command to 0 to prevent exploits when spamclicking a resource
-        if (collection.Contains(resourceObject)) this.amount = 0f;
-
+            status = Status.Invalid;
+        }
     }
 
     protected override IEnumerator Execute()
     {
-        manager.PayResource(this, resourceObject);
+        manager.GetResource(resource);
         return null;
     }
 

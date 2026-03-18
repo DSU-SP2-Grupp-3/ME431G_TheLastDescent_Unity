@@ -59,6 +59,7 @@ public class MoveInRangeCommand : Command, IMoveCommand
         }
         float lackingDistance = Vector3.Distance(agentPath.corners.Last(), toPosition);
         possible = agentPath.status != NavMeshPathStatus.PathInvalid || lackingDistance > range;
+
         if (possible)
         {
             TrimToLength(ref agentPath, range, toPosition);
