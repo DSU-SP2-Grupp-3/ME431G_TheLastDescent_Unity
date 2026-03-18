@@ -16,7 +16,8 @@ public class SelectionIndicator : MonoBehaviour
     public void DisableIndicator()
     {
         targetGameObject = null;
-        transform.position = new Vector3(0, -100, 0);
+        transform.position = new Vector3(0, 100000, 0);
+        
         active = false;
     }
 
