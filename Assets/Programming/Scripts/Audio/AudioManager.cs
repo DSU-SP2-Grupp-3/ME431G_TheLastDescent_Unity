@@ -162,11 +162,9 @@ public class AudioManager : Service<AudioManager>
 
     public bool IsPlaying(EventReference eventReference)
     {
-        UnityEngine.Debug.Log("Tried");
         if (TryGet(eventReference, out EventPlayer player))
         {
-            UnityEngine.Debug.Log(player.IsFinished());
-            return !player.IsFinished();
+            return player.IsFinished();
         }
         return true;
 
