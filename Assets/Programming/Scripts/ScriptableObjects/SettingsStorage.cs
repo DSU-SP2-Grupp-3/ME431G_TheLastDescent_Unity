@@ -22,6 +22,9 @@ public class SettingsStorage : ScriptableObject
 
     public Color DamageColor;
     public Color HealColor;
+
+    [Header("Display")]
+    public float UIScale;
     
     //-E i have to make events :(
     public void TriggerAll() //just triggers all the events <3
@@ -54,4 +57,7 @@ public class SettingsStorage : ScriptableObject
     
     //heal pop, might not get used but it now exists at least?
     public UnityAction HealPopColorEvent = delegate{}; public void SetHealColor() { HealPopColorEvent(); }
+
+    public UnityAction UIScaleEvent = delegate { };
+    public void SetUIScale() { UIScaleEvent(); }
 }

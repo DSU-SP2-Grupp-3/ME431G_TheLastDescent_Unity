@@ -1088,6 +1088,7 @@ GameObject:
   - component: {fileID: 591217829883774}
   - component: {fileID: 8348170990045896760}
   - component: {fileID: 7005138121133212806}
+  - component: {fileID: 5731520460854379015}
   m_Layer: 8
   m_Name: DialogueCommand (1)
   m_TagString: Untagged
@@ -1209,6 +1210,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 5731520460854379015}
+        m_TargetAssemblyTypeName: AudioEventCaller, Programming
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &8348170990045896760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1249,6 +1262,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+--- !u!114 &5731520460854379015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3360429611628297317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f019bf334f849e409d192c88a968d82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventPlayerName: 
+  ParameterName: 
+  eventScriptable: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
+  eventMono: {fileID: 0}
 --- !u!1 &3408488678037616874
 GameObject:
   m_ObjectHideFlags: 0
@@ -1406,6 +1435,7 @@ GameObject:
   - component: {fileID: 7520485897677064212}
   - component: {fileID: 932798456709911230}
   - component: {fileID: 751498945463195134}
+  - component: {fileID: 5039485808534817882}
   m_Layer: 8
   m_Name: DialogueCommand
   m_TagString: Untagged
@@ -1527,6 +1557,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 5039485808534817882}
+        m_TargetAssemblyTypeName: AudioEventCaller, Programming
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &932798456709911230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1567,6 +1609,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+--- !u!114 &5039485808534817882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3807898570156937877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f019bf334f849e409d192c88a968d82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventPlayerName: 
+  ParameterName: 
+  eventScriptable: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
+  eventMono: {fileID: 0}
 --- !u!1 &3832717740560048417
 GameObject:
   m_ObjectHideFlags: 0
@@ -1753,7 +1811,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f68328fb842c2cb469fdf606a01297f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueScriptable: {fileID: 11400000, guid: 8209c4c1504be394891b38216a1046a2, type: 2}
+  dialogueScriptable: {fileID: 11400000, guid: ccae6f0bb5090a04eb86d5b6e3bc14e6, type: 2}
 --- !u!114 &2520603249615009923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2265,6 +2323,7 @@ GameObject:
   - component: {fileID: 4502055859677357402}
   - component: {fileID: 7992976980262781941}
   - component: {fileID: 7854134621289150243}
+  - component: {fileID: 579395790087796407}
   m_Layer: 8
   m_Name: DialogueCommand (1)
   m_TagString: Untagged
@@ -2386,6 +2445,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 579395790087796407}
+        m_TargetAssemblyTypeName: AudioEventCaller, Programming
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &7992976980262781941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2426,6 +2497,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+--- !u!114 &579395790087796407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6605468215074341653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f019bf334f849e409d192c88a968d82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventPlayerName: 
+  ParameterName: 
+  eventScriptable: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
+  eventMono: {fileID: 0}
 --- !u!1 &6623232236950493877
 GameObject:
   m_ObjectHideFlags: 0
@@ -2682,7 +2769,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f68328fb842c2cb469fdf606a01297f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueScriptable: {fileID: 11400000, guid: 8209c4c1504be394891b38216a1046a2, type: 2}
+  dialogueScriptable: {fileID: 11400000, guid: ccae6f0bb5090a04eb86d5b6e3bc14e6, type: 2}
 --- !u!114 &8616793413395676727
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3093,6 +3180,7 @@ GameObject:
   - component: {fileID: 4516116600384173048}
   - component: {fileID: 6186610271030575654}
   - component: {fileID: 3260158222744597901}
+  - component: {fileID: 5508291696827409439}
   m_Layer: 8
   m_Name: DialogueCommand
   m_TagString: Untagged
@@ -3214,6 +3302,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 5508291696827409439}
+        m_TargetAssemblyTypeName: AudioEventCaller, Programming
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &6186610271030575654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3254,6 +3354,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+--- !u!114 &5508291696827409439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7189796780469355106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f019bf334f849e409d192c88a968d82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventPlayerName: 
+  ParameterName: 
+  eventScriptable: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
+  eventMono: {fileID: 0}
 --- !u!1 &7285752035432857832
 GameObject:
   m_ObjectHideFlags: 0
@@ -3269,6 +3385,7 @@ GameObject:
   - component: {fileID: 104189078986675007}
   - component: {fileID: 1822524896065008343}
   - component: {fileID: 3502561097102611909}
+  - component: {fileID: 8042196040537416314}
   m_Layer: 8
   m_Name: DialogueCommand (1)
   m_TagString: Untagged
@@ -3378,10 +3495,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
-        m_MethodName: set_enabled
-        m_Mode: 6
+      - m_Target: {fileID: 8042196040537416314}
+        m_TargetAssemblyTypeName: AudioEventCaller, Programming
+        m_MethodName: Play
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3430,6 +3547,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+--- !u!114 &8042196040537416314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7285752035432857832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f019bf334f849e409d192c88a968d82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventPlayerName: 
+  ParameterName: 
+  eventScriptable: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
+  eventMono: {fileID: 0}
 --- !u!1 &7427105212005935844
 GameObject:
   m_ObjectHideFlags: 0
@@ -3830,6 +3963,7 @@ GameObject:
   - component: {fileID: 2004218162791670482}
   - component: {fileID: 8461359369348150227}
   - component: {fileID: 4534527565671990838}
+  - component: {fileID: 3929619870464294891}
   m_Layer: 8
   m_Name: DialogueCommand
   m_TagString: Untagged
@@ -3951,6 +4085,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 3929619870464294891}
+        m_TargetAssemblyTypeName: AudioEventCaller, Programming
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &8461359369348150227
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3963,7 +4109,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f68328fb842c2cb469fdf606a01297f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueScriptable: {fileID: 11400000, guid: 5691bad5c10db7947820cde93d121c9d, type: 2}
+  dialogueScriptable: {fileID: 11400000, guid: d8b130cc987f9c44080b8d10cab4964d, type: 2}
 --- !u!114 &4534527565671990838
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3991,6 +4137,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+--- !u!114 &3929619870464294891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7964574195197343738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f019bf334f849e409d192c88a968d82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventPlayerName: 
+  ParameterName: 
+  eventScriptable: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
+  eventMono: {fileID: 0}
 --- !u!1 &8249041329521505355
 GameObject:
   m_ObjectHideFlags: 0

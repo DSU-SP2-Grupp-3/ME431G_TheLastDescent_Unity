@@ -39,10 +39,12 @@ public class AgentManager : Service<AgentManager>
     private ClickAbility currentClickAbility;
     private WorldAgent portraitAgent;
 
-    private bool agentInputActive = true;
+    private LockPool agentInputActive;
 
     private void Awake()
     {
+        agentInputActive = new();
+
         Register();
         players = new();
         allAgents = new();
@@ -56,7 +58,7 @@ public class AgentManager : Service<AgentManager>
     {
         InputManager im = inputManager.Get();
         im.OnHover += PreviewCommand;
-        im.OnLeftClick += ProcessRightClick;
+        im.OnLeftClick += ProcessLeftClick;
         im.OnLeftHold += ProcessHold;
         im.OnRightClick += () => currentClickAbility = null;
         modeSwitcher.Get().OnEnterTurnBased += (_) => allPlayersSelected = false;
@@ -109,7 +111,7 @@ public class AgentManager : Service<AgentManager>
         PreviewUpdated?.Invoke(currentCommandPackage);
     }
 
-    private void ProcessRightClick()
+    private void ProcessLeftClick()
     {
         if (!agentInputActive) return;
         if (currentCommandPackage.empty) return;
@@ -186,10 +188,25 @@ public class AgentManager : Service<AgentManager>
         }
     }
 
-    public void SetAgentInputActive(bool active)
+    public void LockAgentInputActive(object objectLock)
     {
-        agentInputActive = active;
+        agentInputActive.Lock(objectLock);
         currentClickAbility = null;
+    }
+
+    public void UnlockAgentInputActive(object objectLock)
+    {
+        agentInputActive.Unlock(objectLock);
+    }
+
+    public void LockAgentInputActive(GameObject objectLock)
+    {
+        LockAgentInputActive(objectLock as object);
+    }
+
+    public void UnlockAgentInputActive(GameObject objectLock)
+    {
+        UnlockAgentInputActive(objectLock as object);
     }
 
     public void SetClickAbility(ClickAbility clickAbility)
