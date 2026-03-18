@@ -173,7 +173,7 @@ public class Visualizer : MonoBehaviour
     public void DrawPreviewPath(NavMeshPath previewPath)
     {
         previewLineRenderer.positionCount = previewPath.corners.Length;
-        previewLineRenderer.SetPositions(previewPath.corners);
+        previewLineRenderer.SetPositions(validatePath(previewPath.corners));
     }
 
     public void DrawExecutingPath(NavMeshPath executingPath, WorldAgent agent)
@@ -183,7 +183,44 @@ public class Visualizer : MonoBehaviour
 
         LineRenderer executionLineRenderer = agentVisualizeTools[agent].executionLineRenderer;
         executionLineRenderer.positionCount = executingPath.corners.Length;
-        executionLineRenderer.SetPositions(executingPath.corners);
+        executionLineRenderer.SetPositions(validatePath(executingPath.corners));
+    }
+
+    public float validHeightDifference;
+    private Vector3[] validatePath(Vector3[] input)
+    {
+        for (int i = 0; i < input.Length - 1; i++)
+        {
+            if(Mathf.Abs(input[i+1].y - input[i].y) > validHeightDifference)
+            {
+                Debug.Log("Too Tall :(");
+            }
+        }
+        return input;
+    }
+
+    private Vector3[] insertAt(Vector3[] path, int index, Vector3 node) //add an overload for an array too maybe?
+    {
+        if (index > path.Length)
+        {
+            Debug.Log("index out of bounds :(");
+            return path;
+        }
+        Vector3[] output = new Vector3[path.Length+1];
+        
+        for (int i = 0; i < index; i++)
+        {
+            output[i] = path[i];
+        }
+        
+        output[index] = node;
+        
+        for (int i = index; i < output.Length + 1; i++)
+        {
+            output[i + 1] = path[i];
+        }
+        
+        return output;
     }
 
     private class VisualizeTools
