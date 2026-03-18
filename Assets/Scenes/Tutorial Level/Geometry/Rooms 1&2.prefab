@@ -1088,6 +1088,8 @@ GameObject:
   - component: {fileID: 8348170990045896760}
   - component: {fileID: 7005138121133212806}
   - component: {fileID: 5731520460854379015}
+  - component: {fileID: 1922103546289035515}
+  - component: {fileID: 2648946123856016640}
   m_Layer: 8
   m_Name: DialogueCommand (1)
   m_TagString: Untagged
@@ -1126,9 +1128,11 @@ MonoBehaviour:
   playerCommands:
   - {fileID: 8234779246939680995}
   interactableCommands:
+  - {fileID: 1922103546289035515}
   - {fileID: 591217829883774}
   - {fileID: 8348170990045896760}
   - {fileID: 7005138121133212806}
+  - {fileID: 2648946123856016640}
 --- !u!114 &8234779246939680995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1277,6 +1281,38 @@ MonoBehaviour:
   ParameterName: 
   eventScriptable: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
   eventMono: {fileID: 0}
+--- !u!114 &1922103546289035515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3360429611628297317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dab778056d896cf4b982fcbc86692187, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  startTrigger: Start
+  endTrigger: 
+  hasEndAnimation: 0
+--- !u!114 &2648946123856016640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3360429611628297317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dab778056d896cf4b982fcbc86692187, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  startTrigger: End
+  endTrigger: 
+  hasEndAnimation: 0
 --- !u!1 &3408488678037616874
 GameObject:
   m_ObjectHideFlags: 0
@@ -1430,11 +1466,12 @@ GameObject:
   - component: {fileID: 1962354868712999435}
   - component: {fileID: 6789014001257919914}
   - component: {fileID: 8549685330101927055}
-  - component: {fileID: 1668535260512958545}
   - component: {fileID: 7520485897677064212}
   - component: {fileID: 932798456709911230}
   - component: {fileID: 751498945463195134}
   - component: {fileID: 5039485808534817882}
+  - component: {fileID: 6886608362942726681}
+  - component: {fileID: 315073923167204618}
   m_Layer: 8
   m_Name: DialogueCommand
   m_TagString: Untagged
@@ -1473,8 +1510,10 @@ MonoBehaviour:
   playerCommands:
   - {fileID: 8549685330101927055}
   interactableCommands:
+  - {fileID: 751498945463195134}
   - {fileID: 7520485897677064212}
   - {fileID: 932798456709911230}
+  - {fileID: 751498945463195134}
   - {fileID: 751498945463195134}
 --- !u!114 &8549685330101927055
 MonoBehaviour:
@@ -1489,22 +1528,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativePosition: {x: -1, y: 0, z: 0}
---- !u!114 &1668535260512958545
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3807898570156937877}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dab778056d896cf4b982fcbc86692187, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 9034302727842663578}
-  startTrigger: Open
-  endTrigger: 
-  hasEndAnimation: 0
 --- !u!114 &7520485897677064212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1624,6 +1647,38 @@ MonoBehaviour:
   ParameterName: 
   eventScriptable: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
   eventMono: {fileID: 0}
+--- !u!114 &6886608362942726681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3807898570156937877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dab778056d896cf4b982fcbc86692187, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  startTrigger: Start
+  endTrigger: 
+  hasEndAnimation: 0
+--- !u!114 &315073923167204618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3807898570156937877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dab778056d896cf4b982fcbc86692187, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  startTrigger: End
+  endTrigger: 
+  hasEndAnimation: 0
 --- !u!1 &3832717740560048417
 GameObject:
   m_ObjectHideFlags: 0
@@ -2318,11 +2373,12 @@ GameObject:
   - component: {fileID: 8618082858398684481}
   - component: {fileID: 8837194934775171794}
   - component: {fileID: 8728233504865353432}
-  - component: {fileID: 4357281158668812327}
   - component: {fileID: 4502055859677357402}
   - component: {fileID: 7992976980262781941}
   - component: {fileID: 7854134621289150243}
   - component: {fileID: 579395790087796407}
+  - component: {fileID: 1372895704047012891}
+  - component: {fileID: 8673942275155059252}
   m_Layer: 8
   m_Name: DialogueCommand (1)
   m_TagString: Untagged
@@ -2361,9 +2417,11 @@ MonoBehaviour:
   playerCommands:
   - {fileID: 8728233504865353432}
   interactableCommands:
+  - {fileID: 1372895704047012891}
   - {fileID: 4502055859677357402}
   - {fileID: 7992976980262781941}
   - {fileID: 7854134621289150243}
+  - {fileID: 8673942275155059252}
 --- !u!114 &8728233504865353432
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2377,22 +2435,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativePosition: {x: -1, y: 0, z: 0}
---- !u!114 &4357281158668812327
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6605468215074341653}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dab778056d896cf4b982fcbc86692187, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 9193522327744587451}
-  startTrigger: Open
-  endTrigger: 
-  hasEndAnimation: 0
 --- !u!114 &4502055859677357402
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2512,6 +2554,38 @@ MonoBehaviour:
   ParameterName: 
   eventScriptable: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
   eventMono: {fileID: 0}
+--- !u!114 &1372895704047012891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6605468215074341653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dab778056d896cf4b982fcbc86692187, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  startTrigger: Start
+  endTrigger: 
+  hasEndAnimation: 0
+--- !u!114 &8673942275155059252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6605468215074341653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dab778056d896cf4b982fcbc86692187, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  startTrigger: End
+  endTrigger: 
+  hasEndAnimation: 0
 --- !u!1 &6623232236950493877
 GameObject:
   m_ObjectHideFlags: 0
@@ -3175,11 +3249,12 @@ GameObject:
   - component: {fileID: 613399263555921848}
   - component: {fileID: 32318434358415247}
   - component: {fileID: 5649835181928206395}
-  - component: {fileID: 7222206283946035302}
   - component: {fileID: 4516116600384173048}
   - component: {fileID: 6186610271030575654}
   - component: {fileID: 3260158222744597901}
   - component: {fileID: 5508291696827409439}
+  - component: {fileID: 1127036805906566907}
+  - component: {fileID: 614297363793081044}
   m_Layer: 8
   m_Name: DialogueCommand
   m_TagString: Untagged
@@ -3218,9 +3293,11 @@ MonoBehaviour:
   playerCommands:
   - {fileID: 5649835181928206395}
   interactableCommands:
+  - {fileID: 1127036805906566907}
   - {fileID: 4516116600384173048}
   - {fileID: 6186610271030575654}
   - {fileID: 3260158222744597901}
+  - {fileID: 614297363793081044}
 --- !u!114 &5649835181928206395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3234,22 +3311,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativePosition: {x: -1, y: 0, z: 0}
---- !u!114 &7222206283946035302
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7189796780469355106}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dab778056d896cf4b982fcbc86692187, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 284446657392062031}
-  startTrigger: Open
-  endTrigger: 
-  hasEndAnimation: 0
 --- !u!114 &4516116600384173048
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3369,6 +3430,38 @@ MonoBehaviour:
   ParameterName: 
   eventScriptable: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
   eventMono: {fileID: 0}
+--- !u!114 &1127036805906566907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7189796780469355106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dab778056d896cf4b982fcbc86692187, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  startTrigger: Start
+  endTrigger: 
+  hasEndAnimation: 0
+--- !u!114 &614297363793081044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7189796780469355106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dab778056d896cf4b982fcbc86692187, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  startTrigger: End
+  endTrigger: 
+  hasEndAnimation: 0
 --- !u!1 &7285752035432857832
 GameObject:
   m_ObjectHideFlags: 0
@@ -3385,6 +3478,8 @@ GameObject:
   - component: {fileID: 1822524896065008343}
   - component: {fileID: 3502561097102611909}
   - component: {fileID: 8042196040537416314}
+  - component: {fileID: 3748014914985189912}
+  - component: {fileID: 3446092951401591483}
   m_Layer: 8
   m_Name: DialogueCommand (1)
   m_TagString: Untagged
@@ -3423,9 +3518,11 @@ MonoBehaviour:
   playerCommands:
   - {fileID: 4233647505205499095}
   interactableCommands:
+  - {fileID: 3748014914985189912}
   - {fileID: 104189078986675007}
   - {fileID: 1822524896065008343}
   - {fileID: 3502561097102611909}
+  - {fileID: 3446092951401591483}
 --- !u!114 &4233647505205499095
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3562,6 +3659,38 @@ MonoBehaviour:
   ParameterName: 
   eventScriptable: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
   eventMono: {fileID: 0}
+--- !u!114 &3748014914985189912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7285752035432857832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dab778056d896cf4b982fcbc86692187, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  startTrigger: Start
+  endTrigger: 
+  hasEndAnimation: 0
+--- !u!114 &3446092951401591483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7285752035432857832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dab778056d896cf4b982fcbc86692187, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  startTrigger: End
+  endTrigger: 
+  hasEndAnimation: 0
 --- !u!1 &7427105212005935844
 GameObject:
   m_ObjectHideFlags: 0
@@ -3957,11 +4086,12 @@ GameObject:
   - component: {fileID: 6144796849120323871}
   - component: {fileID: 5820467752998997072}
   - component: {fileID: 3177357853415240687}
-  - component: {fileID: 4800073615411552266}
   - component: {fileID: 2004218162791670482}
   - component: {fileID: 8461359369348150227}
   - component: {fileID: 4534527565671990838}
   - component: {fileID: 3929619870464294891}
+  - component: {fileID: 4566593978354723173}
+  - component: {fileID: 5826314861452937699}
   m_Layer: 8
   m_Name: DialogueCommand
   m_TagString: Untagged
@@ -4000,9 +4130,11 @@ MonoBehaviour:
   playerCommands:
   - {fileID: 3177357853415240687}
   interactableCommands:
+  - {fileID: 4566593978354723173}
   - {fileID: 2004218162791670482}
   - {fileID: 8461359369348150227}
   - {fileID: 4534527565671990838}
+  - {fileID: 5826314861452937699}
 --- !u!114 &3177357853415240687
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4016,22 +4148,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativePosition: {x: -1, y: 0, z: 0}
---- !u!114 &4800073615411552266
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7964574195197343738}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dab778056d896cf4b982fcbc86692187, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 9193522327744587451}
-  startTrigger: Open
-  endTrigger: 
-  hasEndAnimation: 0
 --- !u!114 &2004218162791670482
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4151,6 +4267,38 @@ MonoBehaviour:
   ParameterName: 
   eventScriptable: {fileID: 11400000, guid: be6f92e1021ebca4bbc0f32b84dc5a90, type: 2}
   eventMono: {fileID: 0}
+--- !u!114 &4566593978354723173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7964574195197343738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dab778056d896cf4b982fcbc86692187, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  startTrigger: Start
+  endTrigger: 
+  hasEndAnimation: 0
+--- !u!114 &5826314861452937699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7964574195197343738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dab778056d896cf4b982fcbc86692187, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  startTrigger: End
+  endTrigger: 
+  hasEndAnimation: 0
 --- !u!1 &8249041329521505355
 GameObject:
   m_ObjectHideFlags: 0
