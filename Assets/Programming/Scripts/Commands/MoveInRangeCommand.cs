@@ -11,6 +11,7 @@ public class MoveInRangeCommand : Command, IMoveCommand
         get
         {
             float length = 0;
+            if (agentPath.corners.Length == 0) return length;
             for (int i = 1; i < agentPath.corners.Length; i++)
             {
                 length += (agentPath.corners[i] - agentPath.corners[i - 1]).magnitude;
@@ -34,8 +35,8 @@ public class MoveInRangeCommand : Command, IMoveCommand
     private const float playEndAnimationDistance = 0.5f;
     private const float ignoreMovementDistance = 0.1f;
     private const float interruptTime = 20f;
-    private const int trimSampleResoltion = 5;
-    private const int findCompletePathIterations = 10;
+    private const float samplePointStepSize = 0.1f;
+    private const float samplePathStepSize = 0.2f;
 
     private WorldAgent lineOfSightTarget;
 
@@ -45,26 +46,68 @@ public class MoveInRangeCommand : Command, IMoveCommand
         base(invokingAgent)
     {
         fromPosition = invokingAgent.GetLastMoveCommandToPosition();
-        noMovement = Vector3.Distance(fromPosition, toPosition) <= range;
+        float distance = Vector3.Distance(fromPosition, toPosition);
+        noMovement = distance <= range;
         this.range = range;
         agentPath = new();
-        NavMesh.CalculatePath(fromPosition, toPosition, NavMesh.AllAreas, agentPath);
-        if (agentPath.status != NavMeshPathStatus.PathComplete)
+        
+        Vector3 toFrom = (fromPosition - toPosition).normalized;
+        float sampleLength = 0f;
+        
+        // find a valid path as close to the target as possible
+        // alternatively these points could be user defined by the move in range command wrapper
+        // check points between to and from position until a path is found
+        while (sampleLength <= distance && agentPath.status == NavMeshPathStatus.PathInvalid)
         {
-            if (!FindCompletePath(fromPosition, toPosition, ref agentPath))
+            // a point at distance sampleLength from toPosition toward fromPosition
+            Vector3 samplePosition = toPosition + toFrom * sampleLength;
+            if (NavMesh.SamplePosition(samplePosition, out NavMeshHit hit, 0f, NavMesh.AllAreas))
             {
-                possible = false;
-                return;
+                // if this point is on the NavMesh, calculate a path to it and break
+                // if the target is on the NavMesh this should be the same as calculating the path between from and to position
+                NavMesh.CalculatePath(fromPosition, hit.position, NavMesh.AllAreas, agentPath);
+                break;
             }
+            
+            sampleLength += samplePointStepSize;
         }
-        float lackingDistance = Vector3.Distance(agentPath.corners.Last(), toPosition);
-        possible = agentPath.status != NavMeshPathStatus.PathInvalid || lackingDistance > range;
 
-        if (possible)
+        // if no point between to and from is valid this command is invalid and movement is not possible
+        if (agentPath.status == NavMeshPathStatus.PathInvalid)
         {
-            TrimToLength(ref agentPath, range, toPosition);
-            this.toPosition = agentPath.corners.Last();
+            possible = false;
+            status = Status.Invalid;
+            return;
         }
+        
+        // calculate point in this path that is nearest from position while still within range from toPosition
+        // if the distance from the end of this path is farther than range from toPosition, then the move is impossible
+        
+        // invert path for sampling (NavMesh.CalculatePath(agentPath.corners.Last, agentPath.corners[0], ...)
+        // use inverted path and samplePathStepSize to move toward fromPosition
+        // whenever the sampled path position is further away from toPosition than range, the previously sampled position is our target
+        // recalculate agentPath to the target
+        
+        
+        
+        
+        // NavMesh.CalculatePath(fromPosition, toPosition, NavMesh.AllAreas, agentPath);
+        // if (agentPath.status != NavMeshPathStatus.PathComplete)
+        // {
+        //     if (!FindCompletePath(fromPosition, toPosition, ref agentPath))
+        //     {
+        //         possible = false;
+        //         return;
+        //     }
+        // }
+        // float lackingDistance = Vector3.Distance(agentPath.corners.Last(), toPosition);
+        // possible = agentPath.status != NavMeshPathStatus.PathInvalid || lackingDistance > range;
+        //
+        // if (possible)
+        // {
+        //     TrimToLength(ref agentPath, range, toPosition);
+        //     this.toPosition = agentPath.corners.Last();
+        // }
     }
 
     protected override IEnumerator Execute()
@@ -137,51 +180,7 @@ public class MoveInRangeCommand : Command, IMoveCommand
     {
         visualizer.DrawPreviewPath(agentPath);
     }
-
-    private void TrimToLength(ref NavMeshPath path, float minDistance, Vector3 target)
-    {
-        if (path.corners.Length < 2) return;
-        // starting from the target, check which point first exists min distance
-        for (int i = path.corners.Length - 2; i >= 0; i--)
-        {
-            float distance = Vector3.Distance(path.corners[i], target);
-            if (distance > minDistance)
-            {
-                // sample along last corner pair to see if a complete path can be drawn closer to target position
-                float tIncrement = 1f / trimSampleResoltion;
-                for (float t = 0f; t < 1; t += tIncrement)
-                {
-                    Vector3 samplePoint = Vector3.Lerp(path.corners[i], path.corners[i + 1], t);
-                    distance = Vector3.Distance(samplePoint, target);
-                    if (distance <= minDistance)
-                    {
-                        NavMesh.CalculatePath(path.corners[0], samplePoint, NavMesh.AllAreas, path);
-                        return;
-                    }
-                }
-            }
-        }
-    }
-
-    private bool FindCompletePath(Vector3 from, Vector3 to, ref NavMeshPath path)
-    {
-        NavMeshPath candidatePath = new();
-        float tIncrement = 1f / findCompletePathIterations;
-        for (float t = 0f; t < 1f; t += tIncrement)
-        {
-            Vector3 linearSample = Vector3.Lerp(to, from, t);
-            if (NavMesh.SamplePosition(linearSample, out NavMeshHit hit, 2f, NavMesh.AllAreas))
-            {
-                NavMesh.CalculatePath(from, hit.position, NavMesh.AllAreas, candidatePath);
-                if (candidatePath.status == NavMeshPathStatus.PathComplete)
-                {
-                    path = candidatePath;
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+    
 
     public override void Break()
     {

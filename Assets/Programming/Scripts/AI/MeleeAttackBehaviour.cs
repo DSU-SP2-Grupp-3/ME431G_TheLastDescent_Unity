@@ -56,6 +56,7 @@ public class MeleeAttackBehaviour : BehaviourDefinition
                 aiAgent.weaponStats.attackRange,
                 aiAgent
             );
+            // todo: check if command is invalid
             aiMovement.SetLineOfSightTarget(closestTarget);
             commands.AddCommand(aiMovement);
 
