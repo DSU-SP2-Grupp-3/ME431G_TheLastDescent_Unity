@@ -28,6 +28,8 @@ public class MoveInRangeCommand : Command, IMoveCommand
     private Vector3 fromPosition;
     private float range;
 
+    public float length => PathLength(agentPath);
+
     public readonly NavMeshPath agentPath;
     public bool possible { get; private set; }
     public bool noMovement { get; private set; }
@@ -88,12 +90,13 @@ public class MoveInRangeCommand : Command, IMoveCommand
 
     protected override IEnumerator Execute()
     {
-        if (agentPath == null)
+        if (agentPath.status == NavMeshPathStatus.PathInvalid)
         {
             status = Status.Failed;
             yield break;
         }
         invokingAgent.navMeshAgent.SetPath(agentPath);
+        Debug.DrawLine(agentPath.corners.Last(), agentPath.corners.Last() + Vector3.up * 10, Color.red, 20f);
 
         invokingAgent.animator.ResetTrigger("StopMoving");
         invokingAgent.animator.SetTrigger("StartMoving");
@@ -120,12 +123,7 @@ public class MoveInRangeCommand : Command, IMoveCommand
     {
         return () =>
         {
-            if (lineOfSightTarget)
-            {
-                if (invokingAgent.navMeshAgent.Raycast(toPosition, out NavMeshHit hit)) return false;
-                if (invokingAgent.navMeshAgent.remainingDistance < range) return true;
-            }
-            else if (invokingAgent.navMeshAgent.remainingDistance < playEndAnimationDistance) return true;
+            if (invokingAgent.navMeshAgent.remainingDistance < playEndAnimationDistance) return true;
             else if (Time.time > interrupt)
             {
                 status = Status.Failed;
@@ -162,16 +160,15 @@ public class MoveInRangeCommand : Command, IMoveCommand
     public bool Trim(float maxLength)
     {
         invokingAgent.navMeshAgent.SetPath(agentPath);
-        // SamplePathPosition returns true if maxLength is longer than agentPath
-        if (!invokingAgent.navMeshAgent.SamplePathPosition(NavMesh.AllAreas, maxLength, out NavMeshHit hit))
+        if (invokingAgent.navMeshAgent.remainingDistance < maxLength)
         {
-            NavMesh.CalculatePath(agentPath.corners[0], hit.position, NavMesh.AllAreas, agentPath);
             invokingAgent.navMeshAgent.ResetPath();
-            // SamplePathPosition was false -> maxLength is shorter than agent path, thus the path is trimmed
-            return true;
+            return false;
         }
+        invokingAgent.navMeshAgent.SamplePathPosition(NavMesh.AllAreas, maxLength, out NavMeshHit hit);
+        NavMesh.CalculatePath(agentPath.corners[0], hit.position, NavMesh.AllAreas, agentPath);
         invokingAgent.navMeshAgent.ResetPath();
-        return false;
+        return true;
     }
 
     public override void VisualizeInQueue(Visualizer visualizer)

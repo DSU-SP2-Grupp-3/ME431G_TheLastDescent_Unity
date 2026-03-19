@@ -34,27 +34,33 @@ public class MeleeAttackBehaviour : BehaviourDefinition
         BehaviourCommands commands = new();
 
         List<WorldAgent> targets = agentManager.GetFilteredAgents((w => w.team == teamToAttack)).ToList();
-        WorldAgent closestTarget = AI.GetNearestAgent(aiAgent.transform.position, targets);
-        
-        //sets the ais world navMeshAgent to a new path
+        IEnumerable<WorldAgent> nearestCandidates = AI.GetNearestAgent(aiAgent.transform.position, targets);
 
-        MoveInRangeCommand inRangeCommand = new MoveInRangeCommand(
-            closestTarget.transform.position,
-            aiAgent.weaponStats.attackRange,
-            aiAgent, closestTarget
-        );
+
+        MoveInRangeCommand inRangeCommand = null;
+        WorldAgent closest = null;
+        foreach (WorldAgent candidate in nearestCandidates)
+        {
+            closest = candidate;
+            inRangeCommand = new MoveInRangeCommand(
+                closest.transform.position,
+                aiAgent.weaponStats.attackRange,
+                aiAgent, closest
+            );
+            if (inRangeCommand.possible) break;
+        }
         
-        bool attackCanReach = !inRangeCommand.Trim(aiAgent.localStats.movement);
+        bool trimmed = inRangeCommand.Trim(aiAgent.localStats.movement);
 
         commands.AddCommand(inRangeCommand);
         
-        LookCommand lookCommand = new LookCommand(aiAgent, closestTarget);
+        LookCommand lookCommand = new LookCommand(aiAgent, closest);
         commands.AddCommand(lookCommand);
         
-        if (attackCanReach)
+        // if the path was not trimmed that means that the enemy is in range to attack
+        if (!trimmed)
         {
-            // if the path does not need to be trimmed then we attack the player as well
-            AttackCommand attackPlayerCommand = new AttackCommand(aiAgent, closestTarget, agentManager.damageManager);
+            AttackCommand attackPlayerCommand = new AttackCommand(aiAgent, closest, agentManager.damageManager);
             commands.AddCommand(attackPlayerCommand);
         }
 
