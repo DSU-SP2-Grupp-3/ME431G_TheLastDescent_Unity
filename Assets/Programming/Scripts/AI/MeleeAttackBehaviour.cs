@@ -54,10 +54,10 @@ public class MeleeAttackBehaviour : BehaviourDefinition
             MoveInRangeCommand aiMovement = new MoveInRangeCommand(
                 path.corners.Last(),
                 aiAgent.weaponStats.attackRange,
-                aiAgent
+                aiAgent,
+                closestTarget
             );
             // todo: check if command is invalid
-            aiMovement.SetLineOfSightTarget(closestTarget);
             commands.AddCommand(aiMovement);
 
             LookCommand lookCommand = new LookCommand(aiAgent, closestTarget);

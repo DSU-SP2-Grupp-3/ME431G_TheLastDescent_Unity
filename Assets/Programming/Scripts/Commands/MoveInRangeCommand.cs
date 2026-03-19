@@ -35,79 +35,55 @@ public class MoveInRangeCommand : Command, IMoveCommand
     private const float playEndAnimationDistance = 0.5f;
     private const float ignoreMovementDistance = 0.1f;
     private const float interruptTime = 20f;
-    private const float samplePointStepSize = 0.1f;
+    
+    private const float sampleRadiusStepSize = 0.1f;
+    private const float sampleAngleStepSize = 10f * Mathf.Deg2Rad;
+    private const float samplePointRange = 0.2f;
     private const float samplePathStepSize = 0.2f;
 
     private WorldAgent lineOfSightTarget;
 
     public Vector3 ToPosition() => toPosition;
 
-    public MoveInRangeCommand(Vector3 toPosition, float range, WorldAgent invokingAgent) :
+    public MoveInRangeCommand(Vector3 toPosition, float range, WorldAgent invokingAgent, WorldAgent lineOfSightTarget) :
         base(invokingAgent)
     {
         fromPosition = invokingAgent.GetLastMoveCommandToPosition();
-        float distance = Vector3.Distance(fromPosition, toPosition);
-        noMovement = distance <= range;
         this.range = range;
+        this.lineOfSightTarget = lineOfSightTarget;
+        
         agentPath = new();
+        NavMeshPath candidatePath = new();
         
-        Vector3 toFrom = (fromPosition - toPosition).normalized;
-        float sampleLength = 0f;
-        
-        // find a valid path as close to the target as possible
-        // alternatively these points could be user defined by the move in range command wrapper
-        // check points between to and from position until a path is found
-        while (sampleLength <= distance && agentPath.status == NavMeshPathStatus.PathInvalid)
+        // search points within radius, find the point inside the radius with shortest complete path to agent
+        for (float sampleRadius = range; sampleRadius > 0; sampleRadius -= sampleRadiusStepSize)
         {
-            // a point at distance sampleLength from toPosition toward fromPosition
-            Vector3 samplePosition = toPosition + toFrom * sampleLength;
-            if (NavMesh.SamplePosition(samplePosition, out NavMeshHit hit, 0f, NavMesh.AllAreas))
+            for (float angle = 0; angle < Mathf.PI * 2; angle += sampleAngleStepSize)
             {
-                // if this point is on the NavMesh, calculate a path to it and break
-                // if the target is on the NavMesh this should be the same as calculating the path between from and to position
-                NavMesh.CalculatePath(fromPosition, hit.position, NavMesh.AllAreas, agentPath);
-                break;
+                Vector3 delta = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * sampleRadius;
+                Vector3 samplePosition = toPosition + delta;
+                NavMesh.CalculatePath(fromPosition, samplePosition, NavMesh.AllAreas, candidatePath);
+                if (candidatePath.status != NavMeshPathStatus.PathComplete) continue;
+                if (lineOfSightTarget && TargetObstructed(candidatePath.corners.Last())) continue;
+                if (agentPath.status == NavMeshPathStatus.PathInvalid || PathLength(candidatePath) < PathLength(agentPath))
+                {
+                    NavMesh.CalculatePath(fromPosition, samplePosition, NavMesh.AllAreas, agentPath);
+                }
             }
-            
-            sampleLength += samplePointStepSize;
+            // if a valid path has been found, don't check smaller radiuses
+            if (agentPath.status == NavMeshPathStatus.PathComplete) break;
         }
-
-        // if no point between to and from is valid this command is invalid and movement is not possible
+        
         if (agentPath.status == NavMeshPathStatus.PathInvalid)
         {
             possible = false;
-            status = Status.Invalid;
             return;
         }
         
-        // calculate point in this path that is nearest from position while still within range from toPosition
-        // if the distance from the end of this path is farther than range from toPosition, then the move is impossible
-        
-        // invert path for sampling (NavMesh.CalculatePath(agentPath.corners.Last, agentPath.corners[0], ...)
-        // use inverted path and samplePathStepSize to move toward fromPosition
-        // whenever the sampled path position is further away from toPosition than range, the previously sampled position is our target
-        // recalculate agentPath to the target
-        
-        
-        
-        
-        // NavMesh.CalculatePath(fromPosition, toPosition, NavMesh.AllAreas, agentPath);
-        // if (agentPath.status != NavMeshPathStatus.PathComplete)
-        // {
-        //     if (!FindCompletePath(fromPosition, toPosition, ref agentPath))
-        //     {
-        //         possible = false;
-        //         return;
-        //     }
-        // }
-        // float lackingDistance = Vector3.Distance(agentPath.corners.Last(), toPosition);
-        // possible = agentPath.status != NavMeshPathStatus.PathInvalid || lackingDistance > range;
-        //
-        // if (possible)
-        // {
-        //     TrimToLength(ref agentPath, range, toPosition);
-        //     this.toPosition = agentPath.corners.Last();
-        // }
+        possible = true;
+        this.toPosition = agentPath.corners.Last();
+        float distance = (fromPosition - toPosition).magnitude;
+        noMovement = distance <= range;
     }
 
     protected override IEnumerator Execute()
@@ -159,9 +135,23 @@ public class MoveInRangeCommand : Command, IMoveCommand
         };
     }
 
-    public void SetLineOfSightTarget(WorldAgent target)
+    private float PathLength(NavMeshPath path)
     {
-        lineOfSightTarget = target;
+        float length = 0f;
+        for (int i = 1; i < path.corners.Length; i++)
+        {
+            length += Vector3.Distance(path.corners[i - 1], path.corners[i]);
+        }
+        return length;
+    }
+
+    private bool TargetObstructed(Vector3 from)
+    {
+        return Physics.Linecast(
+            from, 
+            lineOfSightTarget.transform.position, 
+            LayerMask.GetMask("Environment")
+        );
     }
 
     public override void VisualizeInQueue(Visualizer visualizer)

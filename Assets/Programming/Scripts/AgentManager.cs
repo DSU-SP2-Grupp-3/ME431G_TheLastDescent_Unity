@@ -157,7 +157,7 @@ public class AgentManager : Service<AgentManager>
             foreach (WorldAgent agent in players)
             {
                 if (agent == selectedPlayer) continue;
-                MoveInRangeCommand moveInRangeCommand = new MoveInRangeCommand(moveCommand.ToPosition(), 3f, agent);
+                MoveInRangeCommand moveInRangeCommand = new MoveInRangeCommand(moveCommand.ToPosition(), 3f, agent, null);
                 agent.OverwriteQueue(moveInRangeCommand);
             }
         }

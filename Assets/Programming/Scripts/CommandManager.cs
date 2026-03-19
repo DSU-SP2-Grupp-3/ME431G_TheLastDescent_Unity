@@ -51,8 +51,14 @@ public static class CommandManager
             return EmptyPackage();
         }
 
-        if (!AllMoveCommandsPossible(result.invokingAgentCommands)) return EmptyPackage();
-        if (InvalidCommandInCollection(result.invokingAgentCommands)) return EmptyPackage();
+        if (!AllMoveCommandsPossible(result.invokingAgentCommands) || 
+            InvalidCommandInCollection(result.invokingAgentCommands)) 
+        {
+            CommandPackage badInteraction = EmptyPackage();
+            badInteraction.SetHighlight(result.interactableAgent, true);
+            badInteraction.SetCursor("InvalidPoint");
+            return badInteraction;
+        }
 
         TrimUnnecessaryMoveCommands(ref result.invokingAgentCommands);
         CommandPackage interactionPackage = new CommandPackage(agent, result.invokingAgentCommands);
@@ -132,7 +138,8 @@ public static class CommandManager
         MoveInRangeCommand inRangeCommand = new MoveInRangeCommand(
             receiver.transform.position,
             attacker.weaponStats.attackRange,
-            attacker
+            attacker,
+            receiver
         );
         if (!inRangeCommand.possible) return EmptyPackage();
         AttackCommand attackCommand = new AttackCommand(
@@ -188,6 +195,7 @@ public static class CommandManager
         public string hint { get; private set; }
         public string type { get; private set; }
         public bool valid { get; private set; }
+        public bool unreachable { get; private set; }
         public CursorInfo cursorInfo { get; private set; }
         public readonly WorldAgent agent;
         public readonly Dictionary<WorldAgent, bool> highlights;
