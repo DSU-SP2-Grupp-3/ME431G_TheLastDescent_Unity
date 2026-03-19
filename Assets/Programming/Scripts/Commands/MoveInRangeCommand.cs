@@ -154,6 +154,26 @@ public class MoveInRangeCommand : Command, IMoveCommand
         );
     }
 
+    /// <summary>
+    /// Trims the agentPath in this command to maxLength using
+    /// <para>NavMeshAgent.SamplePathPosition</para>
+    /// </summary>
+    /// <returns>True if the path was trimmed</returns>
+    public bool Trim(float maxLength)
+    {
+        invokingAgent.navMeshAgent.SetPath(agentPath);
+        // SamplePathPosition returns true if maxLength is longer than agentPath
+        if (!invokingAgent.navMeshAgent.SamplePathPosition(NavMesh.AllAreas, maxLength, out NavMeshHit hit))
+        {
+            NavMesh.CalculatePath(agentPath.corners[0], hit.position, NavMesh.AllAreas, agentPath);
+            invokingAgent.navMeshAgent.ResetPath();
+            // SamplePathPosition was false -> maxLength is shorter than agent path, thus the path is trimmed
+            return true;
+        }
+        invokingAgent.navMeshAgent.ResetPath();
+        return false;
+    }
+
     public override void VisualizeInQueue(Visualizer visualizer)
     {
         visualizer.AppendQueuedPath(agentPath, invokingAgent);
