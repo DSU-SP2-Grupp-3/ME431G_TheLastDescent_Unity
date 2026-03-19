@@ -19,16 +19,29 @@ public class MusicRandomizer : MonoBehaviour
     {
         while (true)
         {
-            if (audioManager.IsPlaying(eventScriptable.eventReference))
+            int time = Random.Range(min, max);
+            yield return new WaitForSeconds(time);
+
+            if  (audioManager.IsPlaying(eventScriptable.eventReference))
             {
-                int time = Random.Range(min, max);
-                yield return new WaitForSeconds(time);
-                int RandTrack = Random.Range(0, randTracks.Length - 1);
-                int Track = randTracks[RandTrack];
-                audioManager.PlayAudioEvent(eventScriptable);
-                audioManager.RunInstanceModification(eventScriptable, ParamName, Track);
+                continue;
             }
-            yield return new WaitForSeconds(15);
+
+            int randIndex = Random.Range(0, randTracks.Length);
+            int track = randTracks[randIndex];
+
+            Debug.Log($"Playing Music track number {track}");
+
+            EventPlayer player = audioManager.Getplayer(eventScriptable.eventReference.Guid);
+            if (player == null)
+            {
+                audioManager.CreatePlayer(eventScriptable, out EventPlayer result);
+                player = result;
+            }
+
+            player.RunInstanceModification(ParamName, track);
+            player.PlayEvent();
+
         }
     }
 }

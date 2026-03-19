@@ -50,6 +50,17 @@ public class EventPlayer
         eventInstance.getPlaybackState(out PLAYBACK_STATE state);
         return state == PLAYBACK_STATE.STOPPED;
     }
+    public bool IsPlaying()
+    {
+        if (!eventInstance.isValid()) return false;
+
+        PLAYBACK_STATE state;
+        eventInstance.getPlaybackState(out state);
+
+        Debug.Log(state);
+
+        return state == PLAYBACK_STATE.PLAYING || state == PLAYBACK_STATE.STARTING;
+    }
 
     public void Stop(bool allowFadeout = true)
     {
