@@ -35,7 +35,19 @@ public class SettingsManager : Service<SettingsManager>
         Time.timeScale = 1f;
         if (agentManager.TryGet(out AgentManager am)) { am.UnlockAgentInputActive(gameObject); }
     }
-    
+
+    // call this when changing volumes
+    public void SetVCATracks()
+    {
+        AudioSettings.Instance.masterVolume = MasterSlider.value;
+        AudioSettings.Instance.effectVolume = SFXSlider.value;
+        AudioSettings.Instance.musicVolume = MusicSlider.value;
+        AudioSettings.Instance.ambienceVolume = AmbienceSlider.value;
+        AudioSettings.Instance.dialogueVolume = DialogueSlider.value;
+        AudioSettings.Instance.UpdateVolumes();
+        AudioSettings.Instance.SetVolumes();
+    }
+
     public void MasterVol() { AudioSettings.Instance.masterVolume = MasterSlider.value; AudioSettings.Instance.UpdateVolumes(); AudioSettings.Instance.SetVolumes();}    
     public void SFXVol() { AudioSettings.Instance.effectVolume = SFXSlider.value; AudioSettings.Instance.UpdateVolumes(); AudioSettings.Instance.SetVolumes();}
     public void MusicVol() { AudioSettings.Instance.musicVolume = MusicSlider.value; AudioSettings.Instance.UpdateVolumes(); AudioSettings.Instance.SetVolumes();}
