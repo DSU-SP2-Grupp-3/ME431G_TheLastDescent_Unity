@@ -14,6 +14,7 @@ public class AudioManager : Service<AudioManager>
 {
     [SerializeField]
     private Dictionary<GUID, EventPlayer> PersistentPlayers;
+    public EventPlayer Getplayer (GUID value) => PersistentPlayers.GetValueOrDefault(value);
     private List<EventPlayer> OneShotPlayers = new();
     private readonly Queue<EventPlayer> removalQueue = new();
     private void Awake()
@@ -130,7 +131,6 @@ public class AudioManager : Service<AudioManager>
     private void Update()
     {
         var finished = new List<EventPlayer>();
-        var persistentFinished = new List<GUID>();
         foreach (var player in OneShotPlayers)
         {
             if (player.IsFinished())
@@ -138,23 +138,10 @@ public class AudioManager : Service<AudioManager>
                 finished.Add(player);
             }
         }
-        foreach (var kvp in PersistentPlayers)
-        {
-            if (kvp.Value.IsFinished())
-            {
-                persistentFinished.Add(kvp.Key);
-            }
-        }
         foreach (var player in finished)
         {
             RemovePlayer(player);
         }
-
-        foreach (var guid in persistentFinished)
-        {
-            RemovePlayer(new EventReference { Guid = guid });
-        }
-
     }
 
 
@@ -162,13 +149,11 @@ public class AudioManager : Service<AudioManager>
 
     public bool IsPlaying(EventReference eventReference)
     {
-        UnityEngine.Debug.Log("Tried");
         if (TryGet(eventReference, out EventPlayer player))
         {
-            UnityEngine.Debug.Log(player.IsFinished());
-            return !player.IsFinished();
+            return player.IsPlaying();
         }
-        return true;
+        return false;
 
     }
 
