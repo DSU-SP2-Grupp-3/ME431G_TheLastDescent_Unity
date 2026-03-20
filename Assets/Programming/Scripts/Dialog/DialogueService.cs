@@ -110,12 +110,12 @@ public class DialogueService : Service<DialogueService>
             unityEvent.Invoke();
             WrittenSentence += letters.Dequeue();
             textField.maxVisibleCharacters += 1;
-            yield return turbo ? null : new WaitForSeconds(0.04f);
+            yield return turbo ? null : new WaitForSecondsRealtime(0.04f);
         }
     }
     public IEnumerator OnMouseClick()
     {
-        yield return turbo ? null : new WaitForSeconds(0.01f);
+        yield return turbo ? null : new WaitForSecondsRealtime(0.01f);
         while (true)
         {
             if (Input.GetMouseButtonDown(1) || turbo)
