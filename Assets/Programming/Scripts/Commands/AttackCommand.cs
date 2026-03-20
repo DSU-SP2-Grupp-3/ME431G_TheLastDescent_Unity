@@ -15,19 +15,18 @@ public class AttackCommand : Command
     private bool animationEnded;
     private bool receiverDied;
 
-    private string attackEventName;
+    private EventScriptable attackEvent;
 
-    public AttackCommand(WorldAgent invokingAgent,
-                         WorldAgent receivingAgent,
-                         DamageManager damageManager,
-                         float attackCost,
-                         string attackEventName)
-        : base(invokingAgent)
+    public AttackCommand(
+        WorldAgent invokingAgent,
+        WorldAgent receivingAgent,
+        DamageManager damageManager
+    ) : base(invokingAgent)
     {
         this.receivingAgent = receivingAgent;
         this.damageManager = damageManager;
-        this.attackEventName = attackEventName;
-        this.attackCost = attackCost;
+        attackEvent = invokingAgent.weaponStats.attackEvent;
+        attackCost = invokingAgent.weaponStats.attackCost;
     }
 
     protected override IEnumerator Execute()
@@ -58,7 +57,7 @@ public class AttackCommand : Command
 
     private void PerformAttack()
     {
-        audioManager.PlayAudioEvent(attackEventName);
+        audioManager.PlayAudioEvent(attackEvent);
         float damage = invokingAgent.weaponStats.GetDamage() * receivingAgent.localStats.receivedDamageModifier;
         damageManager.DealDamageEvent(damage, receivingAgent);
     }

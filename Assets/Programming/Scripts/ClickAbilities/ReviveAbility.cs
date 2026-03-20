@@ -47,7 +47,7 @@ public class ReviveAbility : ScriptableObject, IClickAbility
                 info.GetAgent(out WorldAgent revivee, LayerMask.NameToLayer("Player"));
 
                 MoveInRangeCommand inRangeCommand = new MoveInRangeCommand(
-                    revivee.transform.position, 2f, reviver
+                    revivee.transform.position, 2f, reviver, revivee
                 );
                 ReviveCommand reviveCommand = new ReviveCommand(
                     reviver,
@@ -77,9 +77,10 @@ public class ReviveAbility : ScriptableObject, IClickAbility
                     {
                         ability.AddAffectedAgent(agent);
                         MoveInRangeCommand inRangeCommand = new MoveInRangeCommand(
-                            agent.transform.position, 2f, reviver
+                            agent.transform.position, 2f, reviver, agent
                         );
-                        ability.commands.Add(inRangeCommand);
+                        can = inRangeCommand.possible;
+                        if (can) ability.commands.Add(inRangeCommand);
                     }
                     return can;
                 }
