@@ -153,7 +153,7 @@ public class Visualizer : MonoBehaviour
 
         if (agentLineRenderer.positionCount == 0) // first path in command queue
         {
-            agentLineRenderer.positionCount = inputPath.corners.Length;
+            agentLineRenderer.positionCount = inputPath.corners.Length-1*4+1;
             for (int i = 0; i < agentLineRenderer.positionCount; i++)
             {
                 agentLineRenderer.SetPosition(i, inputPath.corners[i]);
@@ -172,7 +172,7 @@ public class Visualizer : MonoBehaviour
 
     public void DrawPreviewPath(NavMeshPath previewPath)
     {
-        previewLineRenderer.positionCount = previewPath.corners.Length;
+        previewLineRenderer.positionCount = (previewPath.corners.Length - 1) * 4 + 1;
         previewLineRenderer.SetPositions(validatePath(previewPath.corners));
     }
 
@@ -182,46 +182,66 @@ public class Visualizer : MonoBehaviour
         // todo: connect the line rendering later
 
         LineRenderer executionLineRenderer = agentVisualizeTools[agent].executionLineRenderer;
-        executionLineRenderer.positionCount = executingPath.corners.Length;
+        executionLineRenderer.positionCount = (executingPath.corners.Length - 1) * 4 + 1;
         executionLineRenderer.SetPositions(validatePath(executingPath.corners));
     }
 
-    public float validHeightDifference;
+    public float distanceThreshold;
     private Vector3[] validatePath(Vector3[] input)
     {
-        for (int i = 0; i < input.Length - 1; i++)
+        // for each node we want to find the next one and input another node at 1,2,3/4hs of the way to that node
+        //so it works out to be 0 -> length-2 for the for loop (given that you cant check the final node :p
+        if (input.Length > 1)
         {
-            if(Mathf.Abs(input[i+1].y - input[i].y) > validHeightDifference)
+            Vector3 midpoint;  // 2/4
+            Vector3 nearpoint; // 1/4
+            Vector3 farpoint;  // 3/4
+            
+            Vector3[] output = new Vector3[(input.Length-1)*4+1];
+            for (int i = 0; i < input.Length-1; i++)
             {
-                Debug.Log("Too Tall :(");
+                if (Vector3.Distance(input[i], input[i + 1]) > distanceThreshold)
+                {
+                    midpoint  = Midpoint(input[i], input[i+1]);
+                    nearpoint = Midpoint(input[i], midpoint);
+                    farpoint  = Midpoint(midpoint, input[i+1]);
+
+                    RaycastHit hit;
+                
+                    output[i * 4] = input[i];
+
+                    Physics.Raycast(new Vector3(nearpoint.x, nearpoint.y + 10, nearpoint.z), Vector3.down, out hit, 32, LayerMask.GetMask("Ground"));
+                    output[i * 4 + 1] = hit.point + (Vector3.up / 100);
+                
+                    Physics.Raycast(new Vector3(midpoint.x, midpoint.y + 10, midpoint.z), Vector3.down, out hit, 32, LayerMask.GetMask("Ground"));
+                    output[i * 4 + 2] = hit.point + (Vector3.up / 100);
+                
+                    Physics.Raycast(new Vector3(farpoint.x, farpoint.y + 10, farpoint.z), Vector3.down, out hit, 32, LayerMask.GetMask("Ground"));
+                    output[i * 4 + 3] = hit.point + (Vector3.up / 100);
+                }
+                else
+                {
+                    output[i * 4] = input[i];
+                    output[i * 4 + 1] = input[i];
+                    output[i * 4 + 2] = input[i];
+                    output[i * 4 + 3] = input[i];
+                }
             }
+			output[^1] = input[^1];
+            
+            return output;
         }
-        return input;
+        else
+        {
+            return input;
+        }
     }
 
-    private Vector3[] insertAt(Vector3[] path, int index, Vector3 node) //add an overload for an array too maybe?
+    private Vector3 Midpoint(Vector3 start, Vector3 end)
     {
-        if (index > path.Length)
-        {
-            Debug.Log("index out of bounds :(");
-            return path;
-        }
-        Vector3[] output = new Vector3[path.Length+1];
-        
-        for (int i = 0; i < index; i++)
-        {
-            output[i] = path[i];
-        }
-        
-        output[index] = node;
-        
-        for (int i = index; i < output.Length + 1; i++)
-        {
-            output[i + 1] = path[i];
-        }
-        
-        return output;
+        return new Vector3((start.x + end.x) / 2, (start.y + end.y) / 2, (start.z + end.z) / 2);
     }
+    
 
     private class VisualizeTools
     {
