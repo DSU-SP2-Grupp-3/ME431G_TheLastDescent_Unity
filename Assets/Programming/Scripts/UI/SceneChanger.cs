@@ -1,8 +1,11 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SceneChanger : Service<SceneChanger>
 {
+    public event Action<string> OnGoToScene;
+    
     private void Awake()
     {
         Register();
@@ -10,6 +13,8 @@ public class SceneChanger : Service<SceneChanger>
 
     public void GoToScene(string nextSceneName)
     {
+        Register();
+        OnGoToScene?.Invoke(nextSceneName);
         SceneManager.LoadScene(nextSceneName);
     }
 

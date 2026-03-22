@@ -1,8 +1,10 @@
 using System;
 
 [Serializable]
-public struct SaveData
+public class SaveData
 {
+    public bool newData;
+    
     public float playeyAHp;
     public float playerATemp;
 
@@ -14,7 +16,7 @@ public struct SaveData
 
     public float collectedResources;
 
-    public string lastLoadedScene;
+    public string scene;
 
     // todo: settings need to be saved as well
 }
