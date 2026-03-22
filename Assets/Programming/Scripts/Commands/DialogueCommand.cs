@@ -28,10 +28,14 @@ public class DialogueCommand : Command
                 dialoguePausedRoundClock = true;
                 roundClock.EnterTurnBased();
             }
-
             agentManager.LockAgentInputActive(this);
-            yield return dialogueService.StartCoroutine(
-                dialogueService.InitializeDialouge(dialogueScriptable.GetDialogues()));
+
+            bool isDone = false;
+
+            dialogueService.EnqueueDialogue(dialogueScriptable.GetDialogues(), () => isDone = true);
+
+            yield return new WaitUntil(() => isDone);
+
             agentManager.UnlockAgentInputActive(this);
 
             if (dialoguePausedRoundClock)
