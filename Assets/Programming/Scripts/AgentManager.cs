@@ -30,6 +30,8 @@ public class AgentManager : Service<AgentManager>
     private WorldAgent selectedPlayer;
     private WorldAgent defaultPlayer;
 
+    public Transform playerMiddleTransform;
+
     public DamageManager damageManager;
     public ResourceManager resourceManager;
 
@@ -62,6 +64,18 @@ public class AgentManager : Service<AgentManager>
         im.OnLeftHold += ProcessHold;
         im.OnRightClick += () => currentClickAbility = null;
         modeSwitcher.Get().OnEnterTurnBased += (_) => allPlayersSelected = false;
+        playerMiddleTransform = new GameObject("PlayerMidpoint").transform;
+    }
+
+    private void Update()
+    {
+        Vector3 midpoint = Vector3.zero;
+        foreach (WorldAgent player in GetPlayerAgents())
+        {
+            midpoint += player.cameraFocusTransform.position;
+        }
+        midpoint /= GetPlayerAgents().Count;
+        playerMiddleTransform.position = midpoint;
     }
 
     private void PreviewCommand(RaycastHit hit, bool didHit)

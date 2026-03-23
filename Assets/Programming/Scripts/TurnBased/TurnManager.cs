@@ -151,7 +151,8 @@ public class TurnManager : Service<TurnManager>
             turnManagerEvents.StartExecutingTurn?.Invoke();
             executingTurn = true;
 
-            Transform latestSelectedPlayer = camera.Get().targetGameObject;
+            camera.Get().SetCameraTarget(agentManager.Get().playerMiddleTransform);
+
             OrderGroups();
             for (int i = 0; i < orderedGroups.Count; i++)
             {
@@ -164,7 +165,7 @@ public class TurnManager : Service<TurnManager>
                 yield return WaitForAll(activeGroup.GetGroupCommandQueues());
             }
 
-            camera.Get().SetCameraTarget(latestSelectedPlayer);
+            agentManager.Get().SelectPlayer(agentManager.Get().GetSelectedPlayer());
 
             activeGroup = null;
 
