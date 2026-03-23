@@ -130,7 +130,7 @@ public class AgentManager : Service<AgentManager>
     private void ProcessHold()
     {
         if (!agentInputActive) return;
-        if (currentCommandPackage.type == "move" && modeSwitcher.Get().mode == RoundClock.ProgressMode.RealTime)
+        if (currentCommandPackage.type == "move" && modeSwitcher.Get().mode == RoundClock.ProgressMode.Automatic)
         {
             QueueCurrentPackage();
         }
@@ -138,6 +138,7 @@ public class AgentManager : Service<AgentManager>
 
     private void QueueCurrentPackage()
     {
+        Debug.Log(modeSwitcher.Get().mode);
         currentClickAbility = null;
         if (!resourceManager.CanQueuePackage(currentCommandPackage))
         {
@@ -157,7 +158,8 @@ public class AgentManager : Service<AgentManager>
             foreach (WorldAgent agent in players)
             {
                 if (agent == selectedPlayer) continue;
-                MoveInRangeCommand moveInRangeCommand = new MoveInRangeCommand(moveCommand.ToPosition(), 3f, agent, null);
+                MoveInRangeCommand moveInRangeCommand =
+                    new MoveInRangeCommand(moveCommand.ToPosition(), 3f, agent, null);
                 agent.OverwriteQueue(moveInRangeCommand);
             }
         }
@@ -259,7 +261,7 @@ public class AgentManager : Service<AgentManager>
 
     public void SelectAllPlayers()
     {
-        if (modeSwitcher.Get().mode == RoundClock.ProgressMode.RealTime)
+        if (modeSwitcher.Get().mode == RoundClock.ProgressMode.Automatic)
         {
             allPlayersSelected = true;
         }
@@ -267,7 +269,7 @@ public class AgentManager : Service<AgentManager>
 
     public void UndoLatestCommand()
     {
-        if (modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased)
+        if (modeSwitcher.Get().mode == RoundClock.ProgressMode.Manual)
         {
             selectedPlayer.UndoLastestCommand(resourceManager);
         }

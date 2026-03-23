@@ -102,7 +102,7 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
     {
         if (targetGameObject)
         {
-            if (modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased)
+            if (modeSwitcher.Get().mode == RoundClock.ProgressMode.Manual)
             {
                 rangeIndicator.transform.position = targetGameObject.transform.position;
             }

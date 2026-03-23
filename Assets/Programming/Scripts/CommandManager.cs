@@ -51,8 +51,8 @@ public static class CommandManager
             return EmptyPackage();
         }
 
-        if (!AllMoveCommandsPossible(result.invokingAgentCommands) || 
-            InvalidCommandInCollection(result.invokingAgentCommands)) 
+        if (!AllMoveCommandsPossible(result.invokingAgentCommands) ||
+            InvalidCommandInCollection(result.invokingAgentCommands))
         {
             CommandPackage badInteraction = EmptyPackage();
             badInteraction.SetHighlight(result.interactableAgent, true);
@@ -185,7 +185,6 @@ public static class CommandManager
                             .ToArray();
         commands = trimmed;
     }
-    
 
     public class CommandPackage
     {
@@ -249,7 +248,7 @@ public static class CommandManager
         {
             this.hint = hint;
         }
-        
+
         public void SetCursor(string resourcePath)
         {
             cursorInfo = Resources.Load<CursorInfo>($"Cursors/{resourcePath}");
@@ -259,13 +258,12 @@ public static class CommandManager
         {
             valid = true;
         }
-        
+
         public bool QueueCommands(RoundClock.ProgressMode mode, ResourceManager resourceManager)
         {
-
             switch (mode)
             {
-                case RoundClock.ProgressMode.TurnBased:
+                case RoundClock.ProgressMode.Manual:
                     if (!CanQueueCommands()) return false;
                     else
                     {
@@ -273,7 +271,7 @@ public static class CommandManager
                         agent.QueueCommands(commands.Where(c => c.status != Command.Status.Invalid).ToArray());
                     }
                     break;
-                case RoundClock.ProgressMode.RealTime:
+                case RoundClock.ProgressMode.Automatic:
                     resourceManager.ProcessCommands(commands);
                     agent.OverwriteQueue(commands.Where(c => c.status != Command.Status.Invalid).ToArray());
                     break;

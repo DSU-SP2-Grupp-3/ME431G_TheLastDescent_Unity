@@ -29,6 +29,7 @@ public class TurnManager : Service<TurnManager>
     private ResourceManager resourceManager;
 
     public bool executingTurn { get; private set; }
+    public bool active => cycle != null;
 
     private void Awake()
     {
@@ -73,7 +74,11 @@ public class TurnManager : Service<TurnManager>
 
     public void Deactivate(bool dontClearGroups = false)
     {
-        if (cycle != null) StopCoroutine(cycle);
+        if (cycle != null)
+        {
+            StopCoroutine(cycle);
+            cycle = null;
+        }
         if (!dontClearGroups) groups.Clear();
         else
         {
@@ -156,7 +161,6 @@ public class TurnManager : Service<TurnManager>
 
             AddSlackersToGroups();
 
-            // todo: this check should be made after each command performed by a player, in case an enemy dies halfway through player turn
             if (AllActiveEnemiesDead())
             {
                 // force entrance into real time when all enemies have been defeated

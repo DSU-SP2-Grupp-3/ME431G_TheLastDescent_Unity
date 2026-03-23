@@ -94,7 +94,7 @@ public class Visualizer : MonoBehaviour
 
         // calculate bools
         bool enoughResouces = resourceManager.CanQueuePackage(commandPackage);
-        bool realTime = modeSwitcher.Get().mode == RoundClock.ProgressMode.RealTime;
+        bool realTime = modeSwitcher.Get().mode == RoundClock.ProgressMode.Automatic;
         bool canQueue = commandPackage.CanQueueCommands() || realTime;
         float packageApCost = commandPackage.TotalPackageCommandCost();
         float packageResourceCost = resourceManager.TotalCommandCollectionResourceCost(commandPackage.commands);
