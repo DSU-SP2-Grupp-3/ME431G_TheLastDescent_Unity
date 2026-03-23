@@ -24,6 +24,7 @@ public class TurnManager : Service<TurnManager>
     private Locator<ModeSwitcher> modeSwitcher;
     private Locator<Modal> modalLocator;
     private Locator<InputManager> inputManager;
+    private Locator<OrthographicCameraMover> camera;
 
     [SerializeField]
     private ResourceManager resourceManager;
@@ -42,6 +43,7 @@ public class TurnManager : Service<TurnManager>
         modeSwitcher = new();
         modalLocator = new();
         inputManager = new();
+        camera = new();
     }
 
     private void Start()
@@ -144,15 +146,25 @@ public class TurnManager : Service<TurnManager>
             playerReady = false;
             yield return new WaitUntil((() => playerReady == true));
 
+            camera.Get().SetPanningLocked(true);
+
             turnManagerEvents.StartExecutingTurn?.Invoke();
             executingTurn = true;
 
+            Transform latestSelectedPlayer = camera.Get().targetGameObject;
             OrderGroups();
             for (int i = 0; i < orderedGroups.Count; i++)
             {
                 activeGroup = orderedGroups[i];
+                if (activeGroup.GroupDead()) continue;
+                if (activeGroup.team != WorldAgent.Team.Player)
+                {
+                    camera.Get().SetCameraTarget(activeGroup.GetCameraTarget().cameraFocusTransform);
+                }
                 yield return WaitForAll(activeGroup.GetGroupCommandQueues());
             }
+
+            camera.Get().SetCameraTarget(latestSelectedPlayer);
 
             activeGroup = null;
 
@@ -166,6 +178,8 @@ public class TurnManager : Service<TurnManager>
                 // force entrance into real time when all enemies have been defeated
                 modeSwitcher.Get().TryEnterRealTime(true);
             }
+
+            camera.Get().SetPanningLocked(false);
         }
     }
 
