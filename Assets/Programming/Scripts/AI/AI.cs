@@ -74,26 +74,22 @@ public class AI : MonoBehaviour
     public void LookAtNearestTarget()
     {
         List<WorldAgent> targets = agentManager.Get().GetPlayerAgents();
-        WorldAgent closestTarget = GetNearestAgent(agent.transform.position, targets);
+        WorldAgent closestTarget = GetNearestAgent(agent.transform.position, targets).First();
 
         LookCommand lookCommand = new LookCommand(agent, closestTarget);
         agent.OverwriteQueue(lookCommand);
     }
 
-    public static WorldAgent GetNearestAgent(Vector3 fromPosition, List<WorldAgent> candidates)
+    public static IEnumerable<WorldAgent> GetNearestAgent(Vector3 fromPosition, List<WorldAgent> candidates)
     {
-        float shortestSqrDistance = float.MaxValue;
-        WorldAgent shortest = null;
-        foreach (WorldAgent candidate in candidates)
+        candidates.Sort((a1, a2) =>
         {
-            float sqrMagnitude = (fromPosition - candidate.transform.position).sqrMagnitude;
-            if (sqrMagnitude < shortestSqrDistance && candidate.localStats.hitPoints > 0)
-            {
-                shortestSqrDistance = sqrMagnitude;
-                shortest = candidate;
-            }
-        }
-        return shortest;
+            float distance1 = Vector3.Distance(fromPosition, a1.transform.position);
+            float distance2 = Vector3.Distance(fromPosition, a2.transform.position);
+            return distance1.CompareTo(distance2);
+        });
+
+        return candidates;
     }
 
     [Serializable]

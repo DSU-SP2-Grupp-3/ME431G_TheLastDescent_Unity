@@ -8,6 +8,8 @@ using UnityEngine.Events;
 
 public class DialogueService : Service<DialogueService>
 {
+    private Queue<DialogueRequest> requestQueue = new();
+    private bool isRunning = false;
     private Queue<Dialogue> dialogues = new();
 
     private Queue<string> Sentences = new();
@@ -23,6 +25,7 @@ public class DialogueService : Service<DialogueService>
     private Image portrait;
     [SerializeField]
     private Animator ani;
+    private PopupService popupService;
     //Temp fix
     public bool isDone;
     public UnityEvent unityEvent;
@@ -33,19 +36,47 @@ public class DialogueService : Service<DialogueService>
     {
         Register();
     }
-    public IEnumerator InitializeDialouge(Dialogue[] dialogues)
+    private void Start()
     {
-        ani.Play("DialogueStart");
-        
+        popupService = new Locator<PopupService>().Get();
+    }
+    public void EnqueueDialogue(Dialogue[] dialogues, Action onComplete)
+    {
+        requestQueue.Enqueue(new DialogueRequest(dialogues, onComplete));
+
+        if (!isRunning)
+        {
+            StartCoroutine(ProcessQueue());
+        }
+    }
+    private IEnumerator ProcessQueue()
+    {
+        isRunning = true;
+        ani.SetTrigger("DialogueStart");
+
+        while (requestQueue.Count > 0)
+        {
+            DialogueRequest request = requestQueue.Dequeue();
+
+            yield return StartCoroutine(RunDialogueSequence(request.dialogues));
+
+            request.onComplete?.Invoke();
+        }
+
+        ani.SetTrigger("DialogueEnd");
+        isRunning = false;
+    }
+    public IEnumerator RunDialogueSequence(Dialogue[] dialogues)
+    {
+
         // todo: maybe don't clear dialogues here to prevent funky stuff if triggering two dialogues at the same time??
         this.dialogues.Clear();
         foreach (Dialogue dialogue in dialogues)
         {
             this.dialogues.Enqueue(dialogue);
         }
-
         yield return StartCoroutine(RunDialogue());
-        ani.Play("DialogueEnd");
+
     }
 
     private IEnumerator RunDialogue()
@@ -60,15 +91,19 @@ public class DialogueService : Service<DialogueService>
                 Sentences.Enqueue(sentence);
             }
 
-
-            if (activeSpeaker.portrait != null) portrait.sprite = activeSpeaker.portrait;
-
             nameField.text = activeSpeaker.name;
+            if (activeSpeaker.portrait != null) portrait.sprite = activeSpeaker.portrait;
+            if (activeSpeaker.sfx != null) new Locator<AudioManager>().Get().PlayAudioEvent(activeSpeaker.sfx);
+            if (activeSpeaker.Popup != null) yield return popupService.Open(activeSpeaker.Popup);
+
             yield return StartCoroutine(DisplayNextSentence());
 
+            nameField.text = "";
+            textField.text = "";
+
+            if (activeSpeaker.Popup != null) yield return popupService.Close();
         }
-        nameField.text = "";
-        textField.text = "";
+
         EndDialogue();
     }
     public IEnumerator DisplayNextSentence()
@@ -110,12 +145,12 @@ public class DialogueService : Service<DialogueService>
             unityEvent.Invoke();
             WrittenSentence += letters.Dequeue();
             textField.maxVisibleCharacters += 1;
-            yield return turbo ? null : new WaitForSeconds(0.04f);
+            yield return turbo ? null : new WaitForSecondsRealtime(0.04f);
         }
     }
     public IEnumerator OnMouseClick()
     {
-        yield return turbo ? null : new WaitForSeconds(0.01f);
+        yield return turbo ? null : new WaitForSecondsRealtime(0.01f);
         while (true)
         {
             if (Input.GetMouseButtonDown(1) || turbo)

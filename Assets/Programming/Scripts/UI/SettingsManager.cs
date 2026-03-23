@@ -19,20 +19,23 @@ public class SettingsManager : Service<SettingsManager>
     
     [SerializeField] private Material pathMaterial;
     [SerializeField] private Material indicatorMaterial;
-
+    private Locator<AgentManager> agentManager;
+    
     public void Open()
     {
         open?.Invoke(); 
         Time.timeScale = 0f; 
         Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+        if (agentManager.TryGet(out AgentManager am)) { am.LockAgentInputActive(gameObject); }
     }
 
     public void Close()
     {
         close?.Invoke(); 
-        Time.timeScale = 1f; 
-        
+        Time.timeScale = 1f;
+        if (agentManager.TryGet(out AgentManager am)) { am.UnlockAgentInputActive(gameObject); }
     }
+    
     public void MasterVol() { AudioSettings.Instance.masterVolume = MasterSlider.value; AudioSettings.Instance.UpdateVolumes(); AudioSettings.Instance.SetVolumes();}    
     public void SFXVol() { AudioSettings.Instance.effectVolume = SFXSlider.value; AudioSettings.Instance.UpdateVolumes(); AudioSettings.Instance.SetVolumes();}
     public void MusicVol() { AudioSettings.Instance.musicVolume = MusicSlider.value; AudioSettings.Instance.UpdateVolumes(); AudioSettings.Instance.SetVolumes();}
@@ -45,9 +48,11 @@ public class SettingsManager : Service<SettingsManager>
         storedSettings.UIScale = UIScaleSlider.value;
         storedSettings.SetUIScale();
     }
-    
+
+    private bool agentManagerExsists = false;
     private void Start()
     {
+        agentManager = new Locator<AgentManager>();
         storedSettings.TriggerAll();
         MasterSlider.value = storedSettings.masterVolume;
         SFXSlider.value = storedSettings.effectVolume;

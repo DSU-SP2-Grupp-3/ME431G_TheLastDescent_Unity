@@ -14,8 +14,12 @@ public class MoveInRangeCommandWrapper : CommandWrapper
     
     public override Command UnwrapCommand(WorldAgent agent)
     {
-        MoveInRangeCommand inRangeCommand = new MoveInRangeCommand(transform.position + relativePosition, range, agent);
-        if (lineOfSightTarget) inRangeCommand.SetLineOfSightTarget(lineOfSightTarget);
+        MoveInRangeCommand inRangeCommand = new MoveInRangeCommand(
+            transform.position + relativePosition,
+            range,
+            agent,
+            lineOfSightTarget
+        );
         return inRangeCommand;
     }
 }

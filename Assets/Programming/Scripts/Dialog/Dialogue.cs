@@ -7,6 +7,9 @@ public class Dialogue
 {
     public string name;
     public Sprite portrait;
+    public GameObject Popup;
+    public EventScriptable sfx;
     [TextArea]
     public string[] sentences;
+
 }

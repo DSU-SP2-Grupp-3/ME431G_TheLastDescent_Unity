@@ -34,49 +34,34 @@ public class MeleeAttackBehaviour : BehaviourDefinition
         BehaviourCommands commands = new();
 
         List<WorldAgent> targets = agentManager.GetFilteredAgents((w => w.team == teamToAttack)).ToList();
-        WorldAgent closestTarget = AI.GetNearestAgent(aiAgent.transform.position, targets);
-        
-        //sets the ais world navMeshAgent to a new path
-        NavMeshPath path = new();
-        aiAgent.navMeshAgent.CalculatePath(closestTarget.transform.position, path);
-        aiAgent.navMeshAgent
-               .SetPath(path); // SetPath here so remainingDistance can be calculated in TrimPathToMoveRange
-        bool trimmed = TrimPathToMoveRange(aiAgent, ref path, aiAgent.localStats.movement);
-        
-        bool canAttackWithinRemainingDistance =
-            (aiAgent.navMeshAgent.remainingDistance 
-            < aiAgent.localStats.movement + aiAgent.weaponStats.attackRange) 
-            && !NavMesh.Raycast(aiAgent.transform.position, closestTarget.transform.position, out NavMeshHit navMeshHit, NavMesh.AllAreas);
+        IEnumerable<WorldAgent> nearestCandidates = AI.GetNearestAgent(aiAgent.transform.position, targets);
 
-        if (!trimmed || canAttackWithinRemainingDistance)
+
+        MoveInRangeCommand inRangeCommand = null;
+        WorldAgent closest = null;
+        foreach (WorldAgent candidate in nearestCandidates)
         {
-            //create and queue a movecommand using the path and the agent
-            MoveInRangeCommand aiMovement = new MoveInRangeCommand(
-                path.corners.Last(),
+            closest = candidate;
+            inRangeCommand = new MoveInRangeCommand(
+                closest.transform.position,
                 aiAgent.weaponStats.attackRange,
-                aiAgent
+                aiAgent, closest
             );
-            aiMovement.SetLineOfSightTarget(closestTarget);
-            commands.AddCommand(aiMovement);
-
-            LookCommand lookCommand = new LookCommand(aiAgent, closestTarget);
-            commands.AddCommand(lookCommand);
-            
-            // if the path does not need to be trimmed then we attack the player as well
-            AttackCommand attackPlayerCommand = new AttackCommand(
-                aiAgent, closestTarget, agentManager.damageManager,
-                aiAgent.weaponStats.attackCost, "EnemyAttack"
-            );
-            commands.AddCommand(attackPlayerCommand);
+            if (inRangeCommand.possible) break;
         }
-        else
+        
+        bool trimmed = inRangeCommand.Trim(aiAgent.localStats.movement);
+
+        commands.AddCommand(inRangeCommand);
+        
+        LookCommand lookCommand = new LookCommand(aiAgent, closest);
+        commands.AddCommand(lookCommand);
+        
+        // if the path was not trimmed that means that the enemy is in range to attack
+        if (!trimmed)
         {
-            LookCommand lookCommand = new LookCommand(aiAgent, closestTarget);
-            commands.AddCommand(lookCommand);
-            
-            if (path.corners.Length == 0) return commands;
-            MoveCommand aiMovement = new MoveCommand(path, aiAgent);
-            commands.AddCommand(aiMovement);
+            AttackCommand attackPlayerCommand = new AttackCommand(aiAgent, closest, agentManager.damageManager);
+            commands.AddCommand(attackPlayerCommand);
         }
 
         return commands;

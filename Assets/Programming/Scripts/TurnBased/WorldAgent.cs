@@ -28,28 +28,32 @@ public class WorldAgent : MonoBehaviour
         Neutral,
         Interactable
     }
-
-    [Tooltip("True if this is the agent (player) should be the default selection when loading the scene")]
-    public bool defaultSelected;
-    [Tooltip("If true, prevent queueing commands while the command queue is being executed")]
-    public bool lockDuringQueueExecution;
-    [Tooltip("If true this agent will revive if dead after exiting turn based and all enemies are dead")]
-    public bool reviveAfterCombat;
-    [Range(0f, 1f), Tooltip("The portion of hp restored when revived automatically after combat")]
-    public float reviveHitPointPortion;
-
     public Team team;
+
+    public bool IsInteractable() => team == Team.Interactable;
+    public bool NotPlayer() => team != Team.Player;
+    
+    [HideIf("NotPlayer"), Tooltip("True if this is the agent (player) should be the default selection when loading the scene")]
+    public bool defaultSelected;
+    [HideIf("NotPlayer"), Tooltip("If true, prevent queueing commands while the command queue is being executed")]
+    public bool lockDuringQueueExecution;
+    [HideIf("NotPlayer"), Tooltip("If true this agent will revive if dead after exiting turn based and all enemies are dead")]
+    public bool reviveAfterCombat;
+    [HideIf("NotPlayer"), Range(0f, 1f), Tooltip("The portion of hp restored when revived automatically after combat")]
+    public float reviveHitPointPortion;
+    
     [Header("References")]
     public Animator animator;
+    [HideIf("IsInteractable")]
     public NavMeshAgent navMeshAgent;
     [Tooltip("Only required if the object will generate a path")]
     public Transform cameraFocusTransform;
     public Transform indicatorFocusTransform;
 
-    [SerializeField]
+    [SerializeField, HideIf("IsInteractable")]
     private AgentStats stats;
     public AgentStats localStats { get; set; } //set could be privated but is not for now
-    [SerializeField]
+    [SerializeField, HideIf("IsInteractable")]
     private WeaponStats equippedWeapon;
     public WeaponStats weaponStats
     {
@@ -64,13 +68,15 @@ public class WorldAgent : MonoBehaviour
         }
     }
 
-    [SerializeField, Tooltip("The levels off debuffs to be applied, make sure they are in descending order, " +
+    [SerializeField, HideIf("NotPlayer"),
+     Tooltip("The levels off debuffs to be applied, make sure they are in descending order, " +
                              "meaning the first debuff received is the first element in the list")]
     private DebuffLevel[] debuffLevels;
     private int currentDebuffLevel;
 
     private DamageManager damageManager;
 
+    [HideIf("IsInteractable")]
     public int actorID;
     /// True if this agent should enter into the turn order when turn based mode is activated
     public bool active { get; private set; }
@@ -435,7 +441,7 @@ public class WorldAgent : MonoBehaviour
     {
         return commandQueue.Where(c => c is GetResourceCommand).Select(r => (r as GetResourceCommand).resource);
     }
-
+    
     [Serializable]
     public class DebuffLevel : IComparable<DebuffLevel>
     {
