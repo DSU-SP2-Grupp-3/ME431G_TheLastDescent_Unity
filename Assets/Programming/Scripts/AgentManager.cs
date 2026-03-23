@@ -152,7 +152,6 @@ public class AgentManager : Service<AgentManager>
 
     private void QueueCurrentPackage()
     {
-        Debug.Log(modeSwitcher.Get().mode);
         currentClickAbility = null;
         if (!resourceManager.CanQueuePackage(currentCommandPackage))
         {

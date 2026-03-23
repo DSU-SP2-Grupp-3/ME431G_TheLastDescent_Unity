@@ -71,6 +71,9 @@ public class WorldAgent : MonoBehaviour
         }
     }
 
+    public string moveEventName;
+    public string idleSoundEventName;
+
     [SerializeField, HideIf("NotPlayer"),
      Tooltip("The levels off debuffs to be applied, make sure they are in descending order, " +
              "meaning the first debuff received is the first element in the list")]
@@ -92,6 +95,7 @@ public class WorldAgent : MonoBehaviour
     private Locator<TurnManager> turnManager;
     private Locator<Indicator> indicator;
     private Locator<RoundClock> roundClock;
+    private Locator<AudioManager> audioManager;
 
     public AgentManager manager => agentManager.Get();
 
@@ -127,6 +131,7 @@ public class WorldAgent : MonoBehaviour
         turnManager = new();
         indicator = new();
         roundClock = new();
+        audioManager = new();
 
         if (team == Team.Player) active = true;
         if (stats) localStats = stats.Clone();
@@ -148,6 +153,9 @@ public class WorldAgent : MonoBehaviour
         damageManager.DealDamageEvent += TakeDamage;
         modeSwitcher.Get().OnEnterTurnBased += RegisterInTurnManager;
         modeSwitcher.Get().OnEnterRealTime += ExitTurnBased;
+
+        // todo: cannot play multiple instances of the same persistant event
+        // if (idleSoundEventName != "") audioManager.Get().PlayAudioEvent(idleSoundEventName, gameObject);
     }
 
     private void RegisterInTurnManager(TurnManager turnManager)
@@ -326,6 +334,7 @@ public class WorldAgent : MonoBehaviour
         animator.SetTrigger("Die");
         navMeshAgent.enabled = false;
         OnDeath?.Invoke();
+        // if (idleSoundEventName != "") audioManager.Get().StopAudioEvent(idleSoundEventName);
     }
 
     public void Revive()
