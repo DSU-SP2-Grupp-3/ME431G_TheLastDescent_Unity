@@ -267,13 +267,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b18b60669053492ab0421e52b7e090f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultSelected: 0
+  displayName: Button
   team: 4
+  defaultSelected: 0
+  lockDuringQueueExecution: 0
+  reviveAfterCombat: 0
+  reviveHitPointPortion: 0
   animator: {fileID: 7227810049995749423}
   navMeshAgent: {fileID: 0}
   cameraFocusTransform: {fileID: 0}
+  indicatorFocusTransform: {fileID: 0}
   stats: {fileID: 0}
   equippedWeapon: {fileID: 0}
+  moveEventName: 
+  idleSoundEventName: 
+  debuffLevels: []
   actorID: 0
 --- !u!114 &3603874594621902929
 MonoBehaviour:
@@ -307,6 +315,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   relativePosition: {x: 0, y: 0, z: 0}
   range: 2
+  lineOfSightTarget: {fileID: 0}
 --- !u!114 &214826941016310560
 MonoBehaviour:
   m_ObjectHideFlags: 0

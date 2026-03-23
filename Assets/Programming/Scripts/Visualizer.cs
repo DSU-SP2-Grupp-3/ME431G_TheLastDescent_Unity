@@ -13,7 +13,7 @@ public class Visualizer : MonoBehaviour
     private LineRenderer previewLineRenderer;
 
     [SerializeField]
-    private TMP_Text packageAPDisplay, hintDisplay;
+    private TMP_Text packageInfoDisplay, hintDisplay;
 
     private Dictionary<WorldAgent, VisualizeTools> agentVisualizeTools;
     private Dictionary<WorldAgent, Command> currentlyExecutingCommands;
@@ -28,7 +28,8 @@ public class Visualizer : MonoBehaviour
     [SerializeField]
     private ResourceManager resourceManager;
 
-    [SerializeField] private SettingsStorage storedSettings;
+    [SerializeField]
+    private SettingsStorage storedSettings;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -39,7 +40,6 @@ public class Visualizer : MonoBehaviour
         currentlyExecutingCommands = new();
         highlightedAgents = new();
         previewLineRenderer = Instantiate(lineRendererPrefab, transform);
-        packageAPDisplay.gameObject.SetActive(false);
         modeSwitcher = new();
         turnManager = new();
     }
@@ -47,7 +47,7 @@ public class Visualizer : MonoBehaviour
     private void Update()
     {
         // todo: tweak here so we can choose what agents to visualize and when
-        
+
         foreach (Command command in currentlyExecutingCommands.Values)
         {
             command.VisualizeExecution(this);
@@ -89,8 +89,8 @@ public class Visualizer : MonoBehaviour
     {
         // reset prefabs
         previewLineRenderer.positionCount = 0;
-        packageAPDisplay.color = Color.white;
-        packageAPDisplay.rectTransform.anchoredPosition = Vector2.zero;
+        packageInfoDisplay.color = Color.white;
+        packageInfoDisplay.rectTransform.anchoredPosition = Vector2.zero;
 
         // calculate bools
         bool enoughResouces = resourceManager.CanQueuePackage(commandPackage);
@@ -103,7 +103,7 @@ public class Visualizer : MonoBehaviour
         CursorInfo cInfo = commandPackage.cursorInfo;
         if (cInfo) Cursor.SetCursor(cInfo.texture, cInfo.hotSpot, cInfo.cursorMode);
         else Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-        packageAPDisplay.text = "";
+        packageInfoDisplay.text = "";
 
         if (commandPackage.hint != null) hintDisplay.text = commandPackage.hint;
         else hintDisplay.text = "";
@@ -112,16 +112,15 @@ public class Visualizer : MonoBehaviour
 
         HighlightAgents(commandPackage.highlights, realTime);
 
-        if (!canQueue || !enoughResouces) packageAPDisplay.color = Color.red;
+        if (!canQueue || !enoughResouces) packageInfoDisplay.color = Color.red;
 
-        if (packageApCost > 0f || packageResourceCost > 0f)
-        {
-            packageAPDisplay.gameObject.SetActive(true);
-            Vector2 mousePosition = Input.mousePosition;
-            packageAPDisplay.rectTransform.anchoredPosition = mousePosition;
-            if (!realTime) packageAPDisplay.text = $"{packageApCost:0.0} AP\n";
-            if (packageResourceCost > 0) packageAPDisplay.text += $"{packageResourceCost:0} Res";
-        }
+        // set package info
+        packageInfoDisplay.text = "";
+        packageInfoDisplay.rectTransform.anchoredPosition = Input.mousePosition;
+
+        if (commandPackage.info is not null and not "") packageInfoDisplay.text += $"{commandPackage.info}\n";
+        if (packageApCost > 0f && !realTime) packageInfoDisplay.text += $"{packageApCost:0.0} AP\n";
+        if (packageResourceCost > 0f) packageInfoDisplay.text += $"{packageResourceCost:0} Res";
 
         if (commandPackage.empty) return;
 

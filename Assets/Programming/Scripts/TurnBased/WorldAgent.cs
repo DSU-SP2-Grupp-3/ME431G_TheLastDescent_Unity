@@ -29,6 +29,8 @@ public class WorldAgent : MonoBehaviour
         Interactable
     }
 
+    public string displayName;
+
     public Team team;
 
     public bool IsInteractable() => team == Team.Interactable;
@@ -71,8 +73,8 @@ public class WorldAgent : MonoBehaviour
         }
     }
 
-    public string moveEventName;
-    public string idleSoundEventName;
+    [HideIf("IsInteractable")]
+    public string moveEventName, idleSoundEventName;
 
     [SerializeField, HideIf("NotPlayer"),
      Tooltip("The levels off debuffs to be applied, make sure they are in descending order, " +
