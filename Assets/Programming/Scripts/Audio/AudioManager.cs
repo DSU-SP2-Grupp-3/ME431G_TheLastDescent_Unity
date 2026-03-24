@@ -101,6 +101,7 @@ public class AudioManager : Service<AudioManager>
 
     public void StopAudioEvent(EventScriptable eventScriptable)
     {
+        if(TryGet(eventScriptable.eventReference, out EventPlayer player)) player.Stop();
         RemovePlayer(eventScriptable.eventReference);
     }
     public void StopAudioEvent(string name)

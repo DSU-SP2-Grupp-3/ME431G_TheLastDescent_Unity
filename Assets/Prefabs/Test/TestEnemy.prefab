@@ -101,6 +101,7 @@ GameObject:
   - component: {fileID: 9163769210025672173}
   - component: {fileID: 5474678374904609022}
   - component: {fileID: 7178454798365608886}
+  - component: {fileID: 3710671538145046812}
   m_Layer: 9
   m_Name: TestEnemy
   m_TagString: Untagged
@@ -155,11 +156,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b18b60669053492ab0421e52b7e090f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  team: 2
   defaultSelected: 0
   lockDuringQueueExecution: 0
   reviveAfterCombat: 0
   reviveHitPointPortion: 0
-  team: 2
   animator: {fileID: 5474678374904609022}
   navMeshAgent: {fileID: 9163769210025672173}
   cameraFocusTransform: {fileID: 6913362169945385132}
@@ -233,6 +234,25 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.7
   m_Center: {x: 0, y: 2, z: 0}
+--- !u!114 &3710671538145046812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6647577457735645191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e21fb589011d4cb4be808ec0dc61058c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventReference:
+    Guid:
+      Data1: -201008282
+      Data2: 1307972342
+      Data3: -1191238260
+      Data4: -1231033615
+    Path: event:/SFX/Enemies/Skulldrone/Idle
 --- !u!1001 &1681388746934828504
 PrefabInstance:
   m_ObjectHideFlags: 0
