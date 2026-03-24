@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class WorldAgentGroup
@@ -39,5 +40,17 @@ public class WorldAgentGroup
         }
 
         return queues;
+    }
+
+    public bool GroupDead()
+    {
+        return agents.All(a => a.dead);
+    }
+
+    public WorldAgent GetCameraTarget()
+    {
+        IEnumerable<WorldAgent> alive = agents.Where(a => !a.dead);
+        if (alive.Any()) return alive.First();
+        else return null;
     }
 }

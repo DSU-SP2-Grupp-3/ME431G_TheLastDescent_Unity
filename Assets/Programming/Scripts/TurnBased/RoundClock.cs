@@ -30,7 +30,7 @@ public class RoundClock : Service<RoundClock>
 
     void Update()
     {
-        if (mode == ProgressMode.RealTime)
+        if (mode == ProgressMode.Automatic)
         {
             if (nextRoundTime <= Time.time)
             {
@@ -48,20 +48,20 @@ public class RoundClock : Service<RoundClock>
         RoundProgressed?.Invoke(currentRound);
     }
 
-    public void EnterTurnBased()
+    public void Pause()
     {
-        mode = ProgressMode.TurnBased;
+        mode = ProgressMode.Manual;
     }
 
-    public void EnterRealTime()
+    public void Unpause()
     {
-        mode = ProgressMode.RealTime;
+        mode = ProgressMode.Automatic;
         nextRoundTime = Time.time + realSecondsPerRound;
     }
     
     public enum ProgressMode 
     {
-        RealTime,
-        TurnBased,
+        Automatic,
+        Manual,
     }
 }

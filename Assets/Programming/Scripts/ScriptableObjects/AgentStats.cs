@@ -9,14 +9,22 @@ public class AgentStats : ScriptableObject
         initHitPoints,
         initActionPoints,
         initMovement;
-    
+
     public float movement { get; private set; }
-    
-    public Watcher<float> 
+
+    public Watcher<float>
         hitPoints,
         actionPoints,
         temperature;
-    
+
+    public string GetHitPointsStatusString()
+    {
+        float hitPointPortion = hitPoints / initHitPoints;
+        if (hitPointPortion < 0.5f) return "Dying";
+        if (hitPointPortion < 1f) return "Hurt";
+        return "Unhurt";
+    }
+
     [SerializeField, Tooltip("The initial modifiers to use for this stat")]
     private AgentStatModifiers modifiers;
 
