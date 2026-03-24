@@ -4055,6 +4055,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4091044356747433083}
     - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnRealTimeEnteredForced.m_PersistentCalls.m_Calls.Array.data[2].m_Target
+      value: 
+      objectReference: {fileID: 2968415986432020565}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: OnTurnBasedEnteredForced.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1042727677510206925}
@@ -4065,7 +4069,7 @@ PrefabInstance:
     - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: OnTurnBasedEnteredForced.m_PersistentCalls.m_Calls.Array.data[2].m_Target
       value: 
-      objectReference: {fileID: 5039465854952169041}
+      objectReference: {fileID: 5676253459269358761}
     - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: OnRealTimeEnteredForced.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
       value: 2
@@ -4240,9 +4244,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1842632015221817357, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5039465854952169041}
-    - targetCorrespondingSourceObject: {fileID: 1842632015221817357, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 5676253459269358761}
   m_SourcePrefab: {fileID: 100100000, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
 --- !u!114 &4123078311678244522 stripped
@@ -4261,22 +4262,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1842632015221817357, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
   m_PrefabInstance: {fileID: 8206358183696379511}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5039465854952169041
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7525672516364840570}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f019bf334f849e409d192c88a968d82, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  eventPlayerName: 
-  ParameterName: LocationMUSIC
-  eventScriptable: {fileID: 11400000, guid: 324bcb606c2f5dd4daee2e3bc5284b9f, type: 2}
-  eventMono: {fileID: 0}
 --- !u!114 &5676253459269358761
 MonoBehaviour:
   m_ObjectHideFlags: 0
