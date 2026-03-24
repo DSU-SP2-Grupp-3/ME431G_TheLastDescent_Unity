@@ -100,7 +100,7 @@ public class MoveCommand : Command, IMoveCommand
     {
         if (trigger == "step")
         {
-            audioManager.PlayAudioEvent("Footstep", gameObject);
+            audioManager.PlayAudioEvent(invokingAgent.moveEventName, gameObject);
         }
     }
 

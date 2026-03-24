@@ -75,7 +75,7 @@ public class PlayerUI : MonoBehaviour
     public void SetStatsVisbility(bool show)
     {
         if (modeSwitcher == null) return;
-        if (!show && modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased) statsContext.SetActive(true);
+        if (!show && modeSwitcher.Get().mode == RoundClock.ProgressMode.Manual) statsContext.SetActive(true);
         else statsContext.SetActive(show);
     }
 
