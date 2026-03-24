@@ -28,7 +28,7 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
     [SerializeField, Range(0f, 1f)]
     private float smoothing;
 
-    public GameObject rangeIndicator;
+    // public GameObject rangeIndicator;
     private Locator<ModeSwitcher> modeSwitcher;
     public float FreeMoveSpeed;
     public float FreeDistanceCap;
@@ -38,6 +38,8 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
     private Transform savedCharacter;
 
     private Vector2 freeMoveInitialMousePosition;
+
+    private bool lockPanning;
 
     private void Awake()
     {
@@ -59,9 +61,10 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
         im.OnRightHold += OnRightHold;
         im.OnRightUp += OnRightClickDropped;
     }
-    
+
     private void OnRightClick()
     {
+        if (lockPanning) return;
         //Mouse.current.WarpCursorPosition(new Vector2(Screen.width/2,Screen.height/2));
         freeMoveInitialMousePosition = Input.mousePosition;
 
@@ -71,9 +74,10 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
     }
     private void OnRightHold()
     {
+        if (lockPanning) return;
         // Vector2 mousePos = (Vector2)Input.mousePosition - new Vector2(Screen.width/2,Screen.height/2);
         Vector2 mousePos = (Vector2)Input.mousePosition - freeMoveInitialMousePosition;
-        mousePos = new Vector2(mousePos.x/Screen.width*0.5f,mousePos.y/Screen.height*0.5f);
+        mousePos = new Vector2(mousePos.x / Screen.width * 0.5f, mousePos.y / Screen.height * 0.5f);
         Vector2 cameraForce = mousePos * FreeMoveSpeed;
 
         Transform cam = mainCamera.transform;
@@ -82,15 +86,24 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
 
         freeMoveFocus.position += move * FreeMoveSpeed;
         var player = am.GetSelectedPlayer();
-        if(Vector2.Distance(new Vector2(player.transform.position.x, player.transform.position.z), new Vector2(freeMoveFocus.position.x, freeMoveFocus.position.z)) >= FreeDistanceCap)
+        if (Vector2.Distance(new Vector2(player.transform.position.x, player.transform.position.z),
+                new Vector2(freeMoveFocus.position.x, freeMoveFocus.position.z)) >= FreeDistanceCap)
         {
-            freeMoveFocus.position = player.transform.position + (freeMoveFocus.position - player.transform.position).normalized * FreeDistanceCap;
+            freeMoveFocus.position = player.transform.position +
+                                     (freeMoveFocus.position - player.transform.position).normalized * FreeDistanceCap;
         }
     }
 
     private void OnRightClickDropped()
     {
+        if (lockPanning) return;
         targetGameObject = savedCharacter;
+    }
+
+    public void SetPanningLocked(bool locked)
+    {
+        if (locked) OnRightClickDropped();
+        lockPanning = locked;
     }
 
     public void SetCameraTarget(Transform target)
@@ -102,14 +115,15 @@ public class OrthographicCameraMover : Service<OrthographicCameraMover>
     {
         if (targetGameObject)
         {
-            if (modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased)
-            {
-                rangeIndicator.transform.position = targetGameObject.transform.position;
-            }
-            else
-            {
-                rangeIndicator.transform.position = new Vector3(0, -100, 0);
-            }
+            // if (modeSwitcher.Get().mode == RoundClock.ProgressMode.Manual)
+            // {
+            //     rangeIndicator.transform.position = targetGameObject.transform.position;
+            // }
+            // else
+            // {
+            //     rangeIndicator.transform.position = new Vector3(0, -100, 0);
+            // }
+
             Vector3 targetPosition = targetGameObject.position + offset;
             transform.position = Vector3.Lerp(transform.position, targetPosition, smoothing * Time.deltaTime * 100f);
 

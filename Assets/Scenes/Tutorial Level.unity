@@ -8227,9 +8227,13 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5522654136739608721, guid: 54c903646527d2543b4c30dd6567bd88, type: 3}
+      propertyPath: interactableCommands.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5522654136739608721, guid: 54c903646527d2543b4c30dd6567bd88, type: 3}
       propertyPath: 'interactableCommands.Array.data[0]'
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1993464535799658871}
     - target: {fileID: 5522654136739608721, guid: 54c903646527d2543b4c30dd6567bd88, type: 3}
       propertyPath: 'interactableCommands.Array.data[1]'
       value: 
@@ -8250,6 +8254,10 @@ PrefabInstance:
       propertyPath: 'interactableCommands.Array.data[1]'
       value: 
       objectReference: {fileID: 742991985}
+    - target: {fileID: 8366196937635193200, guid: 54c903646527d2543b4c30dd6567bd88, type: 3}
+      propertyPath: 'interactables.Array.data[1]'
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 8616793413395676727, guid: 54c903646527d2543b4c30dd6567bd88, type: 3}
       propertyPath: commandEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -8268,6 +8276,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5500173573704197271, guid: 54c903646527d2543b4c30dd6567bd88, type: 3}
   m_PrefabInstance: {fileID: 1993464535799658869}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1993464535799658871 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1822524896065008343, guid: 54c903646527d2543b4c30dd6567bd88, type: 3}
+  m_PrefabInstance: {fileID: 1993464535799658869}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f68328fb842c2cb469fdf606a01297f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2283570251571743805
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8360,6 +8379,10 @@ PrefabInstance:
     - target: {fileID: 4877848490641179202, guid: 8843da53c81142e4a8a9d4ffaae80730, type: 3}
       propertyPath: m_Name
       value: Split Paths
+      objectReference: {fileID: 0}
+    - target: {fileID: 5983421204547424351, guid: 8843da53c81142e4a8a9d4ffaae80730, type: 3}
+      propertyPath: 'interactables.Array.data[1]'
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7606192617670071314, guid: 8843da53c81142e4a8a9d4ffaae80730, type: 3}
       propertyPath: m_LocalPosition.x

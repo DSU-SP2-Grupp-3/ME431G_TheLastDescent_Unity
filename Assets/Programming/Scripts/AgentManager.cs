@@ -30,6 +30,8 @@ public class AgentManager : Service<AgentManager>
     private WorldAgent selectedPlayer;
     private WorldAgent defaultPlayer;
 
+    public Transform playerMiddleTransform;
+
     public DamageManager damageManager;
     public ResourceManager resourceManager;
 
@@ -62,6 +64,18 @@ public class AgentManager : Service<AgentManager>
         im.OnLeftHold += ProcessHold;
         im.OnRightClick += () => currentClickAbility = null;
         modeSwitcher.Get().OnEnterTurnBased += (_) => allPlayersSelected = false;
+        playerMiddleTransform = new GameObject("PlayerMidpoint").transform;
+    }
+
+    private void Update()
+    {
+        Vector3 midpoint = Vector3.zero;
+        foreach (WorldAgent player in GetPlayerAgents())
+        {
+            midpoint += player.cameraFocusTransform.position;
+        }
+        midpoint /= GetPlayerAgents().Count;
+        playerMiddleTransform.position = midpoint;
     }
 
     private void PreviewCommand(RaycastHit hit, bool didHit)
@@ -130,7 +144,7 @@ public class AgentManager : Service<AgentManager>
     private void ProcessHold()
     {
         if (!agentInputActive) return;
-        if (currentCommandPackage.type == "move" && modeSwitcher.Get().mode == RoundClock.ProgressMode.RealTime)
+        if (currentCommandPackage.type == "move" && modeSwitcher.Get().mode == RoundClock.ProgressMode.Automatic)
         {
             QueueCurrentPackage();
         }
@@ -157,7 +171,8 @@ public class AgentManager : Service<AgentManager>
             foreach (WorldAgent agent in players)
             {
                 if (agent == selectedPlayer) continue;
-                MoveInRangeCommand moveInRangeCommand = new MoveInRangeCommand(moveCommand.ToPosition(), 3f, agent, null);
+                MoveInRangeCommand moveInRangeCommand =
+                    new MoveInRangeCommand(moveCommand.ToPosition(), 3f, agent, null);
                 agent.OverwriteQueue(moveInRangeCommand);
             }
         }
@@ -259,7 +274,7 @@ public class AgentManager : Service<AgentManager>
 
     public void SelectAllPlayers()
     {
-        if (modeSwitcher.Get().mode == RoundClock.ProgressMode.RealTime)
+        if (modeSwitcher.Get().mode == RoundClock.ProgressMode.Automatic)
         {
             allPlayersSelected = true;
         }
@@ -267,7 +282,7 @@ public class AgentManager : Service<AgentManager>
 
     public void UndoLatestCommand()
     {
-        if (modeSwitcher.Get().mode == RoundClock.ProgressMode.TurnBased)
+        if (modeSwitcher.Get().mode == RoundClock.ProgressMode.Manual)
         {
             selectedPlayer.UndoLastestCommand(resourceManager);
         }

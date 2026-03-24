@@ -51,8 +51,8 @@ public static class CommandManager
             return EmptyPackage();
         }
 
-        if (!AllMoveCommandsPossible(result.invokingAgentCommands) || 
-            InvalidCommandInCollection(result.invokingAgentCommands)) 
+        if (!AllMoveCommandsPossible(result.invokingAgentCommands) ||
+            InvalidCommandInCollection(result.invokingAgentCommands))
         {
             CommandPackage badInteraction = EmptyPackage();
             badInteraction.SetHighlight(result.interactableAgent, true);
@@ -68,6 +68,7 @@ public static class CommandManager
         interactionPackage.AddCommand(result.QueueInteractablesCommand(agent));
         interactionPackage.SetHighlight(agent, false);
         interactionPackage.SetHighlight(result.interactableAgent, true);
+        interactionPackage.SetInfo(result.interactableAgent.displayName);
         interactionPackage.SetType("interaction");
         interactionPackage.SetCursor("Point");
 
@@ -77,6 +78,7 @@ public static class CommandManager
     public static CommandPackage GetSelectPlayerPackage(WorldAgent agent)
     {
         CommandPackage package = new CommandPackage(agent);
+        package.SetInfo(agent.displayName);
         package.SetHighlight(agent, true);
         package.SetType("select");
 
@@ -94,6 +96,7 @@ public static class CommandManager
         if (clickAbility.CanClick(hit, agent))
         {
             package.SetCursor(clickAbility.validCursorPath);
+            package.SetInfo(agent.displayName);
             package.MarkValid();
         }
         else
@@ -153,6 +156,7 @@ public static class CommandManager
         package.SetHighlight(receiver, false);
         package.SetType("attack");
         package.SetCursor("Crosshair");
+        package.SetInfo($"{receiver.displayName} ({receiver.localStats.GetHitPointsStatusString()})");
 
         return package;
     }
@@ -185,10 +189,13 @@ public static class CommandManager
                             .ToArray();
         commands = trimmed;
     }
-    
 
     public class CommandPackage
     {
+        /// <p> Info about the target of the package </p>
+        /// Displayed above the ap and resource cost of the action
+        public string info { get; private set; }
+        /// Hint about what actions the player must perform
         public string hint { get; private set; }
         public string type { get; private set; }
         public bool valid { get; private set; }
@@ -249,7 +256,12 @@ public static class CommandManager
         {
             this.hint = hint;
         }
-        
+
+        public void SetInfo(string info)
+        {
+            this.info = info;
+        }
+
         public void SetCursor(string resourcePath)
         {
             cursorInfo = Resources.Load<CursorInfo>($"Cursors/{resourcePath}");
@@ -259,13 +271,12 @@ public static class CommandManager
         {
             valid = true;
         }
-        
+
         public bool QueueCommands(RoundClock.ProgressMode mode, ResourceManager resourceManager)
         {
-
             switch (mode)
             {
-                case RoundClock.ProgressMode.TurnBased:
+                case RoundClock.ProgressMode.Manual:
                     if (!CanQueueCommands()) return false;
                     else
                     {
@@ -273,7 +284,7 @@ public static class CommandManager
                         agent.QueueCommands(commands.Where(c => c.status != Command.Status.Invalid).ToArray());
                     }
                     break;
-                case RoundClock.ProgressMode.RealTime:
+                case RoundClock.ProgressMode.Automatic:
                     resourceManager.ProcessCommands(commands);
                     agent.OverwriteQueue(commands.Where(c => c.status != Command.Status.Invalid).ToArray());
                     break;
