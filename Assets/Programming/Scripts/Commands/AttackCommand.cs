@@ -57,7 +57,7 @@ public class AttackCommand : Command
 
     private void PerformAttack()
     {
-        audioManager.PlayAudioEvent(attackEvent);
+        audioManager.PlayAudioEvent(attackEvent.name, invokingAgent.gameObject);
         float damage = invokingAgent.weaponStats.GetDamage() * receivingAgent.localStats.receivedDamageModifier;
         damageManager.DealDamageEvent(damage, receivingAgent);
     }
