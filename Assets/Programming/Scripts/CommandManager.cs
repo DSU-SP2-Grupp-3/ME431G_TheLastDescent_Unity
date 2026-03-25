@@ -96,7 +96,8 @@ public static class CommandManager
         if (clickAbility.CanClick(hit, agent))
         {
             package.SetCursor(clickAbility.validCursorPath);
-            package.SetInfo(agent.displayName);
+            if (clickAbility.queueingAgent) package.SetInfo(clickAbility.queueingAgent.displayName);
+            else if (agent) package.SetInfo(agent.displayName);
             package.MarkValid();
         }
         else

@@ -17,12 +17,14 @@ public class ResourceCounter : MonoBehaviour
     private float queuedGet;
     private float queuedPay;
     private float deltaQueue => queuedGet - queuedPay;
-    
+
     private void Awake()
     {
         resourceManager.collectedResources.Changed += OnResourcesChanged;
         resourceManager.queuedPayResourceCommands.Changed += TotalQueuePayAmount;
         resourceManager.queuedGetResources.Changed += TotalQueueGetAmount;
+        UpdateQueueAmount();
+        OnResourcesChanged(resourceManager.collectedResources);
     }
 
     private void OnResourcesChanged(float amount)
