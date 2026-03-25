@@ -48,6 +48,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: b3915b22b68b8ae4ba3bc92f7c8307cc, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 9dc78152f6a1f234891ec790626f34f5, type: 2}
+    - target: {fileID: -5754084199372789682, guid: b3915b22b68b8ae4ba3bc92f7c8307cc, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 8301181953908789621, guid: 8e914b07539f2434da6da51ac7b826f0, type: 3}
     - target: {fileID: 919132149155446097, guid: b3915b22b68b8ae4ba3bc92f7c8307cc, type: 3}
       propertyPath: m_Name
       value: Rock_02
@@ -59,6 +67,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b3915b22b68b8ae4ba3bc92f7c8307cc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8119641627654571415}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b3915b22b68b8ae4ba3bc92f7c8307cc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -5283564914393224663}
   m_SourcePrefab: {fileID: 100100000, guid: b3915b22b68b8ae4ba3bc92f7c8307cc, type: 3}
 --- !u!1 &6931581716551422492 stripped
 GameObject:
@@ -81,3 +92,24 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 10.71, y: 15.415001, z: 10.56}
   m_TimeToStationary: 0.5
+--- !u!65 &-5283564914393224663
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6931581716551422492}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.7086307, y: 1.3114649, z: 1.5183201}
+  m_Center: {x: 0.107101195, y: 0.15415446, z: 0.10560428}
