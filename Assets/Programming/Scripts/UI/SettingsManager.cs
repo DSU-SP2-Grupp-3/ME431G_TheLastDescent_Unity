@@ -80,5 +80,10 @@ public class SettingsManager : Service<SettingsManager>
     {
         indicatorMaterial.color = storedSettings.IndicatorColor;
     }
+
+    public void SetResolutionHD()
+    {
+        Screen.SetResolution(1920, 1080, FullScreenMode.ExclusiveFullScreen);
+    }
 }
 
