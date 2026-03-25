@@ -438,8 +438,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.013793945, y: 0.012207031}
-  m_SizeDelta: {x: 0, y: 123.3999}
+  m_AnchoredPosition: {x: -0.000061035156, y: 0.000061035156}
+  m_SizeDelta: {x: -345.959, y: -135.43}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &401464180
 MonoBehaviour:
@@ -612,6 +612,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 489312166}
   m_CullTransparentMesh: 1
+--- !u!1 &521173793 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2605508458137096012, guid: a8178c6a026681f42a30ea31262b94e7, type: 3}
+  m_PrefabInstance: {fileID: 2565713137008103983}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &569462666
 GameObject:
   m_ObjectHideFlags: 0
@@ -1758,6 +1763,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4826549662360225866, guid: e9bd46eff8e5f61449b2e1ca3b7d1a08, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4826549662360225866, guid: e9bd46eff8e5f61449b2e1ca3b7d1a08, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4826549662360225866, guid: e9bd46eff8e5f61449b2e1ca3b7d1a08, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1491669971}
+    - target: {fileID: 4826549662360225866, guid: e9bd46eff8e5f61449b2e1ca3b7d1a08, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Close
+      objectReference: {fileID: 0}
+    - target: {fileID: 4826549662360225866, guid: e9bd46eff8e5f61449b2e1ca3b7d1a08, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SettingsManager, Programming
+      objectReference: {fileID: 0}
     - target: {fileID: 6302983103697616977, guid: e9bd46eff8e5f61449b2e1ca3b7d1a08, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -1793,12 +1818,63 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 649005971490529141, guid: a8178c6a026681f42a30ea31262b94e7, type: 3}
   m_PrefabInstance: {fileID: 2565713137008103983}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 521173793}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 968d9a2cd02029c4a844a95f2c2075a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1486312236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 521173793}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b5a069a567d29945a62490dd9ad41a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnStartEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1491669971}
+        m_TargetAssemblyTypeName: SettingsManager, Programming
+        m_MethodName: SetResolutionHD
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 115216874}
+        m_TargetAssemblyTypeName: AudioManager, Programming
+        m_MethodName: PlayAudioEvent
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 11400000, guid: b9edbdfd6f478b243976b3ef0ba4511d, type: 2}
+          m_ObjectArgumentAssemblyTypeName: EventScriptable, Programming
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1486312232}
+        m_TargetAssemblyTypeName: ScreenFade, Programming
+        m_MethodName: CallFade
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!224 &1491669970 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4383047612285556555, guid: e9bd46eff8e5f61449b2e1ca3b7d1a08, type: 3}
@@ -2254,7 +2330,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 50}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1893112504
@@ -2279,8 +2355,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Press anything to continue...
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 120203502b4efac4db49074606c34872, type: 2}
+  m_sharedMaterial: {fileID: -9068281055555829355, guid: 120203502b4efac4db49074606c34872, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2657,9 +2733,57 @@ PrefabInstance:
     m_TransformParent: {fileID: 2090195570}
     m_Modifications:
     - target: {fileID: 649005971490529141, guid: a8178c6a026681f42a30ea31262b94e7, type: 3}
+      propertyPath: isOn
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 649005971490529141, guid: a8178c6a026681f42a30ea31262b94e7, type: 3}
+      propertyPath: OnFadeOut.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 649005971490529141, guid: a8178c6a026681f42a30ea31262b94e7, type: 3}
+      propertyPath: OnFadeOut.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 649005971490529141, guid: a8178c6a026681f42a30ea31262b94e7, type: 3}
+      propertyPath: OnFadeOut.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 649005971490529141, guid: a8178c6a026681f42a30ea31262b94e7, type: 3}
       propertyPath: OnFadeOut.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 2090195571}
+      objectReference: {fileID: 2090195573}
+    - target: {fileID: 649005971490529141, guid: a8178c6a026681f42a30ea31262b94e7, type: 3}
+      propertyPath: OnFadeOut.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 115216874}
+    - target: {fileID: 649005971490529141, guid: a8178c6a026681f42a30ea31262b94e7, type: 3}
+      propertyPath: OnFadeOut.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 649005971490529141, guid: a8178c6a026681f42a30ea31262b94e7, type: 3}
+      propertyPath: OnFadeOut.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: GoToScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 649005971490529141, guid: a8178c6a026681f42a30ea31262b94e7, type: 3}
+      propertyPath: OnFadeOut.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: StopAudioEvent
+      objectReference: {fileID: 0}
+    - target: {fileID: 649005971490529141, guid: a8178c6a026681f42a30ea31262b94e7, type: 3}
+      propertyPath: OnFadeOut.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SceneChanger, Programming
+      objectReference: {fileID: 0}
+    - target: {fileID: 649005971490529141, guid: a8178c6a026681f42a30ea31262b94e7, type: 3}
+      propertyPath: OnFadeOut.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: AudioManager, Programming
+      objectReference: {fileID: 0}
+    - target: {fileID: 649005971490529141, guid: a8178c6a026681f42a30ea31262b94e7, type: 3}
+      propertyPath: OnFadeOut.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 11400000, guid: b9edbdfd6f478b243976b3ef0ba4511d, type: 2}
+    - target: {fileID: 649005971490529141, guid: a8178c6a026681f42a30ea31262b94e7, type: 3}
+      propertyPath: OnFadeOut.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: EventScriptable, Programming
+      objectReference: {fileID: 0}
     - target: {fileID: 2313968034536364332, guid: a8178c6a026681f42a30ea31262b94e7, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2747,7 +2871,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2605508458137096012, guid: a8178c6a026681f42a30ea31262b94e7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1486312236}
   m_SourcePrefab: {fileID: 100100000, guid: a8178c6a026681f42a30ea31262b94e7, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
