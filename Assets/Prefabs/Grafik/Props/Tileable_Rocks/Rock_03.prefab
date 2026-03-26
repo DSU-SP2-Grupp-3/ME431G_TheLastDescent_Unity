@@ -53,6 +53,10 @@ PrefabInstance:
       value: Rock_03
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 4d494c5977b7aee4689b6320ae655e84, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4d494c5977b7aee4689b6320ae655e84, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -63,6 +67,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4d494c5977b7aee4689b6320ae655e84, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2678276780493134598}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4d494c5977b7aee4689b6320ae655e84, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8035269217863973254}
   m_SourcePrefab: {fileID: 100100000, guid: 4d494c5977b7aee4689b6320ae655e84, type: 3}
 --- !u!1 &4482438203985683831 stripped
 GameObject:
@@ -91,3 +98,23 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -5402537198215104751, guid: 4d494c5977b7aee4689b6320ae655e84, type: 3}
+--- !u!114 &8035269217863973254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4482438203985683831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SerializedVersion: 0
+  m_OverrideArea: 1
+  m_Area: 1
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff

@@ -56,8 +56,65 @@ PrefabInstance:
       propertyPath: m_Name
       value: IceRock01
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 63fdaaef14914944da5bbf49351b0346, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 63fdaaef14914944da5bbf49351b0346, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 743184561775979576}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 63fdaaef14914944da5bbf49351b0346, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3665552758576891801}
   m_SourcePrefab: {fileID: 100100000, guid: 63fdaaef14914944da5bbf49351b0346, type: 3}
+--- !u!1 &6428180654415046128 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 63fdaaef14914944da5bbf49351b0346, type: 3}
+  m_PrefabInstance: {fileID: 6193599502415255713}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &743184561775979576
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6428180654415046128}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -8971355165230693711, guid: 63fdaaef14914944da5bbf49351b0346, type: 3}
+--- !u!114 &3665552758576891801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6428180654415046128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SerializedVersion: 0
+  m_OverrideArea: 1
+  m_Area: 1
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff

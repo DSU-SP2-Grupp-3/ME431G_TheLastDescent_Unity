@@ -70,10 +70,68 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 8947bc8b21fe11a46a8f4cc9dee90c80, type: 2}
     - target: {fileID: 919132149155446097, guid: 1ff9e696e9286844caea0845c7069e0a, type: 3}
       propertyPath: m_Name
-      value: Rock_01
+      value: Rock_01(Ice)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1ff9e696e9286844caea0845c7069e0a, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1ff9e696e9286844caea0845c7069e0a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5332519302666250873}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1ff9e696e9286844caea0845c7069e0a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3741059223376433330}
   m_SourcePrefab: {fileID: 100100000, guid: 1ff9e696e9286844caea0845c7069e0a, type: 3}
+--- !u!1 &5523299901610843797 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1ff9e696e9286844caea0845c7069e0a, type: 3}
+  m_PrefabInstance: {fileID: 4640917835545830340}
+  m_PrefabAsset: {fileID: 0}
+--- !u!136 &5332519302666250873
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5523299901610843797}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.011019166
+  m_Height: 0.030181212
+  m_Direction: 1
+  m_Center: {x: -0.00022308387, y: 0.009624514, z: -0.0005012048}
+--- !u!114 &3741059223376433330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5523299901610843797}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SerializedVersion: 0
+  m_OverrideArea: 1
+  m_Area: 1
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
