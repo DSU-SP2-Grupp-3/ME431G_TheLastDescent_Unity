@@ -2373,6 +2373,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 455650176158864557, guid: e9bd46eff8e5f61449b2e1ca3b7d1a08, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2968415986432020565}
+    - target: {fileID: 821771831201221341, guid: e9bd46eff8e5f61449b2e1ca3b7d1a08, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2968415986432020565}
     - target: {fileID: 2320916435429491669, guid: e9bd46eff8e5f61449b2e1ca3b7d1a08, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -2385,6 +2393,10 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3442888554369436321, guid: e9bd46eff8e5f61449b2e1ca3b7d1a08, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2968415986432020565}
     - target: {fileID: 4383047612285556555, guid: e9bd46eff8e5f61449b2e1ca3b7d1a08, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2517,6 +2529,14 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6682862123217857886, guid: e9bd46eff8e5f61449b2e1ca3b7d1a08, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2968415986432020565}
+    - target: {fileID: 6927674744845196534, guid: e9bd46eff8e5f61449b2e1ca3b7d1a08, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2968415986432020565}
     - target: {fileID: 7112903268396531339, guid: e9bd46eff8e5f61449b2e1ca3b7d1a08, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -2569,7 +2589,12 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0.14868164
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3471380737003119261, guid: e9bd46eff8e5f61449b2e1ca3b7d1a08, type: 3}
+    - {fileID: 4138319128704221825, guid: e9bd46eff8e5f61449b2e1ca3b7d1a08, type: 3}
+    - {fileID: 367072758415501417, guid: e9bd46eff8e5f61449b2e1ca3b7d1a08, type: 3}
+    - {fileID: 5127522786797375375, guid: e9bd46eff8e5f61449b2e1ca3b7d1a08, type: 3}
+    - {fileID: 7474682979402029628, guid: e9bd46eff8e5f61449b2e1ca3b7d1a08, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -4172,7 +4197,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: OnTurnBasedEnteredForced.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
-      value: SetValueAndPlay
+      value: TryPlayAndSetValue
       objectReference: {fileID: 0}
     - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: OnRealTimeEnteredForced.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
