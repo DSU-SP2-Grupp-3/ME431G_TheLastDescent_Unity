@@ -89,7 +89,7 @@ public class AI : MonoBehaviour
             return distance1.CompareTo(distance2);
         });
 
-        return candidates;
+        return candidates.Where(c => !c.dead);
     }
 
     [Serializable]

@@ -57,8 +57,6 @@ public class EventPlayer
         PLAYBACK_STATE state;
         eventInstance.getPlaybackState(out state);
 
-        Debug.Log(state);
-
         return state == PLAYBACK_STATE.PLAYING || state == PLAYBACK_STATE.STARTING;
     }
 

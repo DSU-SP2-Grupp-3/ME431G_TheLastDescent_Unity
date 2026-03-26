@@ -14,7 +14,8 @@ public class AudioManager : Service<AudioManager>
 {
     [SerializeField]
     private Dictionary<GUID, EventPlayer> PersistentPlayers;
-    public EventPlayer Getplayer (GUID value) => PersistentPlayers.GetValueOrDefault(value);
+
+    private Dictionary<string, EventScriptable> bank = new();
     private List<EventPlayer> OneShotPlayers = new();
     private readonly Queue<EventPlayer> removalQueue = new();
     private void Awake()
@@ -22,6 +23,12 @@ public class AudioManager : Service<AudioManager>
         PersistentPlayers = new();
 
         Register();
+        var all = Resources.LoadAll<EventScriptable>("");
+        foreach (var e in all)
+        {
+            bank[e.name.ToLower().Trim()] = e;
+        }
+
     }
 
 
@@ -87,8 +94,7 @@ public class AudioManager : Service<AudioManager>
             tempEvent.PlayEvent();
             return;
         }
-        PersistentPlayers.TryGetValue(eventScriptable.eventReference.Guid, out EventPlayer player);
-        if (player != null)
+        if (TryGet(eventScriptable.eventReference, out EventPlayer player))
         {
             player.PlayEvent();
             return;
@@ -112,8 +118,8 @@ public class AudioManager : Service<AudioManager>
 
     public void RunInstanceModification(EventScriptable eventScriptable, string paramName, float value)
     {
-        if(PersistentPlayers.TryGetValue(eventScriptable.eventReference.Guid, out EventPlayer player))
-        player.RunInstanceModification(paramName, value);
+        if (PersistentPlayers.TryGetValue(eventScriptable.eventReference.Guid, out EventPlayer player))
+            player.RunInstanceModification(paramName, value);
     }
     public void RunInstanceModification(EventMono eventMono, string paramName, float value)
     {
@@ -159,6 +165,7 @@ public class AudioManager : Service<AudioManager>
 
     public void RemovePlayer(EventPlayer eventPlayer)
     {
+        eventPlayer.Stop();
         eventPlayer.eventInstance.release();
         OneShotPlayers.Remove(eventPlayer);
     }
@@ -166,8 +173,9 @@ public class AudioManager : Service<AudioManager>
 
     public void RemovePlayer(EventReference eventReference)
     {
-        if (!PersistentPlayers.TryGetValue(eventReference.Guid, out EventPlayer eventPlayer)) { return; }
-        eventPlayer.eventInstance.release();
+        if (!TryGet(eventReference, out EventPlayer player)) { return; }
+        player.Stop();
+        player.eventInstance.release();
         PersistentPlayers.Remove(eventReference.Guid);
     }
 
@@ -175,7 +183,10 @@ public class AudioManager : Service<AudioManager>
     public void CreatePlayer(EventScriptable eventScriptable, out EventPlayer eventPlayer)
     {
         eventPlayer = new EventPlayer(eventScriptable.eventReference);
-        if (!eventPlayer.isOneshot() || eventScriptable.type == EventScriptable.Override.persistent) PersistentPlayers.Add(eventScriptable.eventReference.Guid, eventPlayer);
+        if (!eventPlayer.isOneshot() || eventScriptable.type == EventScriptable.Override.persistent)
+        {
+            PersistentPlayers.Add(eventScriptable.eventReference.Guid, eventPlayer);
+        }
         else OneShotPlayers.Add(eventPlayer);
     }
     #endregion PlayerHandler
@@ -189,11 +200,9 @@ public class AudioManager : Service<AudioManager>
     }
 
 
-    public bool TryGet(string eventName, out EventScriptable result)
+    public bool TryGet(string name, out EventScriptable result)
     {
-        string eventNameC = eventName.ToLower().Trim();
-        result = Resources.Load<EventScriptable>(eventName);
-        return result != null;
+        return bank.TryGetValue(name.ToLower().Trim(), out result);
     }
     public bool TryGet(EventReference eventReference, out EventPlayer result)
     {
@@ -201,4 +210,8 @@ public class AudioManager : Service<AudioManager>
         result = player;
         return boolean;
     }
+    public bool TryGetPlayer(GUID value, out EventPlayer player)
+{
+    return PersistentPlayers.TryGetValue(value, out player);
+}
 }

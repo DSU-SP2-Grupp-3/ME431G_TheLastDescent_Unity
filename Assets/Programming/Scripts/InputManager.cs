@@ -84,7 +84,8 @@ public class InputManager : Service<InputManager>
     /// <returns></returns>
     private RaycastHit GetRayPriority(RaycastHit[] allRayReturns, out bool didHit)
     {
-        allRayReturns = BubbleSortRayCast(allRayReturns);
+        Array.Sort(allRayReturns, (a, b) => a.distance.CompareTo(b.distance));
+        
         foreach (LayerMask priorityLayer in layerPriority)
         {
             foreach (RaycastHit hit in allRayReturns)
@@ -99,26 +100,6 @@ public class InputManager : Service<InputManager>
         }
         didHit = false;
         return new RaycastHit();
-    }
-    //-Ma. Might want to change this to quicksort or merge sort if it becomes too expensive
-    private RaycastHit[] BubbleSortRayCast(RaycastHit[] raycastAll)
-    {
-        var n = raycastAll.Length;
-        while (n > 0)
-        {
-            for (int i = 1; i < n; i++)
-            {
-                if (raycastAll[i - 1].distance > raycastAll[i].distance)
-                {
-
-                    RaycastHit temp = raycastAll[i - 1];
-                    raycastAll[i - 1] = raycastAll[i];
-                    raycastAll[i] = temp;
-                }
-            }
-            n--;
-        }
-        return raycastAll;
     }
 
     // private bool rightMouseHasBeenDown = false;

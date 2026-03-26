@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 public class VolumeTrigger : MonoBehaviour
 {
-    public RoundClock.ProgressMode triggerInMode = RoundClock.ProgressMode.RealTime;
+    public RoundClock.ProgressMode triggerInMode = RoundClock.ProgressMode.Automatic;
     public Locator<RoundClock> roundClock;
 
     public UnityEvent TriggerEnter;

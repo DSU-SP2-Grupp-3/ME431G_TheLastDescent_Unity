@@ -17,16 +17,17 @@ public class DialogueCommand : Command
         agentManager = new Locator<AgentManager>().Get();
         ToggleTurnBasedButton turnBasedButton = new Locator<ToggleTurnBasedButton>().Get();
         RoundClock roundClock = new Locator<RoundClock>().Get();
+        TurnManager turnManager = new Locator<TurnManager>().Get();
         bool dialoguePausedRoundClock = false;
 
         dialogueServiceLocator = new();
 
         if (dialogueServiceLocator.TryGet(out dialogueService))
         {
-            if (roundClock.currentMode == RoundClock.ProgressMode.RealTime)
+            if (roundClock.currentMode == RoundClock.ProgressMode.Automatic)
             {
                 dialoguePausedRoundClock = true;
-                roundClock.EnterTurnBased();
+                roundClock.Pause();
             }
             agentManager.LockAgentInputActive(this);
 
@@ -38,9 +39,9 @@ public class DialogueCommand : Command
 
             agentManager.UnlockAgentInputActive(this);
 
-            if (dialoguePausedRoundClock)
+            if (dialoguePausedRoundClock && !turnManager.active)
             {
-                roundClock.EnterRealTime();
+                roundClock.Unpause();
             }
         }
     }

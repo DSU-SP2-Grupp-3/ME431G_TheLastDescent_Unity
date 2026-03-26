@@ -64,12 +64,12 @@ public class AudioEventCaller : MonoBehaviour
             */
             if (eventScriptable != null)
             {
-                if (!locatedService.TryGet(eventScriptable.name, out _)) locatedService.PlayAudioEvent(eventScriptable);
+                if (!locatedService.TryGet(eventScriptable.eventReference, out _)) locatedService.PlayAudioEvent(eventScriptable);
                 locatedService.RunInstanceModification(eventScriptable, ParameterName, value);
             }
             else
             {
-                if (!locatedService.TryGet(eventPlayerName, out _)) locatedService.PlayAudioEvent(eventPlayerName);
+                if (!locatedService.TryGet(eventScriptable.eventReference, out _)) locatedService.PlayAudioEvent(eventPlayerName);
                 locatedService.RunInstanceModification(eventPlayerName, ParameterName, value);
             }
         }

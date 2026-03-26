@@ -1,13 +1,13 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class SlideShow : MonoBehaviour
 {
-    [SerializeField]
-    private string nextSceneName;
+    public UnityEvent SlideEnd;
 
-    public void LoadNextScene()
+    public void TriggerSlideEnd()
     {
-        SceneManager.LoadScene(nextSceneName);
+        SlideEnd?.Invoke();
     }
 }

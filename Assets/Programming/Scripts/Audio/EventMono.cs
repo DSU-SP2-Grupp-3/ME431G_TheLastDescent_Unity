@@ -24,5 +24,13 @@ public class EventMono : MonoBehaviour
     {
         eventPlayer.eventInstance.setParameterByName(name, value);
     }
+    public void Start()
+    {
+        eventPlayer.PlayEvent();
+    }
+        public void Stop()
+    {
+        eventPlayer.Stop();
+    }
 
 }

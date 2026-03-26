@@ -11,6 +11,7 @@ public class ScreenFade : MonoBehaviour
     public UnityEvent OnFadeIn;
     public UnityEvent OnFadeOut;
     public float fadeTime;
+
     void Awake()
     {
         image = gameObject.GetComponent<Image>();

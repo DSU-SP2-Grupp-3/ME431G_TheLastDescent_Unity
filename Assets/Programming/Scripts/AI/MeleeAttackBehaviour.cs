@@ -36,9 +36,9 @@ public class MeleeAttackBehaviour : BehaviourDefinition
         List<WorldAgent> targets = agentManager.GetFilteredAgents((w => w.team == teamToAttack)).ToList();
         IEnumerable<WorldAgent> nearestCandidates = AI.GetNearestAgent(aiAgent.transform.position, targets);
 
-
         MoveInRangeCommand inRangeCommand = null;
         WorldAgent closest = null;
+        bool candidateExists = false;
         foreach (WorldAgent candidate in nearestCandidates)
         {
             closest = candidate;
@@ -47,16 +47,23 @@ public class MeleeAttackBehaviour : BehaviourDefinition
                 aiAgent.weaponStats.attackRange,
                 aiAgent, closest
             );
-            if (inRangeCommand.possible) break;
+            if (inRangeCommand.possible)
+            {
+                candidateExists = true;
+                break;
+            }
         }
-        
+
+        // if no alive and reachable candidate exists, perform idle commands
+        if (!candidateExists) return GetIdleBehaviourCommands(aiAgent, parameters);
+
         bool trimmed = inRangeCommand.Trim(aiAgent.localStats.movement);
 
         commands.AddCommand(inRangeCommand);
-        
+
         LookCommand lookCommand = new LookCommand(aiAgent, closest);
         commands.AddCommand(lookCommand);
-        
+
         // if the path was not trimmed that means that the enemy is in range to attack
         if (!trimmed)
         {
