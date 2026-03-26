@@ -22,7 +22,7 @@ public class MusicRandomizer : MonoBehaviour
             int time = Random.Range(min, max);
             yield return new WaitForSeconds(time);
 
-            if  (audioManager.IsPlaying(eventScriptable.eventReference))
+            if (audioManager.IsPlaying(eventScriptable.eventReference))
             {
                 continue;
             }
@@ -32,11 +32,9 @@ public class MusicRandomizer : MonoBehaviour
 
             Debug.Log($"Playing Music track number {track}");
 
-            EventPlayer player = audioManager.Getplayer(eventScriptable.eventReference.Guid);
-            if (player == null)
+            if (!audioManager.TryGet(eventScriptable.eventReference, out EventPlayer player))
             {
-                audioManager.CreatePlayer(eventScriptable, out EventPlayer result);
-                player = result;
+                audioManager.CreatePlayer(eventScriptable, out player);
             }
 
             player.RunInstanceModification(ParamName, track);
