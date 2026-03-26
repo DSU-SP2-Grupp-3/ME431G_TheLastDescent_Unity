@@ -29,7 +29,6 @@ public class ScreenFade : MonoBehaviour
     }
     public void CallFade(bool state)
     {
-        Debug.Log(state);
         switch (state)
         {
             case true:

@@ -14,7 +14,7 @@ public class AudioManager : Service<AudioManager>
 {
     [SerializeField]
     private Dictionary<GUID, EventPlayer> PersistentPlayers;
-    public EventPlayer Getplayer (GUID value) => PersistentPlayers.GetValueOrDefault(value);
+    public EventPlayer Getplayer(GUID value) => PersistentPlayers.GetValueOrDefault(value);
     private List<EventPlayer> OneShotPlayers = new();
     private readonly Queue<EventPlayer> removalQueue = new();
     private void Awake()
@@ -87,8 +87,7 @@ public class AudioManager : Service<AudioManager>
             tempEvent.PlayEvent();
             return;
         }
-        PersistentPlayers.TryGetValue(eventScriptable.eventReference.Guid, out EventPlayer player);
-        if (player != null)
+        if (TryGet(eventScriptable.eventReference, out EventPlayer player))
         {
             player.PlayEvent();
             return;
@@ -101,7 +100,8 @@ public class AudioManager : Service<AudioManager>
 
     public void StopAudioEvent(EventScriptable eventScriptable)
     {
-        if(TryGet(eventScriptable.eventReference, out EventPlayer player)) player.Stop();
+        UnityEngine.Debug.Log("I am proud");
+        if (TryGet(eventScriptable.eventReference, out EventPlayer player)) player.Stop();
         RemovePlayer(eventScriptable.eventReference);
     }
     public void StopAudioEvent(string name)
@@ -113,8 +113,8 @@ public class AudioManager : Service<AudioManager>
 
     public void RunInstanceModification(EventScriptable eventScriptable, string paramName, float value)
     {
-        if(PersistentPlayers.TryGetValue(eventScriptable.eventReference.Guid, out EventPlayer player))
-        player.RunInstanceModification(paramName, value);
+        if (PersistentPlayers.TryGetValue(eventScriptable.eventReference.Guid, out EventPlayer player))
+            player.RunInstanceModification(paramName, value);
     }
     public void RunInstanceModification(EventMono eventMono, string paramName, float value)
     {
@@ -160,6 +160,7 @@ public class AudioManager : Service<AudioManager>
 
     public void RemovePlayer(EventPlayer eventPlayer)
     {
+        eventPlayer.Stop();
         eventPlayer.eventInstance.release();
         OneShotPlayers.Remove(eventPlayer);
     }
@@ -168,6 +169,7 @@ public class AudioManager : Service<AudioManager>
     public void RemovePlayer(EventReference eventReference)
     {
         if (!PersistentPlayers.TryGetValue(eventReference.Guid, out EventPlayer eventPlayer)) { return; }
+        eventPlayer.Stop();
         eventPlayer.eventInstance.release();
         PersistentPlayers.Remove(eventReference.Guid);
     }
@@ -176,7 +178,11 @@ public class AudioManager : Service<AudioManager>
     public void CreatePlayer(EventScriptable eventScriptable, out EventPlayer eventPlayer)
     {
         eventPlayer = new EventPlayer(eventScriptable.eventReference);
-        if (!eventPlayer.isOneshot() || eventScriptable.type == EventScriptable.Override.persistent) PersistentPlayers.Add(eventScriptable.eventReference.Guid, eventPlayer);
+        if (!eventPlayer.isOneshot() || eventScriptable.type == EventScriptable.Override.persistent) 
+        {
+            PersistentPlayers.Add(eventScriptable.eventReference.Guid, eventPlayer);
+            UnityEngine.Debug.Log(eventScriptable.name);
+        }
         else OneShotPlayers.Add(eventPlayer);
     }
     #endregion PlayerHandler
@@ -200,6 +206,8 @@ public class AudioManager : Service<AudioManager>
     {
         bool boolean = PersistentPlayers.TryGetValue(eventReference.Guid, out EventPlayer player);
         result = player;
+        UnityEngine.Debug.Log(boolean);
+        UnityEngine.Debug.Log(result);
         return boolean;
     }
 }
