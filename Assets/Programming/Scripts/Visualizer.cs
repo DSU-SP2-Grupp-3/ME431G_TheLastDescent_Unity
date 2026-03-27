@@ -105,8 +105,16 @@ public class Visualizer : MonoBehaviour
         else Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
         packageInfoDisplay.text = "";
 
-        if (commandPackage.hint != null) hintDisplay.text = commandPackage.hint;
-        else hintDisplay.text = "";
+        if (commandPackage.hint != null)
+        {
+            hintDisplay.gameObject.SetActive(true);
+            hintDisplay.text = commandPackage.hint;
+        }
+        else
+        { 
+            hintDisplay.text = "";
+            hintDisplay.gameObject.SetActive(false);
+        }
 
         if (turnManager.Get().executingTurn) return;
 

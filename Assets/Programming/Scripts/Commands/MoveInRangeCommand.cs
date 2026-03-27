@@ -37,9 +37,9 @@ public class MoveInRangeCommand : Command, IMoveCommand
     private const float playEndAnimationDistance = 0.5f;
     private const float ignoreMovementDistance = 0.1f;
     private const float interruptTime = 20f;
-    
-    private const float sampleRadiusStepSize = 0.1f;
-    private const float sampleAngleStepSize = 10f * Mathf.Deg2Rad;
+
+    private const float circumferenceDistance = 0.1f;
+    private const float sampleRadiusStepSize = 0.2f;
     private const float samplePointRange = 0.2f;
     private const float samplePathStepSize = 0.2f;
 
@@ -60,7 +60,7 @@ public class MoveInRangeCommand : Command, IMoveCommand
         // search points within radius, find the point inside the radius with shortest complete path to agent
         for (float sampleRadius = range; sampleRadius > 0; sampleRadius -= sampleRadiusStepSize)
         {
-            for (float angle = 0; angle < Mathf.PI * 2; angle += sampleAngleStepSize)
+            for (float angle = 0; angle < Mathf.PI * 2; angle += circumferenceDistance / sampleRadius)
             {
                 Vector3 delta = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * sampleRadius;
                 Vector3 samplePosition = toPosition + delta;
@@ -72,6 +72,7 @@ public class MoveInRangeCommand : Command, IMoveCommand
                     NavMesh.CalculatePath(fromPosition, samplePosition, NavMesh.AllAreas, agentPath);
                 }
             }
+            // causes in correct pathing in certain situations (but helps performance)
             // if a valid path has been found, don't check smaller radiuses
             if (agentPath.status == NavMeshPathStatus.PathComplete) break;
         }
