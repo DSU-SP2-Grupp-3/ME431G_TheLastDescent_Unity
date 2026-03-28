@@ -176,8 +176,7 @@ public class TurnManager : Service<TurnManager>
 
             if (AllActiveEnemiesDead())
             {
-                // force entrance into real time when all enemies have been defeated
-                modeSwitcher.Get().TryEnterRealTime(true);
+                modeSwitcher.Get().EnterRealTime();
             }
 
             camera.Get().SetPanningLocked(false);

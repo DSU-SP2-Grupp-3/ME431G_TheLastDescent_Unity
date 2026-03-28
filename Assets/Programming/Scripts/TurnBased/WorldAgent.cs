@@ -319,10 +319,8 @@ public class WorldAgent : MonoBehaviour
             }
             else
             {
-                if (modeSwitcher.Get().TryEnterTurnBased(true))
-                {
-                    ForcedEnterTurnBased?.Invoke(this);
-                }
+                modeSwitcher.Get().EnterTurnBased();
+                ForcedEnterTurnBased?.Invoke(this);
             }
         }
         OnActivate?.Invoke();

@@ -4056,16 +4056,44 @@ PrefabInstance:
     m_TransformParent: {fileID: 2489599178037006765}
     m_Modifications:
     - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnTurnBasedEntered.m_PersistentCalls.m_Calls.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: OnRealTimeEnteredForced.m_PersistentCalls.m_Calls.Array.size
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: OnTurnBasedEnteredForced.m_PersistentCalls.m_Calls.Array.size
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.data[5].m_Mode
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.data[6].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.data[7].m_Mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.data[8].m_Mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnTurnBasedEntered.m_PersistentCalls.m_Calls.Array.data[6].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnTurnBasedEntered.m_PersistentCalls.m_Calls.Array.data[7].m_Mode
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -4082,19 +4110,27 @@ PrefabInstance:
     - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.data[3].m_Target
       value: 
-      objectReference: {fileID: 1835890537154417686}
+      objectReference: {fileID: 8783913314965222741}
     - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.data[4].m_Target
       value: 
-      objectReference: {fileID: 8783913314965222741}
+      objectReference: {fileID: 4005052351877550886}
     - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.data[5].m_Target
       value: 
-      objectReference: {fileID: 4005052351877550886}
+      objectReference: {fileID: 4505704836680137289}
     - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.data[6].m_Target
       value: 
-      objectReference: {fileID: 4505704836680137289}
+      objectReference: {fileID: 8735800902288997107}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.data[7].m_Target
+      value: 
+      objectReference: {fileID: 2968415986432020565}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.data[8].m_Target
+      value: 
+      objectReference: {fileID: 2968415986432020565}
     - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: OnTurnBasedEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -4120,6 +4156,26 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4505704836680137289}
     - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnTurnBasedEntered.m_PersistentCalls.m_Calls.Array.data[6].m_Target
+      value: 
+      objectReference: {fileID: 1042727677510206925}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnTurnBasedEntered.m_PersistentCalls.m_Calls.Array.data[7].m_Target
+      value: 
+      objectReference: {fileID: 5676253459269358761}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.data[7].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.data[8].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.data[3].m_MethodName
+      value: SetStatsVisbility
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.data[4].m_MethodName
       value: SetStatsVisbility
       objectReference: {fileID: 0}
@@ -4129,7 +4185,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.data[6].m_MethodName
-      value: SetStatsVisbility
+      value: PopUp
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.data[7].m_MethodName
+      value: StopAudioEvent
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.data[8].m_MethodName
+      value: StopAudioEvent
       objectReference: {fileID: 0}
     - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: OnRealTimeEnteredForced.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
@@ -4138,6 +4202,14 @@ PrefabInstance:
     - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: OnRealTimeEnteredForced.m_PersistentCalls.m_Calls.Array.data[3].m_Mode
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnTurnBasedEntered.m_PersistentCalls.m_Calls.Array.data[6].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnTurnBasedEntered.m_PersistentCalls.m_Calls.Array.data[7].m_CallState
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: OnTurnBasedEntered.m_PersistentCalls.m_Calls.Array.data[3].m_MethodName
@@ -4150,6 +4222,14 @@ PrefabInstance:
     - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: OnTurnBasedEntered.m_PersistentCalls.m_Calls.Array.data[5].m_MethodName
       value: SetStatsVisbility
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnTurnBasedEntered.m_PersistentCalls.m_Calls.Array.data[6].m_MethodName
+      value: PopUp
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnTurnBasedEntered.m_PersistentCalls.m_Calls.Array.data[7].m_MethodName
+      value: TryPlayAndSetValue
       objectReference: {fileID: 0}
     - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: OnTurnBasedEnteredForced.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
@@ -4200,6 +4280,54 @@ PrefabInstance:
       value: TryPlayAndSetValue
       objectReference: {fileID: 0}
     - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.data[3].m_TargetAssemblyTypeName
+      value: PlayerUI, Programming
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.data[6].m_TargetAssemblyTypeName
+      value: Popup, Programming
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.data[7].m_TargetAssemblyTypeName
+      value: AudioManager, Programming
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.data[8].m_TargetAssemblyTypeName
+      value: AudioManager, Programming
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnTurnBasedEntered.m_PersistentCalls.m_Calls.Array.data[6].m_TargetAssemblyTypeName
+      value: Popup, Programming
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnTurnBasedEntered.m_PersistentCalls.m_Calls.Array.data[7].m_TargetAssemblyTypeName
+      value: AudioEventCaller, Programming
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.data[3].m_Arguments.m_BoolArgument
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnTurnBasedEntered.m_PersistentCalls.m_Calls.Array.data[6].m_Arguments.m_BoolArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnTurnBasedEntered.m_PersistentCalls.m_Calls.Array.data[7].m_Arguments.m_BoolArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.data[7].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 11400000, guid: 324bcb606c2f5dd4daee2e3bc5284b9f, type: 2}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.data[8].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 11400000, guid: 324bcb606c2f5dd4daee2e3bc5284b9f, type: 2}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnTurnBasedEntered.m_PersistentCalls.m_Calls.Array.data[7].m_Arguments.m_FloatArgument
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: OnRealTimeEnteredForced.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
       value: AudioManager, Programming
       objectReference: {fileID: 0}
@@ -4214,6 +4342,22 @@ PrefabInstance:
     - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: OnTurnBasedEnteredForced.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_FloatArgument
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.data[7].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: EventScriptable, Programming
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnRealTimeEntered.m_PersistentCalls.m_Calls.Array.data[8].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: EventScriptable, Programming
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnTurnBasedEntered.m_PersistentCalls.m_Calls.Array.data[6].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
+      propertyPath: OnTurnBasedEntered.m_PersistentCalls.m_Calls.Array.data[7].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 611651261740516097, guid: fc12c655057f57347a27ad56c68ed137, type: 3}
       propertyPath: OnRealTimeEnteredForced.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
