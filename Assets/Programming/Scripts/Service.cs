@@ -19,7 +19,11 @@ public abstract class Service<T> : MonoBehaviour where T : class
 
     protected void Register()
     {
-        if (instance) OnDeregister?.Invoke(instance as T);
+        if (instance)
+        {
+            OnDeregister?.Invoke(instance as T);
+            instance.Overridden();
+        }
         instance = this;
         OnRegister?.Invoke(instance as T);
     }
@@ -28,4 +32,6 @@ public abstract class Service<T> : MonoBehaviour where T : class
         if (instance) OnDeregister?.Invoke(instance as T);
         instance = null;
     }
+
+    protected virtual void Overridden() { }
 }
