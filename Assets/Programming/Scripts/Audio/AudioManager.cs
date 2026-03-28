@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using FMOD;
-using FMOD.Studio;
 using FMODUnity;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 //-Ma. You will see a lot of repeated code here due to Unity Events.
 //General rules to follow.
@@ -13,22 +11,20 @@ using UnityEngine;
 public class AudioManager : Service<AudioManager>
 {
     [SerializeField]
-    private Dictionary<GUID, EventPlayer> PersistentPlayers;
-
-    private Dictionary<string, EventScriptable> bank = new();
-    private List<EventPlayer> OneShotPlayers = new();
-    private readonly Queue<EventPlayer> removalQueue = new();
+    private static Dictionary<EventReference, EventPlayer> PersistentPlayers = new();
+    private static Dictionary<string, EventScriptable> bank = new();
+    private static List<EventPlayer> OneShotPlayers = new();
     private void Awake()
     {
-        PersistentPlayers = new();
-
         Register();
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
         var all = Resources.LoadAll<EventScriptable>("");
         foreach (var e in all)
         {
             bank[e.name.ToLower().Trim()] = e;
         }
-
     }
 
 
@@ -115,10 +111,20 @@ public class AudioManager : Service<AudioManager>
         if (TryGet(name, out EventScriptable result)) StopAudioEvent(result);
     }
 
+    private void StopAllPersistentPlayers()
+    {
+        foreach (var kvp in PersistentPlayers)
+        {
+            var player = kvp.Value;
+            player.Stop(); // consider fadeout if needed
+            player.eventInstance.release();
+        }
 
+        PersistentPlayers.Clear();
+    }
     public void RunInstanceModification(EventScriptable eventScriptable, string paramName, float value)
     {
-        if (PersistentPlayers.TryGetValue(eventScriptable.eventReference.Guid, out EventPlayer player))
+        if (PersistentPlayers.TryGetValue(eventScriptable.eventReference, out EventPlayer player))
             player.RunInstanceModification(paramName, value);
     }
     public void RunInstanceModification(EventMono eventMono, string paramName, float value)
@@ -176,7 +182,7 @@ public class AudioManager : Service<AudioManager>
         if (!TryGet(eventReference, out EventPlayer player)) { return; }
         player.Stop();
         player.eventInstance.release();
-        PersistentPlayers.Remove(eventReference.Guid);
+        PersistentPlayers.Remove(eventReference);
     }
 
 
@@ -185,13 +191,16 @@ public class AudioManager : Service<AudioManager>
         eventPlayer = new EventPlayer(eventScriptable.eventReference);
         if (!eventPlayer.isOneshot() || eventScriptable.type == EventScriptable.Override.persistent)
         {
-            PersistentPlayers.Add(eventScriptable.eventReference.Guid, eventPlayer);
+            PersistentPlayers.Add(eventScriptable.eventReference, eventPlayer);
         }
         else OneShotPlayers.Add(eventPlayer);
     }
     #endregion PlayerHandler
 
-
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        StopAllPersistentPlayers();
+    }
     public EventScriptable Get(string eventName)
     {
         string eventNameC = eventName.ToLower().Trim();
@@ -206,12 +215,8 @@ public class AudioManager : Service<AudioManager>
     }
     public bool TryGet(EventReference eventReference, out EventPlayer result)
     {
-        bool boolean = PersistentPlayers.TryGetValue(eventReference.Guid, out EventPlayer player);
+        bool boolean = PersistentPlayers.TryGetValue(eventReference, out EventPlayer player);
         result = player;
         return boolean;
     }
-    public bool TryGetPlayer(GUID value, out EventPlayer player)
-{
-    return PersistentPlayers.TryGetValue(value, out player);
-}
 }
