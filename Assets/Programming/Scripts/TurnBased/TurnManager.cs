@@ -24,7 +24,7 @@ public class TurnManager : Service<TurnManager>
     private Locator<ModeSwitcher> modeSwitcher;
     private Locator<Modal> modalLocator;
     private Locator<InputManager> inputManager;
-    private Locator<OrthographicCameraMover> camera;
+    private Locator<OrthographicCameraMover> oCamera;
 
     [SerializeField]
     private ResourceManager resourceManager;
@@ -43,7 +43,7 @@ public class TurnManager : Service<TurnManager>
         modeSwitcher = new();
         modalLocator = new();
         inputManager = new();
-        camera = new();
+        oCamera = new();
     }
 
     private void Start()
@@ -146,12 +146,12 @@ public class TurnManager : Service<TurnManager>
             playerReady = false;
             yield return new WaitUntil((() => playerReady == true));
 
-            camera.Get().SetPanningLocked(true);
+            oCamera.Get().SetPanningLocked(true);
 
             turnManagerEvents.StartExecutingTurn?.Invoke();
             executingTurn = true;
 
-            camera.Get().SetCameraTarget(agentManager.Get().playerMiddleTransform);
+            oCamera.Get().SetCameraTarget(agentManager.Get().playerMiddleTransform);
 
             OrderGroups();
             for (int i = 0; i < orderedGroups.Count; i++)
@@ -160,7 +160,7 @@ public class TurnManager : Service<TurnManager>
                 if (activeGroup.GroupDead()) continue;
                 if (activeGroup.team != WorldAgent.Team.Player)
                 {
-                    camera.Get().SetCameraTarget(activeGroup.GetCameraTarget().cameraFocusTransform);
+                    oCamera.Get().SetCameraTarget(activeGroup.GetCameraTarget().cameraFocusTransform);
                 }
                 yield return WaitForAll(activeGroup.GetGroupCommandQueues());
             }
@@ -179,7 +179,7 @@ public class TurnManager : Service<TurnManager>
                 modeSwitcher.Get().EnterRealTime();
             }
 
-            camera.Get().SetPanningLocked(false);
+            oCamera.Get().SetPanningLocked(false);
         }
     }
 
