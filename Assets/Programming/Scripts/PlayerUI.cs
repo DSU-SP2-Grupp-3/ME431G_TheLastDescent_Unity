@@ -26,16 +26,16 @@ public class PlayerUI : MonoBehaviour
     private float maxAP;
 
     private Locator<AgentManager> agentManager;
-
     private Locator<ModeSwitcher> modeSwitcher;
+    private Locator<DialogueService> dialogue;
 
     private HashSet<WorldAgent.DebuffLevel> debuffLevels;
 
     private void Awake()
     {
         agentManager = new Locator<AgentManager>();
-
         modeSwitcher = new Locator<ModeSwitcher>();
+        dialogue = new Locator<DialogueService>();
 
         debuffLevels = new();
         debuffHints.text = "";
@@ -75,7 +75,9 @@ public class PlayerUI : MonoBehaviour
     public void SetStatsVisbility(bool show)
     {
         if (modeSwitcher == null) return;
-        if (!show && modeSwitcher.Get().mode == RoundClock.ProgressMode.Manual) statsContext.SetActive(true);
+        if (!show && 
+            (modeSwitcher.Get().mode == RoundClock.ProgressMode.Manual && !dialogue.Get().dialogueRunning))
+        { statsContext.SetActive(true); } 
         else statsContext.SetActive(show);
     }
 

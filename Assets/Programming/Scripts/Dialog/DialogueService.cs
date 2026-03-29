@@ -10,6 +10,7 @@ public class DialogueService : Service<DialogueService>
 {
     private Queue<DialogueRequest> requestQueue = new();
     private bool isRunning = false;
+    public bool dialogueRunning => isRunning;
     private Queue<Dialogue> dialogues = new();
 
     private Queue<string> Sentences = new();

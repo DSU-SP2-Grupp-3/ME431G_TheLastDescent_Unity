@@ -8,6 +8,13 @@ public class SceneChanger : Service<SceneChanger>
         Register();
     }
 
+    public void StopAllSounds()
+    {
+        AudioManager am = new Locator<AudioManager>().Get();
+        am.StopAudioEvent("BasicAmb");
+        am.StopAudioEvent("MusicManager");
+    }
+    
     public void GoToScene(string nextSceneName)
     {
         SceneManager.LoadScene(nextSceneName);

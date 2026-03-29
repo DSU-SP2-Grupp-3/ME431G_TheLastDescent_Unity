@@ -21,7 +21,12 @@ public class RoundClock : Service<RoundClock>
     {
         Register();
     }
-    
+
+    protected override void Overridden()
+    {
+        RoundProgressed = null;
+    }
+
     void Start()
     {
         currentRound = 0;

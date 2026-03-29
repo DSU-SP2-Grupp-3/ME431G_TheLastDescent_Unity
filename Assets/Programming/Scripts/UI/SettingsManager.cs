@@ -83,7 +83,15 @@ public class SettingsManager : Service<SettingsManager>
 
     public void SetResolutionHD()
     {
-        Screen.SetResolution(1920, 1080, FullScreenMode.ExclusiveFullScreen);
+        Resolution currentRes = Screen.currentResolution;
+        if (currentRes.height > 1080 && currentRes.width > 1920)
+        {
+            Screen.SetResolution(1920, 1080, FullScreenMode.Windowed);
+        }
+        else
+        {
+            Screen.SetResolution(1920, 1080, FullScreenMode.ExclusiveFullScreen);
+        }
     }
 }
 

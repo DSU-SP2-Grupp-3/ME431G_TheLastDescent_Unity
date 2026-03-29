@@ -61,7 +61,14 @@ public class AgentStats : ScriptableObject
         }
         else
         {
-            RoundClock.OnRegister += (rc) => rc.RoundProgressed += clone.LoseTemperature;
+            void RegisterLoseTemperature(RoundClock rc)
+            {
+                rc.RoundProgressed += clone.LoseTemperature;
+                // once it's registered stop listening to registers;
+                RoundClock.OnRegister -= RegisterLoseTemperature;
+            }
+
+            RoundClock.OnRegister += RegisterLoseTemperature;
         }
 
         return clone;

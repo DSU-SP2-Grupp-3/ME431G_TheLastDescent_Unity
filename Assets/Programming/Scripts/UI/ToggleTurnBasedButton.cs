@@ -35,15 +35,15 @@ public class ToggleTurnBasedButton : Service<ToggleTurnBasedButton>
 
     public void Toggle()
     {
-        switch (inTurnBased)
-        {
-            case true:
-                modeSwitcher.Get().TryEnterRealTime();
-                break;
-            case false:
-                modeSwitcher.Get().TryEnterTurnBased();
-                break;
-        }
+        // switch (inTurnBased)
+        // {
+        //     case true:
+        //         modeSwitcher.Get().TryEnterRealTime();
+        //         break;
+        //     case false:
+        //         modeSwitcher.Get().TryEnterTurnBased();
+        //         break;
+        // }
     }
 
 }
