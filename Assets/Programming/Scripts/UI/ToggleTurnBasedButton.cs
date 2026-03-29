@@ -8,8 +8,8 @@ public class ToggleTurnBasedButton : Service<ToggleTurnBasedButton>
     private TMP_Text text;
     [SerializeField]
     private string inTurnBasedText, inRealTimeText;
-    [SerializeField]
-    private bool inTurnBased;
+    // [SerializeField]
+    // private bool inTurnBased;
 
     private Locator<ModeSwitcher> modeSwitcher;
 
@@ -20,17 +20,17 @@ public class ToggleTurnBasedButton : Service<ToggleTurnBasedButton>
 
     private void Start()
     {
-        modeSwitcher = new();
-        modeSwitcher.Get().OnEnterRealTime += (_) =>
-        {
-            inTurnBased = false;
-            text.text = inRealTimeText;
-        };
-        modeSwitcher.Get().OnEnterTurnBased += (_) =>
-        {
-            inTurnBased = true;
-            text.text = inTurnBasedText;
-        };
+        // modeSwitcher = new();
+        // modeSwitcher.Get().OnEnterRealTime += (_) =>
+        // {
+        //     inTurnBased = false;
+        //     text.text = inRealTimeText;
+        // };
+        // modeSwitcher.Get().OnEnterTurnBased += (_) =>
+        // {
+        //     inTurnBased = true;
+        //     text.text = inTurnBasedText;
+        // };
     }
 
     public void Toggle()

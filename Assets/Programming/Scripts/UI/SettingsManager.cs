@@ -49,7 +49,6 @@ public class SettingsManager : Service<SettingsManager>
         storedSettings.SetUIScale();
     }
 
-    private bool agentManagerExsists = false;
     private void Start()
     {
         agentManager = new Locator<AgentManager>();
