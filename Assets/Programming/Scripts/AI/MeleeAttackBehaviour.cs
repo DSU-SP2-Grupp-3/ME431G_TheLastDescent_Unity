@@ -58,8 +58,10 @@ public class MeleeAttackBehaviour : BehaviourDefinition
         if (!candidateExists) return GetIdleBehaviourCommands(aiAgent, parameters);
 
         bool trimmed = inRangeCommand.Trim(aiAgent.localStats.movement);
-
-        commands.AddCommand(inRangeCommand);
+        
+        // if movement is zero then the path will always be trimmed, set to false so turrets can attack
+        if (aiAgent.localStats.movement == 0f) trimmed = false;
+        else commands.AddCommand(inRangeCommand);
 
         LookCommand lookCommand = new LookCommand(aiAgent, closest);
         commands.AddCommand(lookCommand);
