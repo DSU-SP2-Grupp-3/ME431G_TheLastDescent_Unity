@@ -31,6 +31,6 @@ public class Popup : MonoBehaviour
         gameObject.SetActive(true);
         currentColor = textColor;
         currentColor.a = 1;
-        text.color = currentColor;
+        if (text) text.color = currentColor;
     }
 }

@@ -1,14 +1,16 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class SettingsManager : Service<SettingsManager>
 {
-    [SerializeField] private SettingsStorage storedSettings;
+    [SerializeField]
+    private SettingsStorage storedSettings;
     public UnityEvent open;
     public UnityEvent close;
-    
+
     public Slider MasterSlider;
     public Slider SFXSlider;
     public Slider MusicSlider;
@@ -16,11 +18,16 @@ public class SettingsManager : Service<SettingsManager>
     public Slider DialogueSlider;
 
     public Slider UIScaleSlider;
-    
-    [SerializeField] private Material pathMaterial;
-    [SerializeField] private Material indicatorMaterial;
+
+    public TMP_Dropdown resolutionDropdown;
+    public TMP_Dropdown fullscreenModeDropdown;
+
+    [SerializeField]
+    private Material pathMaterial;
+    [SerializeField]
+    private Material indicatorMaterial;
     private Locator<AgentManager> agentManager;
-    
+
     public void Open()
     {
         open?.Invoke(); 
@@ -63,11 +70,25 @@ public class SettingsManager : Service<SettingsManager>
         
         storedSettings.PathColorEvent += UpdatePathColor;
         storedSettings.IndicatorColorEvent += UpdateIndicatorColor;
+        
+        if (!storedSettings.resolutionInitialized) 
+        {
+            ResetResolution();
+        }
+        else
+        {
+            resolutionDropdown.SetValueWithoutNotify(storedSettings.resolutionIndex);
+            fullscreenModeDropdown.SetValueWithoutNotify(storedSettings.fullScreenModeIndex);
+        }
     }
 
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape)) { if (transform.position.y < -10) { Open(); } else { Close(); } }
+        if (Input.GetKeyDown(KeyCode.F7))
+        {
+            ResetResolution();   
+        }
     }
 
     private void UpdatePathColor()
@@ -80,17 +101,22 @@ public class SettingsManager : Service<SettingsManager>
         indicatorMaterial.color = storedSettings.IndicatorColor;
     }
 
-    public void SetResolutionHD()
+    public void SetResolution(int option)
     {
-        Resolution currentRes = Screen.currentResolution;
-        if (currentRes.height > 1080 && currentRes.width > 1920)
-        {
-            Screen.SetResolution(1920, 1080, FullScreenMode.Windowed);
-        }
-        else
-        {
-            Screen.SetResolution(1920, 1080, FullScreenMode.ExclusiveFullScreen);
-        }
+        storedSettings.SetResolutionPixels(option);
     }
+    
+    public void SetFullscreenMode(int option)
+    {
+        storedSettings.SetResultionMode(option);
+    }
+
+    private void ResetResolution()
+    {
+        storedSettings.SetResolution(0, 1);
+        resolutionDropdown.SetValueWithoutNotify(0);
+        fullscreenModeDropdown.SetValueWithoutNotify(1);
+    }
+    
 }
 

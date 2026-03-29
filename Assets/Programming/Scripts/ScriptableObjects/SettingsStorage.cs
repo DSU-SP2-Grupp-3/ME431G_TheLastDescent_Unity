@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -25,6 +26,29 @@ public class SettingsStorage : ScriptableObject
 
     [Header("Display")]
     public float UIScale;
+    
+    [HideInInspector]
+    public bool resolutionInitialized;
+    
+    public int resolutionIndex { get; private set; }
+    public (int width, int height) resolution => resolutions[resolutionIndex];
+    public int fullScreenModeIndex { get; private set; }
+    public FullScreenMode fullScreenMode => modes[fullScreenModeIndex];
+
+    // these should match the order in which they are dislplayed in the settings menu
+    private static readonly (int width, int height)[] resolutions =
+    {
+        (1920, 1080),
+        (2560, 1440),
+        (3440, 1440)
+    };
+
+    private static readonly FullScreenMode[] modes =
+    {
+        FullScreenMode.ExclusiveFullScreen,
+        FullScreenMode.FullScreenWindow,
+        FullScreenMode.Windowed
+    };
     
     //-E i have to make events :(
     public void TriggerAll() //just triggers all the events <3
@@ -60,4 +84,22 @@ public class SettingsStorage : ScriptableObject
 
     public UnityAction UIScaleEvent = delegate { };
     public void SetUIScale() { UIScaleEvent(); }
+
+    public void SetResolution(int newResolution, int newFullScreenMode)
+    {
+        resolutionInitialized = true;
+        resolutionIndex = Math.Min(newResolution, resolutions.Length);
+        fullScreenModeIndex = Math.Min(newFullScreenMode, modes.Length);
+        Screen.SetResolution(resolution.width, resolution.height, fullScreenMode);
+    }
+
+    public void SetResolutionPixels(int newResolution)
+    {
+        SetResolution(newResolution, fullScreenModeIndex);
+    }
+
+    public void SetResultionMode(int newFullScreenMode)
+    {
+        SetResolution(resolutionIndex, newFullScreenMode);
+    }
 }
