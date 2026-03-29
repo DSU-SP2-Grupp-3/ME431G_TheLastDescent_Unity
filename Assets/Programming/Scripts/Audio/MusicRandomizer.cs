@@ -32,13 +32,8 @@ public class MusicRandomizer : MonoBehaviour
 
             Debug.Log($"Playing Music track number {track}");
 
-            if (!audioManager.TryGet(eventScriptable.eventReference, out EventPlayer player))
-            {
-                audioManager.CreatePlayer(eventScriptable, out player);
-            }
-
-            player.RunInstanceModification(ParamName, track);
-            player.PlayEvent();
+            audioManager.PlayMusic(eventScriptable);
+            audioManager.RunInstanceModification(eventScriptable, ParamName, track);
 
         }
     }

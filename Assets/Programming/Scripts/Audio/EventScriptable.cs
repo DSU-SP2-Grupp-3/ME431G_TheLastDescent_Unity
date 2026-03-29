@@ -16,6 +16,7 @@ public class EventScriptable : ScriptableObject
         multi
     }
     public Override type;
+    public bool isMusic;
     [SerializeField]
     public EventReference eventReference;
     void OnValidate()

@@ -14,13 +14,13 @@ public class AudioManager : Service<AudioManager>
     private static Dictionary<EventReference, EventPlayer> PersistentPlayers = new();
     private static Dictionary<string, EventScriptable> bank = new();
     private static List<EventPlayer> OneShotPlayers = new();
+    private static EventPlayer MusicPlayer;
     private void Awake()
     {
         Register();
 
-        SceneManager.sceneLoaded += OnSceneLoaded;
-
         var all = Resources.LoadAll<EventScriptable>("");
+
         foreach (var e in all)
         {
             bank[e.name.ToLower().Trim()] = e;
@@ -84,6 +84,11 @@ public class AudioManager : Service<AudioManager>
 
     private void PlayAudio(EventScriptable eventScriptable)
     {
+        if (eventScriptable.isMusic)
+        {
+            PlayMusic(eventScriptable);
+            return;
+        }
         if (eventScriptable.type == EventScriptable.Override.multi)
         {
             CreatePlayer(eventScriptable, out EventPlayer tempEvent);
@@ -100,9 +105,22 @@ public class AudioManager : Service<AudioManager>
     }
     #endregion PlayEvents
 
+    public void PlayMusic(EventScriptable eventScriptable)
+    {
+        StopMusicPlayer();
 
+        CreatePlayer(eventScriptable, out EventPlayer musicPlayer);
+
+        MusicPlayer = musicPlayer;
+        musicPlayer.PlayEvent();
+    }
     public void StopAudioEvent(EventScriptable eventScriptable)
     {
+        if (eventScriptable.isMusic)
+        {
+            StopMusicPlayer();
+            return;
+        }
         RemovePlayer(eventScriptable.eventReference);
     }
     public void StopAudioEvent(string name)
@@ -110,7 +128,16 @@ public class AudioManager : Service<AudioManager>
         name = name.ToLower().Trim();
         if (TryGet(name, out EventScriptable result)) StopAudioEvent(result);
     }
+    public void StopMusicPlayer()
+    {
+        if (MusicPlayer == null) return;
 
+        MusicPlayer.Stop();
+        MusicPlayer.eventInstance.release();
+
+        PersistentPlayers.Remove(MusicPlayer.eventReference);
+        MusicPlayer = null;
+    }
     private void StopAllPersistentPlayers()
     {
         foreach (var kvp in PersistentPlayers)
@@ -124,6 +151,14 @@ public class AudioManager : Service<AudioManager>
     }
     public void RunInstanceModification(EventScriptable eventScriptable, string paramName, float value)
     {
+        if (eventScriptable.isMusic)
+        {
+            if (MusicPlayer != null)
+            {
+                MusicPlayer.RunInstanceModification(paramName, value);
+            }
+            return;
+        }
         if (PersistentPlayers.TryGetValue(eventScriptable.eventReference, out EventPlayer player))
             player.RunInstanceModification(paramName, value);
     }
@@ -196,11 +231,6 @@ public class AudioManager : Service<AudioManager>
         else OneShotPlayers.Add(eventPlayer);
     }
     #endregion PlayerHandler
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        StopAllPersistentPlayers();
-    }
     public EventScriptable Get(string eventName)
     {
         string eventNameC = eventName.ToLower().Trim();
